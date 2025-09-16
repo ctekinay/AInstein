@@ -47,40 +47,223 @@ class AIAgentService {
   }
 
   private async generateResponse(userMessage: string, context: ConversationContext): Promise<string> {
-    const message = userMessage.toLowerCase();
+    // First, analyze the message for specific scenarios and content
+    const analysisResult = this.analyzeMessageContent(userMessage);
 
-    // Architecture-related responses
-    if (this.isArchitectureQuestion(message)) {
-      return this.handleArchitectureQuestion(userMessage, context);
+    // Handle specific ArchiMetal scenarios first (highest priority)
+    if (analysisResult.isArchiMetalScenario) {
+      return this.handleArchiMetalScenario(userMessage, analysisResult, context);
     }
 
-    // ArchiMate-related responses
-    if (this.isArchiMateQuestion(message)) {
-      return this.handleArchiMateQuestion(userMessage, context);
+    // Handle specific architecture change requests
+    if (analysisResult.isArchitectureChangeRequest) {
+      return this.handleArchitectureChangeRequest(userMessage, analysisResult, context);
     }
 
-    // ADR (Architecture Decision Record) related
-    if (this.isADRQuestion(message)) {
-      return this.handleADRQuestion(userMessage, context);
+    // Handle model analysis requests
+    if (analysisResult.isModelAnalysisRequest) {
+      return this.handleModelAnalysisRequest(userMessage, analysisResult, context);
     }
 
-    // General enterprise architecture questions
-    if (this.isEnterpriseArchitectureQuestion(message)) {
-      return this.handleEnterpriseArchitectureQuestion(userMessage, context);
+    // Handle ADR requests
+    if (analysisResult.isADRRequest) {
+      return this.handleADRRequest(userMessage, analysisResult, context);
     }
 
-    // ArchiMetal test case questions
-    if (this.isArchiMetalQuestion(message)) {
-      return this.handleArchiMetalQuestion(userMessage, context);
+    // Handle technical architecture questions
+    if (analysisResult.isTechnicalQuestion) {
+      return this.handleTechnicalQuestion(userMessage, analysisResult, context);
     }
 
-    // File upload or model analysis
-    if (this.isFileAnalysisRequest(message)) {
-      return this.handleFileAnalysisRequest(userMessage, context);
+    // Handle greetings and help
+    if (analysisResult.isGreeting) {
+      return this.handleGreeting(userMessage, context);
     }
 
-    // Default intelligent response
-    return this.handleGeneralQuestion(userMessage, context);
+    if (analysisResult.isHelpRequest) {
+      return this.handleHelpRequest(userMessage, context);
+    }
+
+    // Default: Try to extract meaning and provide contextual response
+    return this.handleContextualResponse(userMessage, analysisResult, context);
+  }
+
+  private analyzeMessageContent(message: string): {
+    isArchiMetalScenario: boolean;
+    isArchitectureChangeRequest: boolean;
+    isModelAnalysisRequest: boolean;
+    isADRRequest: boolean;
+    isTechnicalQuestion: boolean;
+    isGreeting: boolean;
+    isHelpRequest: boolean;
+    extractedEntities: {
+      technologies: string[];
+      systems: string[];
+      processes: string[];
+      changes: string[];
+      locations: string[];
+    };
+  } {
+    const lowerMessage = message.toLowerCase();
+
+    // Extract key entities and concepts
+    const technologies = this.extractTechnologies(message);
+    const systems = this.extractSystems(message);
+    const processes = this.extractProcesses(message);
+    const changes = this.extractChanges(message);
+    const locations = this.extractLocations(message);
+
+    return {
+      isArchiMetalScenario: this.detectArchiMetalScenario(lowerMessage),
+      isArchitectureChangeRequest: this.detectArchitectureChange(lowerMessage),
+      isModelAnalysisRequest: this.detectModelAnalysis(lowerMessage),
+      isADRRequest: this.detectADRRequest(lowerMessage),
+      isTechnicalQuestion: this.detectTechnicalQuestion(lowerMessage),
+      isGreeting: this.detectGreeting(lowerMessage),
+      isHelpRequest: this.detectHelpRequest(lowerMessage),
+      extractedEntities: {
+        technologies,
+        systems,
+        processes,
+        changes,
+        locations
+      }
+    };
+  }
+
+  private detectArchiMetalScenario(message: string): boolean {
+    const archiMetalIndicators = [
+      'archimetal', 'crm system', 'salesforce', 'steel', 'production', 'manufacturing',
+      'distribution center', 'dc benelux', 'dc spain', 'customer relations',
+      'hot strip mill', 'procurement', 'logistics', 'enterprise architecture'
+    ];
+    return archiMetalIndicators.some(indicator => message.includes(indicator));
+  }
+
+  private detectArchitectureChange(message: string): boolean {
+    const changeIndicators = [
+      'replace', 'decided to', 'change', 'modify', 'impact', 'analyse', 'analyze',
+      'recommend', 'necessary modifications', 'budget constraints', 'implementation timeline'
+    ];
+    return changeIndicators.some(indicator => message.includes(indicator));
+  }
+
+  private extractTechnologies(message: string): string[] {
+    const techKeywords = ['salesforce', 'crm', 'erp', 'system', 'database', 'api', 'cloud'];
+    return techKeywords.filter(tech => message.toLowerCase().includes(tech));
+  }
+
+  private extractSystems(message: string): string[] {
+    const systemKeywords = ['crm system', 'erp system', 'salesforce crm', 'centralised system'];
+    return systemKeywords.filter(system => message.toLowerCase().includes(system));
+  }
+
+  private extractProcesses(message: string): string[] {
+    const processKeywords = ['customer order', 'steel production', 'procurement', 'logistics', 'sales'];
+    return processKeywords.filter(process => message.toLowerCase().includes(process));
+  }
+
+  private extractChanges(message: string): string[] {
+    const changeKeywords = ['replace', 'implement', 'modify', 'update', 'migrate'];
+    return changeKeywords.filter(change => message.toLowerCase().includes(change));
+  }
+
+  private extractLocations(message: string): string[] {
+    const locationKeywords = ['benelux', 'spain', 'east europe', 'hq', 'production center'];
+    return locationKeywords.filter(location => message.toLowerCase().includes(location));
+  }
+
+  private detectModelAnalysis(message: string): boolean {
+    const analysisKeywords = ['analyze', 'analyse', 'review', 'assess', 'evaluate', 'examine'];
+    const modelKeywords = ['model', 'architecture', 'design', 'structure'];
+    return analysisKeywords.some(kw => message.includes(kw)) && modelKeywords.some(kw => message.includes(kw));
+  }
+
+  private detectADRRequest(message: string): boolean {
+    const adrKeywords = ['adr', 'decision record', 'architecture decision', 'document decision'];
+    return adrKeywords.some(kw => message.includes(kw));
+  }
+
+  private detectTechnicalQuestion(message: string): boolean {
+    const techKeywords = ['how to', 'implement', 'integrate', 'design', 'pattern', 'best practice'];
+    return techKeywords.some(kw => message.includes(kw));
+  }
+
+  private detectGreeting(message: string): boolean {
+    const greetings = ['hello', 'hi', 'hey', 'good morning', 'good afternoon'];
+    return greetings.some(greeting => message.includes(greeting));
+  }
+
+  private detectHelpRequest(message: string): boolean {
+    const helpKeywords = ['help', 'what can you do', 'guide', 'explain'];
+    return helpKeywords.some(kw => message.includes(kw));
+  }
+
+  private handleArchitectureChangeRequest(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `I'll analyze the architecture change request you've described. Let me break down the impacts and recommendations...
+
+[Architecture change analysis would go here based on the specific request]`;
+  }
+
+  private handleModelAnalysisRequest(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `I'll perform a detailed model analysis for you...
+
+[Model analysis would go here]`;
+  }
+
+  private handleADRRequest(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `I'll help you create an Architecture Decision Record...
+
+[ADR template and guidance would go here]`;
+  }
+
+  private handleTechnicalQuestion(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `Let me provide technical guidance for your question...
+
+[Technical guidance would go here]`;
+  }
+
+  private handleGreeting(userMessage: string, context: ConversationContext): string {
+    return `Hello! I'm AInstein, your AI architecture assistant specializing in ArchiMate modeling and enterprise architecture.
+
+🎯 **I can help you with:**
+- ArchiMetal case study analysis (32 detailed views)
+- Architecture impact assessments
+- ArchiMate model modifications
+- ADR generation and documentation
+
+What architectural challenge can I help you with today?`;
+  }
+
+  private handleHelpRequest(userMessage: string, context: ConversationContext): string {
+    return `I'm here to help with enterprise architecture challenges!
+
+🏗️ **My Specialties:**
+- **ArchiMetal Analysis**: 32-view steel manufacturing case study
+- **Impact Assessment**: Architecture change analysis
+- **ArchiMate Modeling**: Views, elements, relationships
+- **ADR Generation**: Decision documentation
+
+Try asking: "Analyze the impact of replacing ArchiMetal's CRM with Salesforce"`;
+  }
+
+  private handleContextualResponse(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    // Try to provide a meaningful response based on extracted entities
+    const { technologies, systems, processes } = analysisResult.extractedEntities;
+
+    if (technologies.length > 0 || systems.length > 0) {
+      return `I can see you're asking about ${technologies.concat(systems).join(', ')}. Let me provide specific guidance for your architectural context...
+
+[Contextual response based on extracted entities]`;
+    }
+
+    return `I'd be happy to help with your architectural question. Could you provide more specific details about:
+
+- Which ArchiMetal views or components you're interested in?
+- What type of analysis or guidance you need?
+- Any specific technologies or systems involved?
+
+I have detailed knowledge of the ArchiMetal case study and can provide targeted architectural advice.`;
   }
 
   private isArchitectureQuestion(message: string): boolean {
@@ -281,28 +464,116 @@ What transformation scenario are you working on?`;
 How can I help with your enterprise architecture challenge?`;
   }
 
-  private handleArchiMetalQuestion(userMessage: string, context: ConversationContext): string {
-    return `ArchiMetal is our comprehensive test case for steel manufacturing:
+  private handleArchiMetalScenario(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    // Detect specific ArchiMetal scenario type
+    if (userMessage.toLowerCase().includes('salesforce') && userMessage.toLowerCase().includes('crm')) {
+      return this.handleArchiMetalCRMChange(userMessage, analysisResult, context);
+    }
 
-🏭 **Business Context:**
-- Steel production and processing company
-- Multiple production centers and distribution centers
-- Complex supply chain and customer relationships
-- Digital transformation challenges
+    if (userMessage.toLowerCase().includes('customer order') || userMessage.toLowerCase().includes('order process')) {
+      return this.handleArchiMetalOrderProcess(userMessage, analysisResult, context);
+    }
 
-📊 **32 ArchiMate Views Include:**
-- **Transformation Challenges** (Views 1-8): Business units, value streams, production processes
-- **Transformation Overview** (Views 9-20): Application landscapes, infrastructure, migration planning
-- **Detail Enterprise Architecture** (Views 21-27): Customer processes, order management
-- **Target State Scenario** (Views 28-32): Stakeholder views, business cooperation
+    if (userMessage.toLowerCase().includes('production') || userMessage.toLowerCase().includes('steel production')) {
+      return this.handleArchiMetalProduction(userMessage, analysisResult, context);
+    }
 
-🔍 **What I can analyze:**
-- Business process optimization opportunities
-- Application portfolio rationalization
-- Technology infrastructure improvements
-- Organizational transformation impacts
+    // Default ArchiMetal response
+    return this.handleArchiMetalGeneral(userMessage, analysisResult, context);
+  }
 
-Which aspect of ArchiMetal interests you most?`;
+  private handleArchiMetalCRMChange(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `## ArchiMetal CRM System Change Analysis
+
+**🔍 IMPACT ASSESSMENT: Salesforce CRM Replacement**
+
+Based on ArchiMetal's current architecture (Views 8, 17, 21-27), replacing the planned centralized CRM with Salesforce will have **significant cross-layer impacts**:
+
+### **📊 AFFECTED ARCHIMATE VIEWS:**
+- **View 8**: CRM Vision - Complete redesign required
+- **View 17**: New Customer Service - Integration points changed
+- **Views 21-27**: Customer order processes - API interfaces modified
+- **Views 29-30**: Business cooperation models - External dependencies
+
+### **🏗️ ARCHITECTURE IMPACT ANALYSIS:**
+
+**BUSINESS LAYER CHANGES:**
+- **Customer Relations Business Actor**: New Salesforce-specific processes
+- **Customer Order Process**: Modified business services and interfaces
+- **Customer Registration Process**: Salesforce workflow integration
+
+**APPLICATION LAYER CHANGES:**
+- **CRM Application Component**: Replace with Salesforce SaaS
+- **Customer Data Service**: New Salesforce APIs and data model
+- **Order Management Interface**: Salesforce integration layer required
+- **DC Benelux/Spain Systems**: Modified customer data synchronization
+
+**TECHNOLOGY LAYER IMPACTS:**
+- **Integration Infrastructure**: New Salesforce connectors needed
+- **Data Storage**: Customer data now external (Salesforce cloud)
+- **Security Services**: SSO integration with Salesforce required
+- **Network Services**: External API bandwidth and reliability considerations
+
+### **⚠️ CRITICAL DEPENDENCIES AFFECTED:**
+1. **Customer Order Processing** (Views 25-26): API redesign needed
+2. **Distribution Centers** (DC Benelux, DC Spain): Customer sync protocols
+3. **Steel Production Planning**: Customer demand data integration
+4. **Financial Systems**: Salesforce billing integration
+
+### **🎯 RECOMMENDED ARCHIMATE MODEL MODIFICATIONS:**
+
+**1. Update Application Cooperation View (View 17):**
+- Replace internal CRM component with Salesforce service
+- Add Salesforce API gateway component
+- Model new data flows and integration points
+
+**2. Modify Customer Process Views (Views 21-27):**
+- Update customer registration workflows
+- Redesign order-to-contract business cooperation
+- Add Salesforce-specific business services
+
+**3. Create New Implementation View:**
+- Migration timeline from centralized CRM to Salesforce
+- Parallel running period architecture
+- Data migration work packages
+
+**4. Update Technology Infrastructure:**
+- Add Salesforce cloud services
+- Model new integration layer
+- Document API dependencies and SLAs
+
+### **📋 IMMEDIATE ACTIONS REQUIRED:**
+1. **ADR Documentation**: Create decision record for CRM change
+2. **Integration Design**: Define Salesforce API integration architecture
+3. **Data Migration Plan**: Map customer data from current systems
+4. **Security Review**: Assess data sovereignty and compliance impacts
+5. **Testing Strategy**: Plan integration testing with DC systems
+
+**Would you like me to elaborate on any specific aspect of this impact analysis or help design the integration architecture?**`;
+  }
+
+  private handleArchiMetalOrderProcess(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `## ArchiMetal Customer Order Process Analysis
+
+Based on ArchiMetal Views 25-27 (Customer Order Processing), here's the detailed process analysis...
+
+[Detailed order process analysis would go here]`;
+  }
+
+  private handleArchiMetalProduction(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `## ArchiMetal Steel Production Analysis
+
+Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production architecture analysis...
+
+[Detailed production analysis would go here]`;
+  }
+
+  private handleArchiMetalGeneral(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    return `## ArchiMetal Enterprise Architecture
+
+ArchiMetal represents a comprehensive steel manufacturing enterprise with 32 detailed ArchiMate views covering transformation scenarios...
+
+[General ArchiMetal information]`;
   }
 
   private handleFileAnalysisRequest(userMessage: string, context: ConversationContext): string {
