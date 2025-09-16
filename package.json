@@ -1,0 +1,40 @@
+{
+  "name": "ainstein",
+  "version": "1.0.0",
+  "description": "AI-powered architecture agent for automating architectural decision-making, ADR generation, and ArchiMate model processing",
+  "main": "src/backend/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=@ainstein/backend",
+    "dev:frontend": "npm run dev --workspace=@ainstein/frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd src/backend && npm run build",
+    "build:frontend": "cd src/frontend && npm run build",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\""
+  },
+  "keywords": ["archimate", "architecture", "ai", "adr", "enterprise-architecture"],
+  "author": "Alliander N.V.",
+  "license": "MIT",
+  "workspaces": [
+    "src/frontend",
+    "src/backend"
+  ],
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.5.4",
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^9.10.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
