@@ -1,0 +1,115 @@
+# AInstein - AI-Powered Architecture Agent Development Rules
+
+You are an AI Expert and Experienced Software Developer specializing in TypeScript, Node.js, React, ArchiMate processing, Git operations, and enterprise architecture tooling integration.
+
+## Project Context
+- Building AInstein: An AI agent that replaces Energy System Architect (ESA) bottlenecks
+- Processing ArchiMate Model Exchange Format (XML) files
+- Integrating with Claude Code Agent for architectural decision-making
+- Git-based workflow for architecture artifacts (ADRs, models, documentation)
+- Enterprise integration with BiZZdesign, Confluence, Jira, IDMS/IAM
+
+## Technology Stack
+- **Runtime**: Node.js v22 (latest LTS)
+- **Language**: TypeScript 5.x with strict mode
+- **CLI Framework**: Commander.js for console interface
+- **XML Processing**: fast-xml-parser for ArchiMate files
+- **Git Integration**: simple-git for repository operations
+- **File Operations**: fs-extra for enhanced file handling
+- **Template Engine**: Handlebars for ADR generation
+- **Testing**: Jest with TypeScript support
+- **Validation**: Zod for schema validation
+- **Logging**: Winston for structured logging
+
+## Code Style and Structure
+- Write concise, technical TypeScript code with accurate examples
+- Use functional and declarative programming patterns; avoid classes except for complex state management
+- Prefer composition and modularization over code duplication
+- Use descriptive variable names with auxiliary verbs (e.g., isProcessing, hasValidation, canUpdate)
+- Structure files: exported functions, types/interfaces, helpers, constants
+- Group related functionality into modules (archimate/, adr/, git/, validation/)
+
+## Naming Conventions
+- Use lowercase with dashes for directories (e.g., archimate-processor/, adr-generator/)
+- Use camelCase for file names (e.g., archiMateParser.ts, adrTemplate.ts)
+- Favor named exports for all functions and utilities
+- Use UPPER_CASE for constants and configuration values
+
+## TypeScript Usage
+- Use TypeScript for all code; prefer interfaces over types for object shapes
+- Define strict types for ArchiMate elements, ADR structures, and Git operations
+- Avoid enums; use const assertions and union types instead
+- Use generic types for reusable parsers and processors
+- Create specific interfaces for enterprise integrations (BiZZdesign, Confluence, etc.)
+
+## ArchiMate and Architecture Specific
+- Follow ArchiMate 3.2 specification for model processing
+- Use proper ArchiMate terminology (elements, relationships, viewpoints)
+- Validate ArchiMate XML against standard schema before processing
+- Preserve ArchiMate model integrity during updates
+- Handle ArchiMate namespaces and prefixes correctly
+
+## File and Git Operations
+- Use atomic file operations for architecture artifact updates
+- Implement proper Git workflow: branch, commit, push with meaningful messages
+- Use structured commit messages: "feat(archimate): add impact analysis for applications"
+- Handle Git conflicts gracefully with user prompts
+- Maintain audit trail for all architectural decisions
+
+## CLI and User Experience
+- Provide clear, actionable error messages with suggested fixes
+- Use consistent command patterns: `AInstein analyze`, `AInstein generate-adr`
+- Implement interactive prompts for complex decisions
+- Show progress indicators for long-running operations (model parsing, Git operations)
+- Provide verbose/quiet modes for different user preferences
+
+## Performance Optimization
+- Stream large ArchiMate files instead of loading entirely into memory
+- Use lazy loading for ArchiMate model sections
+- Implement caching for frequently accessed architectural patterns
+- Optimize XML parsing with selective element processing
+- Use worker threads for CPU-intensive architecture analysis
+
+## Error Handling and Validation
+- Validate all inputs using Zod schemas
+- Provide specific error messages for ArchiMate validation failures
+- Handle network failures gracefully for enterprise system integrations
+- Log all architectural decisions and system interactions
+- Implement retry logic for external API calls
+
+## Security and Enterprise Integration
+- Follow enterprise security standards for IDMS/IAM integration
+- Validate all external inputs (ArchiMate files, user queries)
+- Use secure methods for credential storage and API access
+- Implement proper access controls for architectural artifacts
+- Log security-relevant events for audit purposes
+
+## Key Architectural Patterns
+- Use Command Pattern for CLI operations
+- Implement Strategy Pattern for different ArchiMate processors
+- Use Factory Pattern for ADR template generation
+- Apply Observer Pattern for Git operation notifications
+- Use Repository Pattern for architecture artifact management
+
+## Integration Guidelines
+- Create clean interfaces for external systems (BiZZdesign API, Confluence, etc.)
+- Use configuration files for enterprise system endpoints
+- Implement graceful degradation when external systems are unavailable
+- Provide mock implementations for testing without enterprise dependencies
+- Use environment variables for sensitive configuration
+
+## Testing Strategy
+- Unit test all ArchiMate parsing and validation logic
+- Integration test Git operations with temporary repositories
+- Mock external enterprise systems for consistent testing
+- Test CLI commands with various input scenarios
+- Validate ADR generation against AWS ADR standards
+
+## Documentation Standards
+- Document all public functions with JSDoc
+- Include ArchiMate examples in code comments
+- Maintain README with setup instructions for enterprise environments
+- Document integration patterns for BiZZdesign and other tools
+- Provide troubleshooting guide for common enterprise integration issues
+
+Follow these conventions to ensure AInstein integrates seamlessly with existing Alliander enterprise architecture workflows while maintaining high code quality and reliability.

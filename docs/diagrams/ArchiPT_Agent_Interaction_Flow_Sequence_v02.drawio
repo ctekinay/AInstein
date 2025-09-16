@@ -1,0 +1,280 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0" version="28.2.0">
+  <diagram name="ArchiPT - Interaction Flow" id="azrEGDkZvGBBBSrj1yv6">
+    <mxGraphModel dx="1034" dy="636" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-2" value="ArchiPT (Architecture Agent) - Interaction Flow Sequence Diagram v0.1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="660" y="290" width="630" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-3" value="User (ESA)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="310" y="340" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-4" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#6c8ebf;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="390" as="sourcePoint" />
+            <mxPoint x="370" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-5" value="ArchiPT&lt;br&gt;Claude Code Agent&lt;br&gt;(ESA Replacement)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="510" y="340" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-6" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="390" as="sourcePoint" />
+            <mxPoint x="580" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-7" value="ArchiMate&lt;br&gt;Processor Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="710" y="340" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-8" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#d6b656;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="390" as="sourcePoint" />
+            <mxPoint x="770" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-9" value="Impact Analyzer&lt;br&gt;Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="890" y="340" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-10" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="950" y="390" as="sourcePoint" />
+            <mxPoint x="950" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-11" value="ADR Generator&lt;br&gt;Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1070" y="340" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-12" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1130" y="390" as="sourcePoint" />
+            <mxPoint x="1130" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-13" value="Validation Engine&lt;br&gt;Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1250" y="340" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-14" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#b85450;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1310" y="390" as="sourcePoint" />
+            <mxPoint x="1310" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-15" value="Git Repository&lt;br&gt;(ArchiMate Models, ADRs)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1430" y="340" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-16" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1500" y="390" as="sourcePoint" />
+            <mxPoint x="1500" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-17" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="427" as="sourcePoint" />
+            <mxPoint x="580" y="427" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-18" value="1. Describe problem/initiative&lt;br&gt;&lt;i&gt;(via VS Code/Console/WebApp)&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="400" width="170" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-19" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="460" as="sourcePoint" />
+            <mxPoint x="770" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-20" value="2. Request relevant models" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="600" y="445" width="130" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-21" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="480" as="sourcePoint" />
+            <mxPoint x="1500" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-22" value="Load ArchiMate models" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="465" width="140" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-23" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1500" y="500" as="sourcePoint" />
+            <mxPoint x="770" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-24" value="Return model data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="485" width="100" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-25" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="520" as="sourcePoint" />
+            <mxPoint x="580" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-26" value="Parsed model structure" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="630" y="505" width="110" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-27" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="550" as="sourcePoint" />
+            <mxPoint x="950" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-28" value="3. Analyze impact &amp; dependencies" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="710" y="535" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-29" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="950" y="570" as="sourcePoint" />
+            <mxPoint x="580" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-30" value="Impact analysis results" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="710" y="555" width="130" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-31" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="600" as="sourcePoint" />
+            <mxPoint x="370" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-32" value="4. Present findings, options &amp; visual impact" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="580" width="200" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-33" value="5. Interactive Discussion &amp; Decision Phase&lt;br&gt;• Explore alternatives and trade-offs&lt;br&gt;• Iterative refinement of architectural decision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="320" y="630" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-34" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="720" as="sourcePoint" />
+            <mxPoint x="580" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-35" value="6. Confirm chosen approach" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="705" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-36" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="750" as="sourcePoint" />
+            <mxPoint x="1130" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-37" value="7. Generate ADR" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="810" y="735" width="100" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-38" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1130" y="770" as="sourcePoint" />
+            <mxPoint x="580" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-39" value="Draft ADR" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="810" y="755" width="100" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-40" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="790" as="sourcePoint" />
+            <mxPoint x="370" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-41" value="8. Present draft ADR for review" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="775" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-42" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="830" as="sourcePoint" />
+            <mxPoint x="580" y="830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-43" value="9. Approve changes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="815" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-44" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="860" as="sourcePoint" />
+            <mxPoint x="770" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-45" value="10. Update ArchiMate models" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="845" width="110" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-46" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="890" as="sourcePoint" />
+            <mxPoint x="1310" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-47" value="11. Validate changes against compliance rules" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="875" width="220" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-48" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1310" y="910" as="sourcePoint" />
+            <mxPoint x="580" y="910" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-49" value="Validation results" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="860" y="895" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-50" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="940" as="sourcePoint" />
+            <mxPoint x="370" y="940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-51" value="12. Present visual diffs &amp; change impact" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="375" y="925" width="190" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-52" value="13. Final Review &amp; Approval&lt;br&gt;SO User confirms all changes before commit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="320" y="970" width="300" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-53" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="1040" as="sourcePoint" />
+            <mxPoint x="580" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-54" value="14. Commit approved changes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="1025" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-55" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="1070" as="sourcePoint" />
+            <mxPoint x="1500" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-56" value="15. Update repository (models, ADRs, documentation)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="950" y="1055" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-57" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1500" y="1090" as="sourcePoint" />
+            <mxPoint x="580" y="1090" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-58" value="Commit confirmation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="970" y="1075" width="220" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-59" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="1130" as="sourcePoint" />
+            <mxPoint x="370" y="1130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-60" value="16. Process complete - Summary &amp; next steps" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="365" y="1110" width="220" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-61" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="575" y="460" width="10" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-62" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="575" y="750" width="10" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="eDfFPNS-UVv-tvCFEFpW-63" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="575" y="860" width="10" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

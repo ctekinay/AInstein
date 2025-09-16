@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0" version="28.2.0">
+  <diagram name="Architecture Agent - Component Diagram" id="Ew8ydOcGyUejcSTS_3OC">
+    <mxGraphModel dx="1273" dy="670" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-1" value="Architecture Agent System (ArchiPT/AInstein) - Component Diagram v0.1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="270" y="20" width="630" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-2" value="Presentation/UI Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;verticalAlign=top;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="70" width="1070" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-3" value="VS Code Extension&lt;br&gt;&lt;i&gt;Claude Code Integration (POC/Temp)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="180" y="110" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-4" value="Console Interface&lt;br&gt;&lt;i&gt;TypeScript CLI (POC/Temp)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="373" y="110" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-5" value="WebApp UI&lt;br&gt;&lt;i&gt;(POC + Prod)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="570" y="110" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-6" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;Architecture Agent Core Services&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="55" y="220" width="1070" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-7" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Validation Engine&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;• Knowledge Graph (SO + BBN)&amp;nbsp;&lt;/div&gt;&lt;div&gt;• Compliance Rules&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;• Quality Gates&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="274" width="180" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-8" value="ArchiMate&lt;br&gt;Processor&lt;br&gt;&lt;br&gt;• XML Parser&lt;br&gt;• Model Analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="274" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-9" value="ADR Generator&lt;br&gt;&lt;br&gt;• Template Engine&lt;br&gt;• Decision Capture&lt;br&gt;• Rationale Tracking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="760" y="274" width="150" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-10" value="Impact Analyzer&lt;br&gt;&lt;br&gt;• Dependency Analysis&lt;br&gt;• Change Propagation&lt;br&gt;• Risk Assessment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="590" y="274" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-11" value="Conversation&lt;br&gt;Manager&lt;br&gt;&lt;br&gt;• Context Management&lt;div&gt;• Session State&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="260" y="274" width="150" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-12" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;LLM Agent (e.g., Claude Code)&lt;br&gt;Integration&lt;br&gt;&lt;br&gt;• File Operations&lt;br&gt;• Diff Generation&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="920" y="274" width="180" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-13" value="Data Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="460" width="1070" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-14" value="Git Repository&lt;br&gt;&lt;i&gt;Version Control &amp; Collaboration&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="65" y="498" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-15" value="ArchiMate Models&lt;br&gt;&lt;i&gt;(ArchiMate Exchange File Format - XML files)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="280" y="498" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-16" value="ADR Repository&lt;br&gt;&lt;i&gt;(Markdown files)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="490" y="498" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-17" value="Process Documentation&lt;br&gt;&lt;i&gt;(Business Processes)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="700" y="498" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-18" value="External Systems &amp; Tools" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;verticalAlign=top;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="620" width="1070" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-19" value="ArchiMate Tools&lt;br&gt;&lt;i&gt;(Archi, BiZZdesign)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="70" y="660" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-20" value="Confluence&lt;br&gt;&lt;i&gt;(Documentation)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="270" y="660" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-21" value="Project Tools&lt;br&gt;&lt;i&gt;(Jira, Azure DevOps)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="470" y="660" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-22" value="Enterprise&lt;br&gt;Systems (IDMS/IAM, GitHub repos, other relevant apps)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="680" y="660" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-23" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="579" y="190" as="sourcePoint" />
+            <mxPoint x="579" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-24" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="585" y="420" as="sourcePoint" />
+            <mxPoint x="585" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-25" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="585" y="580" as="sourcePoint" />
+            <mxPoint x="585" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-26" value="Chatbot UI - ESA/BBN pages integration&lt;div&gt;&lt;i&gt;(POC + Prod)&lt;/i&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="770" y="110" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-27" value="Other&lt;br&gt;Systems (depending on the actual use case)???" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="890" y="660" width="202" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mr6KNtb9g16A8ZJ1HRWE-28" value="Agent System Metadata&lt;div&gt;(Definition of agent capabilities, role interaction defintion)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="910" y="498" width="200" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

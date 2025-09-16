@@ -1,0 +1,162 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+AInstein is an AI-powered architecture agent designed to replace Energy System Architect (ESA) bottlenecks at Alliander N.V., a Dutch Distribution System Operator. The project aims to automate architectural decision-making, ADR generation, and ArchiMate model processing for critical energy infrastructure.
+
+The solution comprises:
+1. **Frontend Implementation**: A chatbot interface allowing architects to communicate with the AI agent
+2. **Backend Implementation**: AI agent flow including GitHub integration, ArchiMate model fetching, model adjustments, validation, and ADR generation
+
+## Test Environment
+
+Due to the lack of production knowledge graphs and test ArchiMate models from the company, the project uses **ArchiMetal** as a comprehensive test case located in `/ArchiMetal/`. This provides:
+- Realistic ArchiMate model files organized by architectural views
+- Complete enterprise architecture scenarios covering transformation challenges, CRM vision, baseline and target states
+- Comprehensive documentation for validation and testing
+
+## Technology Stack
+
+### Backend
+- **Runtime**: Node.js v22 (latest LTS)
+- **Language**: TypeScript 5.x with strict mode
+- **CLI Framework**: Commander.js for console interface
+- **XML Processing**: fast-xml-parser for ArchiMate Model Exchange Format files
+- **Git Integration**: simple-git for repository operations
+- **File Operations**: fs-extra for enhanced file handling
+- **Template Engine**: Handlebars for ADR generation
+- **Testing**: Jest with TypeScript support
+- **Validation**: Zod for schema validation
+- **Logging**: Winston for structured logging
+
+### Frontend
+- **Framework**: TBD (React/Vue/Svelte for chatbot interface)
+- **Communication**: WebSocket/HTTP API for real-time chat
+- **UI Components**: Modern chat interface with file upload capabilities
+
+## Architecture and Code Organization
+
+### Module Structure
+```
+src/
+├── frontend/           # Chatbot interface implementation
+│   ├── components/     # UI components
+│   ├── services/      # API communication
+│   └── types/         # Frontend TypeScript types
+├── backend/           # Core AI agent implementation
+│   ├── archimate/     # ArchiMate XML processing and validation
+│   ├── adr/          # Architecture Decision Record generation
+│   ├── git/          # Git operations and workflow management
+│   ├── validation/   # Input validation and schema definitions
+│   ├── chat/         # Chat interface and WebSocket handling
+│   └── agent/        # AI agent orchestration and workflow
+└── ArchiMetal/        # Test case data and models
+    ├── docs/          # ArchiMetal documentation and specifications
+    ├── ArchiMetal_Transformation_Challenges/
+    ├── ArchiMetal_CRM_Vision/
+    ├── ArchiMetal_Transformation_Overview/
+    ├── Detail_Enterprise_Architecture/
+    └── Target_State_Scenario/
+```
+
+### File Naming Conventions
+- Directories: lowercase with dashes (e.g., `archimate-processor/`)
+- Files: camelCase (e.g., `archiMateParser.ts`, `adrTemplate.ts`)
+- Constants: UPPER_CASE
+- Prefer named exports for all functions and utilities
+
+## Development Guidelines
+
+### TypeScript Standards
+- Use interfaces over types for object shapes
+- Avoid enums; use const assertions and union types
+- Define strict types for ArchiMate elements and ADR structures
+- Use generic types for reusable parsers and processors
+
+### ArchiMate Processing
+- Follow ArchiMate 3.2 specification compliance
+- Validate XML against standard schema before processing
+- Handle namespaces and prefixes correctly
+- Preserve model integrity during updates
+- Stream large files instead of loading entirely into memory
+
+### Git Operations
+- Implement atomic operations for architecture artifact updates
+- Use structured commit messages: `feat(archimate): add impact analysis for applications`
+- Handle conflicts gracefully with user prompts
+- Maintain audit trail for all architectural decisions
+
+### Frontend Design
+- **Chatbot Interface**: Modern conversational UI for architect interactions
+- **File Upload**: Support for ArchiMate model file uploads (.archimate, .xml)
+- **Real-time Communication**: WebSocket connection for live agent feedback
+- **Progress Indicators**: Visual feedback for long-running operations (model analysis, ADR generation)
+- **Error Handling**: Clear, actionable error messages with suggested fixes
+
+### Backend API Design
+- **RESTful Endpoints**: Standard HTTP APIs for file operations and configuration
+- **WebSocket**: Real-time bidirectional communication for chat interface
+- **Agent Workflow**: Orchestrated flow for ArchiMate processing and ADR generation
+- **GitHub Integration**: Automated repository operations and model fetching
+
+## Enterprise Integration Requirements
+
+### External Systems
+- **BiZZdesign Enterprise Studio**: Primary ArchiMate modeling tool
+- **Confluence**: Architectural documentation and ADR storage
+- **Jira**: Project management and initiative tracking
+- **IDMS/IAM**: Enterprise identity and access management
+
+### Security and Compliance
+- Follow enterprise security standards for IDMS/IAM integration
+- Validate all external inputs (ArchiMate files, user queries)
+- Implement proper access controls for architectural artifacts
+- Log security-relevant events for audit purposes
+- Handle architecturally sensitive but not classified information
+
+### Performance Requirements
+- Use lazy loading for ArchiMate model sections
+- Implement caching for frequently accessed architectural patterns
+- Use worker threads for CPU-intensive architecture analysis
+- Optimize XML parsing with selective element processing
+
+## Key Design Patterns
+
+- **Command Pattern**: For chat command processing and AI agent operations
+- **Strategy Pattern**: For different ArchiMate processors and model types
+- **Factory Pattern**: For ADR template generation and response formatting
+- **Observer Pattern**: For real-time chat updates and workflow notifications
+- **Repository Pattern**: For architecture artifact and model management
+- **Publisher-Subscriber**: For WebSocket communication and event handling
+
+## Business Context
+
+This system operates within Alliander's energy transition mission, supporting:
+- Cross-keten (organizational chain) architectural alignment
+- Integration with SCADA, DMS, and smart meter infrastructure
+- Compliance with Dutch energy sector regulations (ACM)
+- Support for renewable energy integration and smart grid evolution
+
+## Development Approach
+
+This is an active development project focusing on building the complete technical infrastructure while using ArchiMetal as the test case for validation. The development priorities are:
+
+1. **Frontend Development**: Implement chatbot interface for architect interactions
+2. **Backend Agent Implementation**: Build the core AI workflow including:
+   - GitHub integration and model fetching
+   - ArchiMate model processing and validation
+   - ADR generation and documentation
+   - Real-time communication with frontend
+3. **Testing and Validation**: Use ArchiMetal test case to validate solution accuracy and completeness
+
+## ArchiMetal Test Case
+
+The ArchiMetal case study provides a comprehensive enterprise architecture transformation scenario with:
+- **32 ArchiMate views** covering business, application, technology, and implementation perspectives
+- **Transformation scenarios** from baseline to target state
+- **Business process cooperation** and stakeholder views
+- **Detailed enterprise architecture** with process and application mappings
+
+This test environment enables development and validation of the AInstein solution without requiring production data or knowledge graphs from the company.
