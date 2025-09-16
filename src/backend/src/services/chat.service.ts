@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Message, ChatSession, AgentStatus } from '../types/chat.types.js';
 import logger from '../utils/logger.js';
+import aiAgentService from './ai-agent.service.js';
 
 class ChatService {
   private sessions: Map<string, ChatSession> = new Map();
@@ -57,20 +58,36 @@ class ChatService {
     return this.agentStatus;
   }
 
-  processUserMessage(sessionId: string, content: string): Message | null {
+  async processUserMessage(sessionId: string, content: string): Promise<Message | null> {
     // Add user message
     const userMessage = this.addMessage(sessionId, content, 'user');
     if (!userMessage) return null;
 
-    // Simulate agent processing
+    // Process with AI agent
     this.updateAgentStatus({ status: 'processing', currentTask: 'Analyzing user input' });
 
-    // Simple echo response for now - will be replaced with actual AI agent logic
-    setTimeout(() => {
-      const agentResponse = `I received your message: "${content}". This is a placeholder response while the AI agent is being implemented.`;
-      this.addMessage(sessionId, agentResponse, 'agent');
-      this.updateAgentStatus({ status: 'idle' });
-    }, 1000);
+    try {
+      // Get intelligent response from AI agent
+      this.updateAgentStatus({ status: 'analyzing', currentTask: 'Processing architectural context' });
+
+      const agentResponse = await aiAgentService.processMessage(sessionId, content);
+
+      this.updateAgentStatus({ status: 'generating', currentTask: 'Generating response' });
+
+      // Add agent response
+      setTimeout(() => {
+        this.addMessage(sessionId, agentResponse, 'agent');
+        this.updateAgentStatus({ status: 'idle' });
+      }, 500);
+
+    } catch (error) {
+      logger.error('Error processing message with AI agent:', error);
+      const errorResponse = 'I apologize, but I encountered an error processing your request. Please try again or rephrase your question.';
+      setTimeout(() => {
+        this.addMessage(sessionId, errorResponse, 'agent');
+        this.updateAgentStatus({ status: 'idle' });
+      }, 500);
+    }
 
     return userMessage;
   }

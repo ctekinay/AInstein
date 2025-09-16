@@ -48,7 +48,7 @@ export const getChatSession = (req: Request, res: Response) => {
   }
 };
 
-export const sendMessage = (req: Request, res: Response) => {
+export const sendMessage = async (req: Request, res: Response) => {
   try {
     const { sessionId } = req.params;
     const { content } = req.body;
@@ -60,7 +60,7 @@ export const sendMessage = (req: Request, res: Response) => {
       });
     }
 
-    const message = chatService.processUserMessage(sessionId, content.trim());
+    const message = await chatService.processUserMessage(sessionId, content.trim());
 
     if (!message) {
       return res.status(404).json({

@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
       }
 
       // Process the message
-      const message = chatService.processUserMessage(sessionId, content.trim());
+      const message = await chatService.processUserMessage(sessionId, content.trim());
 
       if (!message) {
         socket.emit('error', { message: 'Session not found' });
