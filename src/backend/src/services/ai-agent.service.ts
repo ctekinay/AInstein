@@ -622,6 +622,14 @@ How can I help with your enterprise architecture challenge?`;
       return this.handleArchiMetalOrganizationalStructure(userMessage, analysisResult, context);
     }
 
+    // Initiative Detection: Adding new organizational units/capabilities
+    if ((userMessage.toLowerCase().includes('add') || userMessage.toLowerCase().includes('new') || userMessage.toLowerCase().includes('wants to')) &&
+        (userMessage.toLowerCase().includes('distribution center') || userMessage.toLowerCase().includes('dc ') ||
+         userMessage.toLowerCase().includes('center') || userMessage.toLowerCase().includes('office') ||
+         userMessage.toLowerCase().includes('facility') || userMessage.toLowerCase().includes('location'))) {
+      return this.handleArchiMetalInitiativeExpansion(userMessage, analysisResult, context, progressCallback);
+    }
+
     // Default ArchiMetal response
     return this.handleArchiMetalGeneral(userMessage, analysisResult, context);
   }
@@ -946,6 +954,167 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
     } else {
       response += `**Analysis completed based on actual ArchiMetal model data.**\n`;
     }
+
+    return response;
+  }
+
+  private handleArchiMetalInitiativeExpansion(userMessage: string, analysisResult: any, context: ConversationContext, progressCallback?: ProgressCallback): string {
+    const message = userMessage.toLowerCase();
+
+    // Extract new location/unit details
+    let newLocation = '';
+    let newUnitType = '';
+
+    if (message.includes('france')) newLocation = 'France';
+    else if (message.includes('germany')) newLocation = 'Germany';
+    else if (message.includes('italy')) newLocation = 'Italy';
+    else if (message.includes('uk') || message.includes('united kingdom')) newLocation = 'UK';
+
+    if (message.includes('distribution center') || message.includes('dc ')) newUnitType = 'Distribution Center';
+    else if (message.includes('production center')) newUnitType = 'Production Center';
+    else if (message.includes('office')) newUnitType = 'Office';
+
+    const newUnitName = newUnitType && newLocation ? `DC ${newLocation}` : 'New Organizational Unit';
+
+    if (progressCallback) {
+      progressCallback({ step: 'Analyzing existing organizational patterns', progress: 20 });
+    }
+
+    let response = `## 🏗️ **ArchiMetal Initiative Analysis: Adding ${newUnitName}**\n\n`;
+    response += `**Initiative:** ${userMessage}\n\n`;
+
+    if (progressCallback) {
+      progressCallback({ step: 'Identifying pattern from existing DCs', progress: 40 });
+    }
+
+    // Step 1: Analyze existing DC patterns
+    const businessActors = archiMateParser.getBusinessActors();
+    const existingDCs = businessActors.filter(actor =>
+      actor.name.toLowerCase().includes('dc ') ||
+      actor.name.toLowerCase().includes('distribution')
+    );
+
+    response += `### 📊 **Step 1: Pattern Analysis from Existing Distribution Centers**\n\n`;
+    response += `**Found ${existingDCs.length} existing DCs to use as patterns:**\n`;
+    existingDCs.forEach(dc => {
+      response += `- **${dc.name}** (ID: ${dc.id})\n`;
+    });
+    response += `\n`;
+
+    if (progressCallback) {
+      progressCallback({ step: 'Analyzing organizational relationships', progress: 60 });
+    }
+
+    // Step 2: Analyze composition relationships for existing DCs
+    const models = archiMateParser.getAllModels();
+    const dcRelationships: any[] = [];
+    const dcFunctions = new Set<string>();
+
+    for (const model of models) {
+      for (const relationship of model.relationships.values()) {
+        const sourceEl = model.elements.get(relationship.source);
+        const targetEl = model.elements.get(relationship.target);
+
+        if (sourceEl && targetEl && relationship.type.includes('Composition')) {
+          // Check if source is existing DC
+          if (existingDCs.some(dc => dc.id === sourceEl.id)) {
+            dcRelationships.push({
+              dc: sourceEl.name,
+              contains: targetEl.name,
+              targetType: targetEl.type.replace('archimate:', ''),
+              relationship
+            });
+            dcFunctions.add(targetEl.name);
+          }
+        }
+      }
+    }
+
+    response += `### 🔗 **Step 2: Required Business Functions (from existing DC patterns)**\n\n`;
+    if (dcRelationships.length > 0) {
+      const functionsByDC: {[key: string]: string[]} = {};
+      dcRelationships.forEach(rel => {
+        if (!functionsByDC[rel.dc]) functionsByDC[rel.dc] = [];
+        functionsByDC[rel.dc].push(rel.contains);
+      });
+
+      for (const [dc, functions] of Object.entries(functionsByDC)) {
+        response += `**${dc}** contains: ${functions.join(', ')}\n`;
+      }
+
+      response += `\n**${newUnitName} should contain:** ${Array.from(dcFunctions).join(', ')}\n\n`;
+    } else {
+      response += `❌ No composition relationships found for existing DCs. Using standard pattern.\n`;
+      response += `**${newUnitName} should contain:** Distribution, Commercial, Customer Relations\n\n`;
+    }
+
+    if (progressCallback) {
+      progressCallback({ step: 'Generating ArchiMate model updates', progress: 80 });
+    }
+
+    // Step 3: Generate ArchiMate XML updates
+    response += `### 🔧 **Step 3: ArchiMate Model Updates Required**\n\n`;
+    response += `**New Business Actor Element:**\n`;
+    response += `\`\`\`xml\n`;
+    response += `<element id="id-${Date.now()}" xsi:type="archimate:BusinessActor">\n`;
+    response += `  <name>${newUnitName}</name>\n`;
+    response += `  <documentation>Distribution center serving the ${newLocation} market</documentation>\n`;
+    response += `</element>\n`;
+    response += `\`\`\`\n\n`;
+
+    response += `**Required Composition Relationships:**\n`;
+    const requiredFunctions = dcFunctions.size > 0 ? Array.from(dcFunctions) : ['Distribution', 'Commercial', 'Customer Relations'];
+    requiredFunctions.forEach((func, index) => {
+      response += `\`\`\`xml\n`;
+      response += `<relationship id="rel-${Date.now() + index}" xsi:type="archimate:CompositionRelationship"\n`;
+      response += `            source="id-${Date.now()}" target="id-of-${func.toLowerCase().replace(/\s+/g, '-')}">\n`;
+      response += `  <documentation>${newUnitName} contains ${func}</documentation>\n`;
+      response += `</relationship>\n`;
+      response += `\`\`\`\n\n`;
+    });
+
+    response += `**Organizational Hierarchy Update:**\n`;
+    response += `\`\`\`xml\n`;
+    response += `<relationship id="rel-archimetal-${Date.now()}" xsi:type="archimate:CompositionRelationship"\n`;
+    response += `            source="id-70e443457ba447cf9f7be64c0a2e0ad1" target="id-${Date.now()}">\n`;
+    response += `  <documentation>ArchiMetal contains ${newUnitName}</documentation>\n`;
+    response += `</relationship>\n`;
+    response += `\`\`\`\n\n`;
+
+    if (progressCallback) {
+      progressCallback({ step: 'Finalizing impact analysis', progress: 100 });
+    }
+
+    // Step 4: Impact Analysis
+    response += `### 📈 **Step 4: Cross-Layer Impact Analysis**\n\n`;
+    response += `**Business Layer:**\n`;
+    response += `- New business actor: ${newUnitName}\n`;
+    response += `- Replicates functions: ${requiredFunctions.join(', ')}\n`;
+    response += `- Market coverage: ${newLocation}\n\n`;
+
+    response += `**Application Layer:**\n`;
+    response += `- Extend existing applications to support ${newLocation}\n`;
+    response += `- Configure regional settings and localization\n`;
+    response += `- Update data replication and backup strategies\n\n`;
+
+    response += `**Technology Layer:**\n`;
+    response += `- Network connectivity to ${newLocation}\n`;
+    response += `- Local IT infrastructure requirements\n`;
+    response += `- Security and compliance for ${newLocation} market\n\n`;
+
+    response += `### 👥 **Stakeholders to Involve**\n\n`;
+    response += `- **Business:** Regional ${newLocation} management, Distribution teams\n`;
+    response += `- **IT:** Infrastructure team, Application teams, Security\n`;
+    response += `- **Architecture:** Enterprise architects, Solution architects\n`;
+    response += `- **Compliance:** Legal, Regulatory affairs for ${newLocation}\n\n`;
+
+    response += `### 📋 **Next Steps for ADR**\n\n`;
+    response += `1. **Decision:** Approve ${newUnitName} expansion initiative\n`;
+    response += `2. **Architecture:** Update ArchiMate models with proposed elements\n`;
+    response += `3. **Implementation:** Plan infrastructure and application rollout\n`;
+    response += `4. **Governance:** Establish ${newLocation} operational procedures\n\n`;
+
+    response += `**This analysis provides the complete architectural foundation for the ${newUnitName} initiative.**\n`;
 
     return response;
   }
