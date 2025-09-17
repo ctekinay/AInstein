@@ -748,28 +748,85 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
   private handleArchiMetalOrganizationalStructure(userMessage: string, analysisResult: any, context: ConversationContext): string {
     const businessActors = archiMateParser.getBusinessActors();
     const businessProcesses = archiMateParser.getBusinessProcesses();
+    const models = archiMateParser.getAllModels();
 
     let response = `## 🏢 **ArchiMetal Organizational Structure Analysis**\n\n`;
     response += `**Based on Actual ArchiMate Model Data**\n\n`;
+
+    // Analyze architecture state (baseline vs target)
+    const elementsByModel: {[key: string]: {actors: any[], processes: any[]}} = {};
+
+    businessActors.forEach(actor => {
+      for (const model of models) {
+        if (model.elements.has(actor.id)) {
+          const modelName = model.metadata?.name || 'Unknown Model';
+          if (!elementsByModel[modelName]) elementsByModel[modelName] = {actors: [], processes: []};
+          elementsByModel[modelName].actors.push(actor);
+          break;
+        }
+      }
+    });
+
+    businessProcesses.forEach(process => {
+      for (const model of models) {
+        if (model.elements.has(process.id)) {
+          const modelName = model.metadata?.name || 'Unknown Model';
+          if (!elementsByModel[modelName]) elementsByModel[modelName] = {actors: [], processes: []};
+          elementsByModel[modelName].processes.push(process);
+          break;
+        }
+      }
+    });
+
+    // Show baseline vs target distinction if multiple models
+    if (Object.keys(elementsByModel).length > 1) {
+      response += `### 🎯 **Architecture State Analysis**\n\n`;
+      response += `**Elements distributed across ${Object.keys(elementsByModel).length} models:**\n\n`;
+
+      for (const [modelName, elements] of Object.entries(elementsByModel)) {
+        const isTarget = modelName.toLowerCase().includes('target') || modelName.toLowerCase().includes('to-be') ||
+                        modelName.toLowerCase().includes('future') || modelName.toLowerCase().includes('new');
+        const isBaseline = modelName.toLowerCase().includes('baseline') || modelName.toLowerCase().includes('as-is') ||
+                          modelName.toLowerCase().includes('current') || modelName.toLowerCase().includes('existing');
+
+        let stateIndicator = '📊';
+        if (isTarget) stateIndicator = '🎯';
+        else if (isBaseline) stateIndicator = '📋';
+
+        response += `${stateIndicator} **${modelName}** (${elements.actors.length} actors, ${elements.processes.length} processes)\n`;
+      }
+      response += `\n`;
+    }
 
     if (businessActors.length > 0) {
       response += `### 👥 **Business Actors** (${businessActors.length} total)\n\n`;
 
       const actorsByCategory: {[key: string]: any[]} = {};
       businessActors.forEach(actor => {
-        let category = 'Other';
+        let category = 'Organizational Units';
         const name = actor.name.toLowerCase();
 
         if (name.includes('management') || name.includes('manager') || name.includes('director')) {
           category = 'Management';
-        } else if (name.includes('sales') || name.includes('customer')) {
+        } else if (name.includes('sales') || name.includes('customer') || name.includes('commercial')) {
           category = 'Sales & Customer Relations';
         } else if (name.includes('production') || name.includes('manufacturing')) {
           category = 'Production';
-        } else if (name.includes('logistics') || name.includes('supply')) {
+        } else if (name.includes('logistics') || name.includes('supply') || name.includes('transportation')) {
           category = 'Logistics & Supply Chain';
         } else if (name.includes('finance') || name.includes('procurement')) {
           category = 'Finance & Procurement';
+        } else if (name.includes('hr') || name.includes('human resources')) {
+          category = 'Human Resources';
+        } else if (name.includes('quality')) {
+          category = 'Quality Management';
+        } else if (name.includes('dc ') || name.includes('distribution center') || name.includes('hq') ||
+                   name === 'archimetal' || name.includes('center') || name.includes('distribution')) {
+          category = 'Organizational Units';
+        } else if (name === 'business actor' || name.includes('generic')) {
+          category = 'Generic/Template Elements';
+        } else if (name.includes('partner') || name === 'customer') {
+          category = 'External Stakeholders';
         }
 
         if (!actorsByCategory[category]) actorsByCategory[category] = [];
@@ -795,6 +852,59 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
       response += `\n`;
     } else {
       response += `❌ **No Business Processes found** in the ArchiMetal models.\n\n`;
+    }
+
+    // Add organizational hierarchy analysis using relationships
+    if (businessActors.length > 0) {
+      response += `### 🏗️ **Organizational Hierarchy**\n\n`;
+
+      // Analyze composition relationships to understand organizational structure
+      const models = archiMateParser.getAllModels();
+      const orgRelationships: any[] = [];
+
+      for (const model of models) {
+        for (const relationship of model.relationships.values()) {
+          const sourceEl = model.elements.get(relationship.source);
+          const targetEl = model.elements.get(relationship.target);
+
+          if (sourceEl && targetEl &&
+              (sourceEl.type.includes('BusinessActor') || targetEl.type.includes('BusinessActor')) &&
+              (relationship.type.includes('Composition') || relationship.type.includes('Aggregation') ||
+               relationship.type.includes('Assignment'))) {
+            orgRelationships.push({
+              relationship,
+              source: sourceEl,
+              target: targetEl,
+              type: relationship.type.replace('archimate:', '')
+            });
+          }
+        }
+      }
+
+      if (orgRelationships.length > 0) {
+        response += `**Organizational Relationships Found:** ${orgRelationships.length}\n\n`;
+
+        // Group by relationship type for better understanding
+        const relsByType: {[key: string]: any[]} = {};
+        orgRelationships.forEach(rel => {
+          if (!relsByType[rel.type]) relsByType[rel.type] = [];
+          relsByType[rel.type].push(rel);
+        });
+
+        for (const [relType, rels] of Object.entries(relsByType)) {
+          response += `**${relType} Relationships:**\n`;
+          rels.slice(0, 5).forEach(rel => {
+            response += `- **${rel.source.name}** ${relType.toLowerCase()}s **${rel.target.name}**\n`;
+          });
+          if (rels.length > 5) {
+            response += `- ... and ${rels.length - 5} more relationships\n`;
+          }
+          response += `\n`;
+        }
+      } else {
+        response += `No explicit organizational hierarchy relationships found in the model.\n`;
+        response += `This suggests a flat organizational structure or relationships may be modeled differently.\n\n`;
+      }
     }
 
     const totalElements = businessActors.length + businessProcesses.length;
