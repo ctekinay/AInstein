@@ -17,6 +17,16 @@ Due to the lack of production knowledge graphs and test ArchiMate models from th
 - Complete enterprise architecture scenarios covering transformation challenges, CRM vision, baseline and target states
 - Comprehensive documentation for validation and testing
 
+## ArchiMetal Test Case
+
+The ArchiMetal case study provides a comprehensive enterprise architecture transformation scenario with:
+- **32 ArchiMate views** covering business, application, technology, and implementation perspectives
+- **Transformation scenarios** from baseline to target state
+- **Business process cooperation** and stakeholder views
+- **Detailed enterprise architecture** with process and application mappings
+
+This test environment enables development and validation of the AInstein solution without requiring production data or knowledge graphs from the company.
+
 ## Technology Stack
 
 ### Backend
@@ -81,26 +91,6 @@ src/
 - Handle namespaces and prefixes correctly
 - Preserve model integrity during updates
 - Stream large files instead of loading entirely into memory
-
-### ArchiMate Relationship Traversal Analysis
-**Implementation**: Perform actual graph traversal of ArchiMate relationships for dependency analysis
-- Use `archiMateParser.getElementRelationships(elementId)` for precise element lookup by ID
-- Filter relationships by source/target direction to distinguish "uses" vs "used by"
-- Provide relationship type analysis (CompositionRelationship, ServingRelationship, RealizationRelationship)
-- Generate impact chain analysis showing cascading dependencies
-- Include business context with specific element names and types
-
-**Queries Supported**:
-- "what applications call the [System]?" - Shows direct usage relationships
-- "what uses [Element]?" - Dependency analysis from source perspective
-- "what depends on [Element]?" - Impact analysis for target dependencies
-
-**Required Response Format**:
-- Element identification with specific ID and type
-- Relationship summary with counts and types
-- Applications/services using the target element
-- Dependencies of the target element
-- Impact chain analysis with affected element count
 
 ### ArchiMetal Case Study Analysis Requirements
 - Reference actual Figure numbers (Figure 6, Figure 12, etc.), never fabricate "View" numbers
@@ -225,57 +215,3 @@ This is an active development project focusing on building the complete technica
    - ADR generation and documentation
    - Real-time communication with frontend
 3. **Testing and Validation**: Use ArchiMetal test case to validate solution accuracy and completeness
-
-## ArchiMetal Test Case
-
-The ArchiMetal case study provides a comprehensive enterprise architecture transformation scenario with:
-- **32 ArchiMate views** covering business, application, technology, and implementation perspectives
-- **Transformation scenarios** from baseline to target state
-- **Business process cooperation** and stakeholder views
-- **Detailed enterprise architecture** with process and application mappings
-
-## Model Response Validation
-
-### Verification Checklist
-Every architectural analysis response must:
-- [ ] Reference actual figure numbers from ArchiMetal case study
-- [ ] Name specific ArchiMate elements (applications, processes, actors)
-- [ ] Demonstrate understanding of current vs. target state
-- [ ] Show evidence of parsing actual model relationships
-- [ ] Avoid generic EA patterns not present in the source
-
-### Test Queries for Model Validation
-Before running complex scenarios, verify the model can:
-1. "List all application components shown in Figure 12"
-2. "Describe the data flows between DC Benelux and Production Center"
-3. "What business processes are shown in the Register Order workflow?"
-4. "Which applications connect to the EAI Bus in the target architecture?"
-
-### Success Criteria
-A valid response demonstrates:
-- Specific element name usage from the ArchiMate models
-- Understanding of actual relationships (not assumed ones)
-- Reference to concrete figures and diagrams
-- Evidence of parsing model structure, not pattern matching
-
-## ArchiMate File Processing
-
-### XML Parsing Requirements
-- Load and parse actual .archimate XML files from /ArchiMetal/ directory
-- Extract element IDs, names, types, and relationship mappings
-- Build dependency graph from actual model connections
-- Validate element existence before referencing in responses
-
-### Model Understanding Verification
-The AI must demonstrate it can:
-- Identify parent-child relationships in organizational structure
-- Map application-to-application dependencies via interfaces
-- Trace business process flows and their supporting applications
-- Understand data object relationships and flows
-
-### Integration with Case Study Documentation
-- Cross-reference XML model elements with PDF figure descriptions
-- Validate consistency between visual models and XML structure
-- Use case study context to understand business meaning of technical elements
-
-This test environment enables development and validation of the AInstein solution without requiring production data or knowledge graphs from the company.

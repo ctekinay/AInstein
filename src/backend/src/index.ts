@@ -59,8 +59,13 @@ io.on('connection', (socket) => {
         return;
       }
 
-      // Process the message
-      const message = await chatService.processUserMessage(sessionId, content.trim());
+      // Create socket emitter function for real-time progress updates
+      const socketEmitter = (event: string, data: any) => {
+        io.to(sessionId).emit(event, data);
+      };
+
+      // Process the message with progress updates
+      const message = await chatService.processUserMessage(sessionId, content.trim(), socketEmitter);
 
       if (!message) {
         socket.emit('error', { message: 'Session not found' });
@@ -69,20 +74,6 @@ io.on('connection', (socket) => {
 
       // Emit the user message to all clients in the session
       io.to(sessionId).emit('new_message', message);
-
-      // Emit agent status updates
-      const statusUpdates = [
-        { status: 'processing', currentTask: 'Analyzing input', progress: 25 },
-        { status: 'analyzing', currentTask: 'Processing request', progress: 50 },
-        { status: 'generating', currentTask: 'Generating response', progress: 75 },
-      ];
-
-      for (let i = 0; i < statusUpdates.length; i++) {
-        setTimeout(() => {
-          chatService.updateAgentStatus(statusUpdates[i]);
-          io.to(sessionId).emit('agent_status', statusUpdates[i]);
-        }, (i + 1) * 300);
-      }
 
       // Simulate agent response after processing
       setTimeout(() => {

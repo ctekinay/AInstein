@@ -1,4 +1,5 @@
 import logger from '../utils/logger.js';
+import archiMateParser from './archimate-parser.service.js';
 
 interface ConversationContext {
   sessionId: string;
@@ -7,10 +8,15 @@ interface ConversationContext {
   archiMateModels?: string[];
 }
 
+interface ProgressCallback {
+  (update: { step: string; progress: number; details?: string }): void;
+}
+
 class AIAgentService {
   private conversationContexts: Map<string, ConversationContext> = new Map();
+  private modelsLoaded = false;
 
-  initializeContext(sessionId: string): void {
+  async initializeContext(sessionId: string): Promise<void> {
     if (!this.conversationContexts.has(sessionId)) {
       this.conversationContexts.set(sessionId, {
         sessionId,
@@ -19,11 +25,27 @@ class AIAgentService {
       });
       logger.info(`Initialized AI context for session ${sessionId}`);
     }
+
+    // Load ArchiMetal models if not already loaded
+    if (!this.modelsLoaded) {
+      try {
+        await archiMateParser.loadAllArchiMetalModels();
+        this.modelsLoaded = true;
+        logger.info('ArchiMetal models loaded for AI analysis');
+      } catch (error) {
+        logger.error('Failed to load ArchiMetal models:', error);
+      }
+    }
   }
 
-  async processMessage(sessionId: string, userMessage: string): Promise<string> {
-    this.initializeContext(sessionId);
+  async processMessage(sessionId: string, userMessage: string, progressCallback?: ProgressCallback): Promise<string> {
+    await this.initializeContext(sessionId);
     const context = this.conversationContexts.get(sessionId)!;
+
+    // Send initial progress update
+    if (progressCallback) {
+      progressCallback({ step: 'Initializing analysis', progress: 10 });
+    }
 
     // Add user message to history
     context.messageHistory.push({
@@ -33,7 +55,10 @@ class AIAgentService {
     });
 
     // Generate intelligent response based on content
-    const response = await this.generateResponse(userMessage, context);
+    if (progressCallback) {
+      progressCallback({ step: 'Analyzing message content', progress: 25 });
+    }
+    const response = await this.generateResponse(userMessage, context, progressCallback);
 
     // Add assistant response to history
     context.messageHistory.push({
@@ -46,13 +71,19 @@ class AIAgentService {
     return response;
   }
 
-  private async generateResponse(userMessage: string, context: ConversationContext): Promise<string> {
+  private async generateResponse(userMessage: string, context: ConversationContext, progressCallback?: ProgressCallback): Promise<string> {
     // First, analyze the message for specific scenarios and content
+    if (progressCallback) {
+      progressCallback({ step: 'Detecting scenario type', progress: 35 });
+    }
     const analysisResult = this.analyzeMessageContent(userMessage);
 
     // Handle specific ArchiMetal scenarios first (highest priority)
     if (analysisResult.isArchiMetalScenario) {
-      return this.handleArchiMetalScenario(userMessage, analysisResult, context);
+      if (progressCallback) {
+        progressCallback({ step: 'Loading ArchiMetal models', progress: 50 });
+      }
+      return await this.handleArchiMetalScenario(userMessage, analysisResult, context, progressCallback);
     }
 
     // Handle specific architecture change requests
@@ -62,7 +93,7 @@ class AIAgentService {
 
     // Handle model analysis requests
     if (analysisResult.isModelAnalysisRequest) {
-      return this.handleModelAnalysisRequest(userMessage, analysisResult, context);
+      return await this.handleModelAnalysisRequest(userMessage, analysisResult, context);
     }
 
     // Handle ADR requests
@@ -135,7 +166,9 @@ class AIAgentService {
     const archiMetalIndicators = [
       'archimetal', 'crm system', 'salesforce', 'steel', 'production', 'manufacturing',
       'distribution center', 'dc benelux', 'dc spain', 'customer relations',
-      'hot strip mill', 'procurement', 'logistics', 'enterprise architecture'
+      'hot strip mill', 'procurement', 'logistics', 'enterprise architecture',
+      'what applications use', 'what depends on', 'impact of', 'applications call',
+      'what uses the', 'dependencies', 'relationship'
     ];
     return archiMetalIndicators.some(indicator => message.includes(indicator));
   }
@@ -174,8 +207,8 @@ class AIAgentService {
   }
 
   private detectModelAnalysis(message: string): boolean {
-    const analysisKeywords = ['analyze', 'analyse', 'review', 'assess', 'evaluate', 'examine'];
-    const modelKeywords = ['model', 'architecture', 'design', 'structure'];
+    const analysisKeywords = ['analyze', 'analyse', 'review', 'assess', 'evaluate', 'examine', 'show', 'list', 'how many', 'count'];
+    const modelKeywords = ['model', 'architecture', 'design', 'structure', 'summary', 'relationship', 'element', 'archimate'];
     return analysisKeywords.some(kw => message.includes(kw)) && modelKeywords.some(kw => message.includes(kw));
   }
 
@@ -205,10 +238,70 @@ class AIAgentService {
 [Architecture change analysis would go here based on the specific request]`;
   }
 
-  private handleModelAnalysisRequest(userMessage: string, analysisResult: any, context: ConversationContext): string {
-    return `I'll perform a detailed model analysis for you...
+  private async handleModelAnalysisRequest(userMessage: string, analysisResult: any, context: ConversationContext): Promise<string> {
+    const message = userMessage.toLowerCase();
 
-[Model analysis would go here]`;
+    // Load ArchiMetal models if not already loaded
+    if (archiMateParser.getAllModels().length === 0) {
+      await archiMateParser.loadAllArchiMetalModels();
+    }
+
+    // Handle model summary requests
+    if (message.includes('summary') || message.includes('how many') || message.includes('count')) {
+      const summary = archiMateParser.getModelSummary();
+      let response = `## ArchiMetal Model Summary\n\n`;
+
+      for (const [modelName, stats] of Object.entries(summary)) {
+        const modelStats = stats as any;
+        response += `**${modelName}:**\n`;
+        response += `- Elements: ${modelStats.elements}\n`;
+        response += `- Relationships: ${modelStats.relationships}\n`;
+        response += `- Views: ${modelStats.views}\n`;
+        response += `- Business Layer: ${modelStats.folders.business} elements\n`;
+        response += `- Application Layer: ${modelStats.folders.application} elements\n`;
+        response += `- Technology Layer: ${modelStats.folders.technology} elements\n\n`;
+      }
+
+      response += `### Total across all models:\n`;
+      const totalElements = Object.values(summary).reduce((sum: number, model: any) => sum + model.elements, 0);
+      const totalRelationships = Object.values(summary).reduce((sum: number, model: any) => sum + model.relationships, 0);
+      response += `- **${totalElements}** total elements\n`;
+      response += `- **${totalRelationships}** total relationships\n`;
+
+      return response;
+    }
+
+    // Handle relationship-specific queries
+    if (message.includes('relationship')) {
+      const models = archiMateParser.getAllModels();
+      let totalRelationships = 0;
+      let response = `## ArchiMate Relationship Analysis\n\n`;
+
+      for (const model of models) {
+        const relationshipCount = model.relationships.size;
+        totalRelationships += relationshipCount;
+        response += `**${model.name}:** ${relationshipCount} relationships\n`;
+      }
+
+      response += `\n**Total relationships:** ${totalRelationships}\n\n`;
+
+      if (totalRelationships > 0) {
+        response += `### Available relationship queries:\n`;
+        response += `- "Show composition relationships" - see parent-child structures\n`;
+        response += `- "Show triggering relationships" - see process flows\n`;
+        response += `- "Show access relationships" - see data access patterns\n`;
+        response += `- "What impacts the CRM system?" - see impact analysis\n`;
+      }
+
+      return response;
+    }
+
+    // Default model analysis
+    return `I'll perform a detailed model analysis for you. Please specify what you'd like to analyze:
+- Model summary with counts
+- Relationship analysis
+- Element impact analysis
+- Specific layer analysis (business, application, technology)`;
   }
 
   private handleADRRequest(userMessage: string, analysisResult: any, context: ConversationContext): string {
@@ -248,22 +341,63 @@ Try asking: "Analyze the impact of replacing ArchiMetal's CRM with Salesforce"`;
   }
 
   private handleContextualResponse(userMessage: string, analysisResult: any, context: ConversationContext): string {
-    // Try to provide a meaningful response based on extracted entities
-    const { technologies, systems, processes } = analysisResult.extractedEntities;
+    // Check if models are loaded and provide diagnostic info
+    const modelSummary = archiMateParser.getModelSummary();
+    const validationIssues = archiMateParser.validateModelData();
 
-    if (technologies.length > 0 || systems.length > 0) {
-      return `I can see you're asking about ${technologies.concat(systems).join(', ')}. Let me provide specific guidance for your architectural context...
+    if (validationIssues.length > 0) {
+      return `⚠️ **ArchiMetal Models Status:**
 
-[Contextual response based on extracted entities]`;
+**Issues Found:**
+${validationIssues.map(issue => `- ${issue}`).join('\n')}
+
+**Loaded Models:** ${Object.keys(modelSummary).join(', ') || 'None'}
+
+I'm working to load the ArchiMetal model data to provide accurate architectural analysis. Please note that my responses will be limited until the complete model data is available.
+
+For your question: "${userMessage.substring(0, 100)}..."
+
+I can help once the ArchiMetal models are properly loaded. The models should include:
+- Business actors and processes
+- Application components and services
+- Technology infrastructure
+- Implementation and migration views
+
+Would you like me to attempt to reload the models or provide general architectural guidance in the meantime?`;
     }
 
-    return `I'd be happy to help with your architectural question. Could you provide more specific details about:
+    // Try to provide a meaningful response based on extracted entities
+    const { technologies, systems, processes } = analysisResult.extractedEntities;
+    const totalElements = Object.values(modelSummary).reduce((sum: number, model: any) => sum + model.elements, 0);
 
-- Which ArchiMetal views or components you're interested in?
-- What type of analysis or guidance you need?
-- Any specific technologies or systems involved?
+    if (technologies.length > 0 || systems.length > 0) {
+      return `Based on the loaded ArchiMetal models (${totalElements} elements), I can see you're asking about ${technologies.concat(systems).join(', ')}.
 
-I have detailed knowledge of the ArchiMetal case study and can provide targeted architectural advice.`;
+**Available Model Data:**
+${Object.entries(modelSummary).map(([name, summary]: [string, any]) =>
+  `- ${name}: ${summary.elements} elements`
+).join('\n')}
+
+Let me analyze the specific elements you mentioned against the actual model data...
+
+[Analysis based on real ArchiMetal elements would go here]`;
+    }
+
+    return `I have access to ${totalElements} ArchiMetal elements across ${Object.keys(modelSummary).length} models.
+
+**Available for Analysis:**
+${Object.entries(modelSummary).map(([name, summary]: [string, any]) =>
+  `- **${name}**: ${summary.elements} elements across ${Object.values(summary.folders).reduce((a: number, b: any) => a + (b as number), 0)} categorized folders`
+).join('\n')}
+
+For your question about: "${userMessage.substring(0, 100)}..."
+
+Could you specify:
+- Which specific ArchiMetal elements you're interested in?
+- What type of architectural analysis you need?
+- Any particular business processes or applications to focus on?
+
+I can provide detailed analysis based on the actual model relationships and dependencies.`;
   }
 
   private isArchitectureQuestion(message: string): boolean {
@@ -464,10 +598,14 @@ What transformation scenario are you working on?`;
 How can I help with your enterprise architecture challenge?`;
   }
 
-  private handleArchiMetalScenario(userMessage: string, analysisResult: any, context: ConversationContext): string {
+  private async handleArchiMetalScenario(userMessage: string, analysisResult: any, context: ConversationContext, progressCallback?: ProgressCallback): Promise<string> {
     // Detect specific ArchiMetal scenario type
-    if (userMessage.toLowerCase().includes('salesforce') && userMessage.toLowerCase().includes('crm')) {
-      return this.handleArchiMetalCRMChange(userMessage, analysisResult, context);
+    if (userMessage.toLowerCase().includes('crm') || userMessage.toLowerCase().includes('salesforce') ||
+        userMessage.toLowerCase().includes('customer relations') || userMessage.toLowerCase().includes('customer relationship')) {
+      if (progressCallback) {
+        progressCallback({ step: 'Analyzing CRM elements', progress: 60 });
+      }
+      return await this.handleArchiMetalCRMChange(userMessage, analysisResult, context, progressCallback);
     }
 
     if (userMessage.toLowerCase().includes('customer order') || userMessage.toLowerCase().includes('order process')) {
@@ -482,74 +620,106 @@ How can I help with your enterprise architecture challenge?`;
     return this.handleArchiMetalGeneral(userMessage, analysisResult, context);
   }
 
-  private handleArchiMetalCRMChange(userMessage: string, analysisResult: any, context: ConversationContext): string {
+  private handleArchiMetalCRMChange(userMessage: string, analysisResult: any, context: ConversationContext, progressCallback?: ProgressCallback): string {
+    // **RELATIONSHIP TRAVERSAL: Check for specific relationship queries**
+    const message = userMessage.toLowerCase();
+    if (message.includes('what applications call') || message.includes('what uses') || message.includes('what depends on')) {
+      return this.performRelationshipAnalysis(userMessage, progressCallback);
+    }
+
+    // Get actual ArchiMetal data
+    if (progressCallback) {
+      progressCallback({ step: 'Loading business actors', progress: 65 });
+    }
+    const businessActors = archiMateParser.getArchiMetalBusinessUnits();
+
+    if (progressCallback) {
+      progressCallback({ step: 'Extracting CRM elements', progress: 70 });
+    }
+    const crmElements = archiMateParser.getCRMRelatedElements();
+
+    if (progressCallback) {
+      progressCallback({ step: 'Analyzing order processes', progress: 75 });
+    }
+    const orderElements = archiMateParser.getOrderProcessElements();
+
+    if (progressCallback) {
+      progressCallback({ step: 'Gathering model summary', progress: 80 });
+    }
+    const allModels = archiMateParser.getAllModels();
+    const modelSummary = archiMateParser.getModelSummary();
+
+    // Validate we have actual data
+    const validationIssues = archiMateParser.validateModelData();
+    if (validationIssues.length > 0) {
+      return `⚠️ **ArchiMetal Model Data Issues Detected:**
+
+${validationIssues.map(issue => `- ${issue}`).join('\n')}
+
+I cannot provide accurate architecture analysis without access to the actual ArchiMetal model data. Please ensure the ArchiMetal .archimate files are properly loaded.
+
+**Available Models:** ${Object.keys(modelSummary).join(', ') || 'None'}
+**Total Elements Loaded:** ${Object.values(modelSummary).reduce((sum: number, model: any) => sum + model.elements, 0) || 0}`;
+    }
+
+    // Build response based on actual data
+    const businessActorNames = businessActors.map(actor => actor.name);
+    const dcActors = businessActors.filter(actor =>
+      actor.name.includes('DC ') || actor.name.includes('Distribution')
+    );
+
+    if (progressCallback) {
+      progressCallback({ step: 'Generating comprehensive analysis', progress: 90 });
+    }
+
     return `## ArchiMetal CRM System Change Analysis
+**Based on Actual ArchiMetal Model Data**
 
 **🔍 IMPACT ASSESSMENT: Salesforce CRM Replacement**
 
-Based on ArchiMetal's current architecture (Views 8, 17, 21-27), replacing the planned centralized CRM with Salesforce will have **significant cross-layer impacts**:
+I've analyzed the actual ArchiMetal models and found the following elements that will be affected:
 
-### **📊 AFFECTED ARCHIMATE VIEWS:**
-- **View 8**: CRM Vision - Complete redesign required
-- **View 17**: New Customer Service - Integration points changed
-- **Views 21-27**: Customer order processes - API interfaces modified
-- **Views 29-30**: Business cooperation models - External dependencies
+### **📊 LOADED ARCHIMATE MODELS:**
+${Object.entries(modelSummary).map(([name, summary]: [string, any]) =>
+  `- **${name}**: ${summary.elements} elements, ${summary.relationships} relationships`
+).join('\n')}
 
-### **🏗️ ARCHITECTURE IMPACT ANALYSIS:**
+### **🏢 AFFECTED BUSINESS ACTORS (from actual models):**
+${businessActorNames.length > 0 ?
+  businessActorNames.map(name => `- **${name}**`).join('\n') :
+  'No business actors found in loaded models'
+}
 
-**BUSINESS LAYER CHANGES:**
-- **Customer Relations Business Actor**: New Salesforce-specific processes
-- **Customer Order Process**: Modified business services and interfaces
-- **Customer Registration Process**: Salesforce workflow integration
+### **🏗️ CRM-RELATED ELEMENTS FOUND:**
+${crmElements.length > 0 ?
+  crmElements.map(element => `- **${element.name}** (${element.type})`).join('\n') :
+  'No CRM-related elements found in current models'
+}
 
-**APPLICATION LAYER CHANGES:**
-- **CRM Application Component**: Replace with Salesforce SaaS
-- **Customer Data Service**: New Salesforce APIs and data model
-- **Order Management Interface**: Salesforce integration layer required
-- **DC Benelux/Spain Systems**: Modified customer data synchronization
+### **📋 ORDER PROCESS ELEMENTS:**
+${orderElements.length > 0 ?
+  orderElements.map(element => `- **${element.name}** (${element.type})`).join('\n') :
+  'No order process elements found in current models'
+}
 
-**TECHNOLOGY LAYER IMPACTS:**
-- **Integration Infrastructure**: New Salesforce connectors needed
-- **Data Storage**: Customer data now external (Salesforce cloud)
-- **Security Services**: SSO integration with Salesforce required
-- **Network Services**: External API bandwidth and reliability considerations
+### **🎯 DISTRIBUTION CENTER IMPACT:**
+${dcActors.length > 0 ?
+  dcActors.map(dc => `- **${dc.name}**: Customer data synchronization will require Salesforce integration`).join('\n') :
+  'No distribution center actors identified in current models'
+}
 
-### **⚠️ CRITICAL DEPENDENCIES AFFECTED:**
-1. **Customer Order Processing** (Views 25-26): API redesign needed
-2. **Distribution Centers** (DC Benelux, DC Spain): Customer sync protocols
-3. **Steel Production Planning**: Customer demand data integration
-4. **Financial Systems**: Salesforce billing integration
+### **⚠️ ANALYSIS LIMITATION:**
+This analysis is based on the currently loaded ArchiMetal models. For a complete impact assessment, I need:
+1. All 32 ArchiMate figures referenced in the case study
+2. Complete element relationship mappings
+3. Application and technology layer details
 
-### **🎯 RECOMMENDED ARCHIMATE MODEL MODIFICATIONS:**
+**Next Steps:**
+1. Verify all ArchiMetal .archimate files are loaded
+2. Cross-reference with specific figure numbers from the case study
+3. Build detailed dependency mapping from actual model relationships
 
-**1. Update Application Cooperation View (View 17):**
-- Replace internal CRM component with Salesforce service
-- Add Salesforce API gateway component
-- Model new data flows and integration points
-
-**2. Modify Customer Process Views (Views 21-27):**
-- Update customer registration workflows
-- Redesign order-to-contract business cooperation
-- Add Salesforce-specific business services
-
-**3. Create New Implementation View:**
-- Migration timeline from centralized CRM to Salesforce
-- Parallel running period architecture
-- Data migration work packages
-
-**4. Update Technology Infrastructure:**
-- Add Salesforce cloud services
-- Model new integration layer
-- Document API dependencies and SLAs
-
-### **📋 IMMEDIATE ACTIONS REQUIRED:**
-1. **ADR Documentation**: Create decision record for CRM change
-2. **Integration Design**: Define Salesforce API integration architecture
-3. **Data Migration Plan**: Map customer data from current systems
-4. **Security Review**: Assess data sovereignty and compliance impacts
-5. **Testing Strategy**: Plan integration testing with DC systems
-
-**Would you like me to elaborate on any specific aspect of this impact analysis or help design the integration architecture?**`;
+Would you like me to analyze specific elements or relationships from the loaded models?`;
   }
 
   private handleArchiMetalOrderProcess(userMessage: string, analysisResult: any, context: ConversationContext): string {
@@ -680,6 +850,128 @@ Could you be more specific about what architectural challenge you're working on?
   getContext(sessionId: string): ConversationContext | undefined {
     return this.conversationContexts.get(sessionId);
   }
+
+  // **NEW: Relationship Traversal Analysis - 2025-09-17 07:30**
+  // Performs actual graph traversal of ArchiMate relationships instead of keyword matching
+  private performRelationshipAnalysis(userMessage: string, progressCallback?: ProgressCallback): string {
+    const message = userMessage.toLowerCase();
+
+    if (progressCallback) {
+      progressCallback({ step: 'Finding target element in models', progress: 70 });
+    }
+
+    // Extract target element from query
+    let targetElementName = '';
+    if (message.includes('crm system')) targetElementName = 'CRM';
+    else if (message.includes('crm')) targetElementName = 'CRM';
+    else if (message.includes('salesforce')) targetElementName = 'Salesforce';
+
+    // Find the actual CRM element in the ArchiMate models using precise matching
+    const models = archiMateParser.getAllModels();
+    let foundElement = null;
+
+    for (const model of models) {
+      for (const element of model.elements.values()) {
+        if (element.name.toLowerCase().includes(targetElementName.toLowerCase()) &&
+            (element.type.includes('ApplicationComponent') || element.type.includes('ApplicationService'))) {
+          foundElement = element;
+          break;
+        }
+      }
+      if (foundElement) break;
+    }
+
+    if (!foundElement) {
+      return `❌ **Element "${targetElementName}" Not Found**\n\nI couldn't find "${targetElementName}" as an ApplicationComponent or ApplicationService in the ArchiMetal models.\n\n**Available CRM-related elements:**\n${archiMateParser.getCRMRelatedElements().slice(0, 5).map(el => `- ${el.name} (${el.type})`).join('\n')}`;
+    }
+
+    if (progressCallback) {
+      progressCallback({ step: 'Traversing relationship graph', progress: 85 });
+    }
+
+    // **CORE FIX: Use actual relationship traversal instead of keyword search**
+    const relationships = archiMateParser.getElementRelationships(foundElement.id);
+
+    if (progressCallback) {
+      progressCallback({ step: 'Building dependency chain analysis', progress: 90 });
+    }
+
+    let response = `## 🔍 **Relationship Dependency Analysis: "${foundElement.name}"**\n\n`;
+    response += `**Element Type:** ${foundElement.type.replace('archimate:', '')}\n`;
+    response += `**Element ID:** ${foundElement.id}\n\n`;
+
+    if (relationships.length === 0) {
+      response += `❌ **No relationships found** - This indicates a parsing issue or isolated element.\n\n`;
+      response += `**Total relationships in models:** ${models.reduce((sum, model) => sum + model.relationships.size, 0)}\n`;
+      return response;
+    }
+
+    response += `### 📊 **Relationship Summary**\n`;
+    response += `**Direct Relationships:** ${relationships.length}\n\n`;
+
+    // Group by relationship type with business meaning
+    const relationshipsByType: {[key: string]: any[]} = {};
+    relationships.forEach(rel => {
+      const type = rel.type.replace('archimate:', '');
+      if (!relationshipsByType[type]) relationshipsByType[type] = [];
+      relationshipsByType[type].push(rel);
+    });
+
+    response += `**Relationship Types Found:**\n`;
+    for (const [type, rels] of Object.entries(relationshipsByType)) {
+      response += `- **${type}:** ${rels.length} connections\n`;
+    }
+
+    // **Answer the specific question: "What applications USE the CRM System?"**
+    response += `\n### 🎯 **Applications Using "${foundElement.name}"**\n`;
+    const usageRelationships = relationships.filter(rel => rel.target === foundElement.id);
+
+    if (usageRelationships.length > 0) {
+      usageRelationships.forEach(rel => {
+        const sourceEl = models.find(m => m.elements.has(rel.source))?.elements.get(rel.source);
+        if (sourceEl) {
+          const relationshipType = rel.type.replace('archimate:', '');
+          response += `- **${sourceEl.name}** (${sourceEl.type.replace('archimate:', '')}) → *${relationshipType}* → ${foundElement.name}\n`;
+        }
+      });
+    } else {
+      response += `No applications directly use "${foundElement.name}" as a target in the relationship graph.\n`;
+    }
+
+    // **Dependencies that CRM System uses**
+    response += `\n### 📤 **Dependencies of "${foundElement.name}"**\n`;
+    const dependencies = relationships.filter(rel => rel.source === foundElement.id);
+
+    if (dependencies.length > 0) {
+      dependencies.forEach(rel => {
+        const targetEl = models.find(m => m.elements.has(rel.target))?.elements.get(rel.target);
+        if (targetEl) {
+          const relationshipType = rel.type.replace('archimate:', '');
+          response += `- ${foundElement.name} → *${relationshipType}* → **${targetEl.name}** (${targetEl.type.replace('archimate:', '')})\n`;
+        }
+      });
+    } else {
+      response += `"${foundElement.name}" has no outgoing dependencies.\n`;
+    }
+
+    // **Impact Analysis through relationship chains**
+    response += `\n### 💥 **Impact Chain Analysis**\n`;
+    const impactedElements = archiMateParser.getImpactedElements(foundElement.id, 2);
+    if (impactedElements.length > 0) {
+      response += `**${impactedElements.length} elements** in the dependency chain would be affected:\n`;
+      impactedElements.slice(0, 8).forEach(el => {
+        response += `- ${el.name} (${el.type.replace('archimate:', '')})\n`;
+      });
+      if (impactedElements.length > 8) {
+        response += `... and ${impactedElements.length - 8} more elements in the chain\n`;
+      }
+    } else {
+      response += `No cascading impacts detected in the relationship graph.\n`;
+    }
+
+    return response;
+  }
+
 }
 
 export default new AIAgentService();

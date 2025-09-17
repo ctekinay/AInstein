@@ -1,0 +1,1 @@
+ArchiMetal's IT department has decided to replace the planned centralized CRM system with Salesforce CRM due to budget constraints and faster implementation timeline. Analyze the impact of this change on our enterprise architecture and recommend the necessary modifications to our ArchiMate models.

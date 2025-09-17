@@ -84,9 +84,16 @@ export const ChatInterface = () => {
       {/* Header */}
       <header className="bg-white border-b px-6 py-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">AInstein</h1>
-            <p className="text-sm text-gray-600">AI Architecture Assistant</p>
+          <div className="flex items-center gap-4">
+            <img
+              src="/alliander_logo.jpeg"
+              alt="Alliander"
+              className="h-16 w-auto"
+            />
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">AInstein</h1>
+              <p className="text-sm text-gray-600">AI Architecture Assistant</p>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">

@@ -1,0 +1,109 @@
+You're right - let me provide much more specific test scenarios with clear success criteria.
+
+## Test Scenario 1: Application Layer - SaaS CRM Replacement
+
+### 1. User Prompt
+```
+"ArchiMetal's IT department has decided to replace the planned centralized CRM system with Salesforce CRM due to budget constraints and faster implementation timeline. Analyze the impact of this change on our enterprise architecture and recommend the necessary modifications to our ArchiMate models."
+```
+
+### 2. Expected AI Model Steps
+The model should perform these specific steps:
+1. **Identify affected elements**: CRM System application component, Customer Data object, EAI Bus interfaces
+2. **Trace dependencies**: Find all applications that interface with CRM (DC Customer Relations, Commercial applications, Customer Order Monitoring)
+3. **Analyze data flow changes**: Map how customer data flows change from internal database to Salesforce APIs
+4. **Assess integration impacts**: Identify new API interfaces needed, authentication changes, data synchronization requirements
+5. **Consider business process impacts**: Determine if existing processes (Develop Contract, Register Order) need modification
+6. **Evaluate compliance/security**: Consider data residency, GDPR implications of cloud storage
+
+### 3. Expected Model Analysis Output
+The model should provide:
+- **Direct Impacts**: "CRM System component changes from internal application to SaaS service"
+- **Cascade Impacts**: "EAI Bus requires new Salesforce API connector, Customer Data object becomes externally managed"
+- **New Elements Required**: "Salesforce API Interface, Cloud Authentication Service, Data Sync Process"
+- **Risk Assessment**: "Data sovereignty concerns, API rate limiting, potential latency increases"
+- **Migration Dependencies**: "Customer data migration process, parallel running period, cutover strategy"
+
+### 4. Success Criteria - Model Changes Expected
+**Modified Views:**
+- **Application Cooperation View (Figure 19)**: CRM System component changes to external service with API interface
+- **Information Structure View**: Customer Data object shows external management
+- **Business Process Views (Figures 22, 24)**: New API interaction patterns
+
+**New Elements Required:**
+- Salesforce API Interface component
+- Cloud Authentication Service
+- Customer Data Synchronization Process
+- External Data Store (Salesforce Database)
+
+## Test Scenario 2: Business Architecture - Nordic Expansion
+
+### 1. User Prompt
+```
+"ArchiMetal is expanding into Nordic markets and needs to establish DC Nordic in Stockholm. This region requires integration with local steel suppliers, compliance with EU Steel Regulation 2023, and support for Nordic banking standards. Design the architectural changes needed."
+```
+
+### 2. Expected AI Model Steps
+1. **Analyze organizational pattern**: Understand existing DC structure (Benelux, Spain, East Europe)
+2. **Identify replicable elements**: Standard DC business functions (Commercial, Customer Relations, Distribution)
+3. **Determine regional variations**: Nordic-specific compliance, supplier integration, banking standards
+4. **Map value stream impacts**: New supplier relationships, potential new product lines
+5. **Assess technology implications**: Regional systems, language support, currency handling
+6. **Consider governance changes**: HQ oversight patterns, reporting structures
+
+### 3. Expected Model Analysis Output
+- **Organizational Impact**: "New business unit DC Nordic replicates existing DC pattern with regional adaptations"
+- **Process Variations**: "Procurement process requires Nordic supplier integration, compliance processes need EU Steel Regulation checks"
+- **New Relationships**: "DC Nordic to HQ Finance (currency conversion), DC Nordic to Nordic Suppliers"
+- **Technology Requirements**: "Nordic banking integration, Swedish language support, EUR currency handling"
+- **Governance Changes**: "Extended HQ oversight to include Nordic compliance monitoring"
+
+### 4. Success Criteria - Model Changes Expected
+**New/Modified Views:**
+- **Organizational Structure (Figure 14)**: Add DC Nordic as fourth distribution center
+- **Business Process Cooperation**: Replicate core processes with Nordic variations
+- **Value Stream View**: Show Nordic supplier integration point
+
+**New Elements Required:**
+- DC Nordic business unit
+- Nordic Supplier actors
+- EU Steel Compliance Process
+- Nordic Banking Interface
+- Swedish Language Support Service
+
+## Test Scenario 3: Technology Infrastructure - Hybrid Cloud Migration
+
+### 1. User Prompt
+```
+"Due to increasing maintenance costs, ArchiMetal wants to migrate their mainframe-based corporate data center to Azure cloud while maintaining ISA-95 compliance for manufacturing systems. The PC manufacturing systems must remain on-premises. Design the hybrid architecture."
+```
+
+### 2. Expected AI Model Steps
+1. **Categorize workloads**: Separate manufacturing-critical (stay on-premise) from business systems (cloud-eligible)
+2. **Analyze ISA-95 constraints**: Understand which systems must maintain low-latency connections
+3. **Design hybrid connectivity**: Network architecture between cloud and on-premise
+4. **Map data residency requirements**: Customer data, manufacturing data, financial data
+5. **Consider disaster recovery**: Backup and recovery across hybrid environment
+6. **Assess security implications**: Network security, identity management across environments
+
+### 3. Expected Model Analysis Output
+- **Migration Scope**: "ERP Application, CRM System, Financial Applications move to cloud; MES, Production Control remain on-premise"
+- **Connectivity Requirements**: "High-bandwidth, low-latency connection between Azure and PC for ERP-MES integration"
+- **Data Strategy**: "Customer data in Azure, real-time manufacturing data on-premise with cloud analytics copy"
+- **Security Changes**: "Hybrid identity management, network segmentation, encrypted site-to-site VPN"
+- **Compliance Impact**: "ISA-95 compliance maintained through on-premise MES, cloud systems provide enterprise functions"
+
+### 4. Success Criteria - Model Changes Expected
+**Modified Views:**
+- **Technology Infrastructure (Figure 13)**: Split into Cloud Services and On-Premise Infrastructure
+- **Application Landscape (Figure 19)**: Show cloud vs. on-premise application placement
+- **Information Flow Diagrams**: New cloud-to-on-premise data flows
+
+**New Technology Elements:**
+- Azure Cloud Platform
+- Site-to-Site VPN Connection
+- Hybrid Identity Service
+- Cloud Database Services
+- On-Premise to Cloud Data Replication
+
+Each scenario tests different reasoning capabilities: application integration complexity, business pattern replication, and technology constraint management. The success criteria provide measurable outcomes for evaluating your AI model's architectural reasoning abilities.

@@ -60,6 +60,7 @@ export const sendMessage = async (req: Request, res: Response) => {
       });
     }
 
+    // For HTTP API calls, we don't have WebSocket, so no progress updates
     const message = await chatService.processUserMessage(sessionId, content.trim());
 
     if (!message) {
