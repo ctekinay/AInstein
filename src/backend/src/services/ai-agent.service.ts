@@ -200,7 +200,11 @@ class AIAgentService {
 
   private detectGreeting(message: string): boolean {
     const greetings = ['hello', 'hi', 'hey', 'good morning', 'good afternoon'];
-    return greetings.some(greeting => message.includes(greeting));
+    return greetings.some(greeting => {
+      // Use word boundaries to avoid false matches like "ArchiMetal" containing "hi"
+      const regex = new RegExp(`\\b${greeting}\\b`, 'i');
+      return regex.test(message);
+    });
   }
 
   private detectHelpRequest(message: string): boolean {
