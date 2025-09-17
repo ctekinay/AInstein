@@ -25,7 +25,7 @@ export const MessageList = () => {
             Welcome to AInstein
           </h3>
           <p className="text-gray-600">
-            Your AI-powered architecture assistant that streamlines the entire ESA workflows. I can help you evaluate initiatives, analyze the impact of change across relevant business capabilities/services/objects and architectural layers and aspects, identify relevant stakeholders, automatically identify and update corresponding ArchiMate models, and generate ADRs to maintain alignment and transparency across the organization.
+            Your AI-powered architecture assistant that streamlines ESA workflows. I evaluate initiatives, analyze cross-layer impact, identify stakeholders, update ArchiMate models, and generate ADRs to maintain organizational alignment and transparency.
           </p>
         </div>
       </div>
