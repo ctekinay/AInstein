@@ -891,13 +891,39 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
           relsByType[rel.type].push(rel);
         });
 
+        // Add business context explanation for relationship types
+        response += `**Business Context:**\n`;
+        if (relsByType['CompositionRelationship']) {
+          response += `- **Composition relationships** show organizational containment (units that contain other units)\n`;
+        }
+        if (relsByType['AssignmentRelationship']) {
+          response += `- **Assignment relationships** show responsibility allocation (who is assigned to what)\n`;
+        }
+        if (relsByType['AggregationRelationship']) {
+          response += `- **Aggregation relationships** show organizational groupings (units that work together)\n`;
+        }
+        response += `\n`;
+
         for (const [relType, rels] of Object.entries(relsByType)) {
-          response += `**${relType} Relationships:**\n`;
-          rels.slice(0, 5).forEach(rel => {
-            response += `- **${rel.source.name}** ${relType.toLowerCase()}s **${rel.target.name}**\n`;
+          response += `**${relType} (${rels.length} total):**\n`;
+
+          // Group relationships by source for better business understanding
+          const relsBySource: {[key: string]: any[]} = {};
+          rels.forEach(rel => {
+            if (!relsBySource[rel.source.name]) relsBySource[rel.source.name] = [];
+            relsBySource[rel.source.name].push(rel);
           });
-          if (rels.length > 5) {
-            response += `- ... and ${rels.length - 5} more relationships\n`;
+
+          // Show complete lists with business context
+          for (const [sourceName, sourceRels] of Object.entries(relsBySource)) {
+            const targets = sourceRels.map(rel => rel.target.name);
+            if (relType === 'CompositionRelationship') {
+              response += `- **${sourceName}** contains: ${targets.join(', ')}\n`;
+            } else if (relType === 'AssignmentRelationship') {
+              response += `- **${sourceName}** is responsible for: ${targets.join(', ')}\n`;
+            } else {
+              response += `- **${sourceName}** ${relType.toLowerCase()}s: ${targets.join(', ')}\n`;
+            }
           }
           response += `\n`;
         }
