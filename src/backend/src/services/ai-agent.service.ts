@@ -78,35 +78,7 @@ class AIAgentService {
     }
     const analysisResult = this.analyzeMessageContent(userMessage);
 
-    // Handle specific ArchiMetal scenarios first (highest priority)
-    if (analysisResult.isArchiMetalScenario) {
-      if (progressCallback) {
-        progressCallback({ step: 'Loading ArchiMetal models', progress: 50 });
-      }
-      return await this.handleArchiMetalScenario(userMessage, analysisResult, context, progressCallback);
-    }
-
-    // Handle specific architecture change requests
-    if (analysisResult.isArchitectureChangeRequest) {
-      return this.handleArchitectureChangeRequest(userMessage, analysisResult, context);
-    }
-
-    // Handle model analysis requests
-    if (analysisResult.isModelAnalysisRequest) {
-      return await this.handleModelAnalysisRequest(userMessage, analysisResult, context);
-    }
-
-    // Handle ADR requests
-    if (analysisResult.isADRRequest) {
-      return this.handleADRRequest(userMessage, analysisResult, context);
-    }
-
-    // Handle technical architecture questions
-    if (analysisResult.isTechnicalQuestion) {
-      return this.handleTechnicalQuestion(userMessage, analysisResult, context);
-    }
-
-    // Handle greetings and help
+    // Handle greetings and help first (preserve user experience)
     if (analysisResult.isGreeting) {
       return this.handleGreeting(userMessage, context);
     }
@@ -115,8 +87,12 @@ class AIAgentService {
       return this.handleHelpRequest(userMessage, context);
     }
 
-    // Default: Try to extract meaning and provide contextual response
-    return this.handleContextualResponse(userMessage, analysisResult, context);
+    // AInstein operates within specific organizational context
+    // All other queries are treated as organization-specific architecture requests
+    if (progressCallback) {
+      progressCallback({ step: 'Loading ArchiMetal models', progress: 50 });
+    }
+    return await this.handleArchiMetalScenario(userMessage, analysisResult, context, progressCallback);
   }
 
   private analyzeMessageContent(message: string): {
@@ -1120,11 +1096,53 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
   }
 
   private handleArchiMetalGeneral(userMessage: string, analysisResult: any, context: ConversationContext): string {
-    return `## ArchiMetal Enterprise Architecture
+    // Load ArchiMetal models if available
+    const modelSummary = archiMateParser.getModelSummary();
+    const totalElements = Object.values(modelSummary).reduce((sum: number, model: any) => sum + model.elements, 0);
 
-ArchiMetal represents a comprehensive steel manufacturing enterprise with 32 detailed ArchiMate views covering transformation scenarios...
+    // Try to provide organization-specific context
+    let response = `## 🏗️ **ArchiMetal Enterprise Architecture Analysis**\n\n`;
+    response += `**Your Query:** "${userMessage}"\n\n`;
 
-[General ArchiMetal information]`;
+    if (totalElements > 0) {
+      response += `**Available ArchiMetal Models:** ${Object.keys(modelSummary).length} models with ${totalElements} total elements\n\n`;
+
+      // Extract potential entities from the query
+      const { technologies, systems, processes } = analysisResult.extractedEntities;
+
+      if (technologies.length > 0 || systems.length > 0 || processes.length > 0) {
+        response += `**Detected Architecture Elements:**\n`;
+        if (technologies.length > 0) response += `- Technologies: ${technologies.join(', ')}\n`;
+        if (systems.length > 0) response += `- Systems: ${systems.join(', ')}\n`;
+        if (processes.length > 0) response += `- Processes: ${processes.join(', ')}\n`;
+        response += `\n`;
+
+        response += `I can analyze these elements within ArchiMetal's organizational context. `;
+        response += `Please be more specific about what you'd like to know:\n\n`;
+        response += `**Example queries:**\n`;
+        response += `- "What applications use the CRM system?"\n`;
+        response += `- "Show me the organizational structure"\n`;
+        response += `- "Analyze the impact of replacing ${technologies[0] || systems[0] || 'a system'}"\n`;
+        response += `- "What business processes are affected by ${systems[0] || technologies[0] || 'this change'}?"\n`;
+      } else {
+        response += `**Available Analysis Types:**\n`;
+        response += `- **Organizational Analysis**: "Show organizational structure", "Who are the business actors?"\n`;
+        response += `- **System Analysis**: "What applications use X?", "Show data flows to Y"\n`;
+        response += `- **Impact Analysis**: "Analyze impact of replacing X with Y"\n`;
+        response += `- **Process Analysis**: "Show business processes for Z"\n`;
+        response += `- **Initiative Analysis**: "Add new distribution center in France"\n`;
+      }
+    } else {
+      response += `⚠️ ArchiMetal models are not currently loaded. I can still help with:\n`;
+      response += `- General enterprise architecture guidance\n`;
+      response += `- ArchiMate modeling best practices\n`;
+      response += `- Architecture pattern recommendations\n`;
+    }
+
+    response += `\n**I'm designed to analyze your organization's specific architecture.** `;
+    response += `Please provide more context about what you'd like to analyze or change.`;
+
+    return response;
   }
 
   private handleFileAnalysisRequest(userMessage: string, context: ConversationContext): string {
