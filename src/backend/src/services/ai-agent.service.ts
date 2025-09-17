@@ -594,7 +594,9 @@ How can I help with your enterprise architecture challenge?`;
 
     if (userMessage.toLowerCase().includes('organizational structure') || userMessage.toLowerCase().includes('organisational structure') ||
         userMessage.toLowerCase().includes('business actors') || userMessage.toLowerCase().includes('organization') ||
-        userMessage.toLowerCase().includes('organisation') || userMessage.toLowerCase().includes('structure')) {
+        userMessage.toLowerCase().includes('organisation') || userMessage.toLowerCase().includes('structure') ||
+        userMessage.toLowerCase().includes('list all business') || userMessage.toLowerCase().includes('show business') ||
+        userMessage.toLowerCase().includes('list business') || userMessage.toLowerCase().includes('all business actors')) {
       return this.handleArchiMetalOrganizationalStructure(userMessage, analysisResult, context);
     }
 
