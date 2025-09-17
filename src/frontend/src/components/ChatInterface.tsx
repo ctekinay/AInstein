@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useChatStore } from '../stores/chatStore';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { apiClient } from '../utils/api';
@@ -10,6 +10,13 @@ import toast from 'react-hot-toast';
 
 export const ChatInterface = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
+  // Use useRef for synchronous guard that works immediately
+  const initializationRef = useRef(false);
+  // Generate a unique ID for this component instance to track mounting
+  const componentId = useState(() => Math.random().toString(36).substr(2, 9))[0];
+
+  console.log('🔧 ChatInterface component rendered, ID:', componentId);
+
   const {
     currentSession,
     setCurrentSession,
@@ -22,6 +29,23 @@ export const ChatInterface = () => {
   const { sendMessage } = useWebSocket(sessionId);
 
   useEffect(() => {
+    // DEBUG: Log every useEffect run to trace the problem
+    console.log(`🔍 ChatInterface [${componentId}] useEffect triggered:`, {
+      initializationStarted: initializationRef.current,
+      sessionId,
+      currentSession: currentSession?.id
+    });
+
+    // FIXED: Use ref for synchronous guard that works immediately
+    if (initializationRef.current || sessionId) {
+      console.log('⏭️ Skipping initialization (already started or done)');
+      return;
+    }
+
+    // Set the guard immediately before any async operations
+    initializationRef.current = true;
+    console.log('🚀 Starting chat initialization...');
+
     const initializeChat = async () => {
       setIsLoading(true);
       try {
@@ -44,6 +68,7 @@ export const ChatInterface = () => {
           setCurrentSession(session);
           setMessages([]);
 
+          console.log('✅ Chat session initialized successfully:', response.data.sessionId);
           toast.success('Chat session initialized');
         } else {
           toast.error(response.error || 'Failed to initialize chat');
@@ -57,7 +82,7 @@ export const ChatInterface = () => {
     };
 
     initializeChat();
-  }, [setCurrentSession, setMessages, setIsLoading]);
+  }, [setCurrentSession, setMessages, setIsLoading, sessionId]);
 
   const handleSendMessage = (content: string) => {
     if (!sessionId) {

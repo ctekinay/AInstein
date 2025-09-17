@@ -616,6 +616,12 @@ How can I help with your enterprise architecture challenge?`;
       return this.handleArchiMetalProduction(userMessage, analysisResult, context);
     }
 
+    if (userMessage.toLowerCase().includes('organizational structure') || userMessage.toLowerCase().includes('organisational structure') ||
+        userMessage.toLowerCase().includes('business actors') || userMessage.toLowerCase().includes('organization') ||
+        userMessage.toLowerCase().includes('organisation') || userMessage.toLowerCase().includes('structure')) {
+      return this.handleArchiMetalOrganizationalStructure(userMessage, analysisResult, context);
+    }
+
     // Default ArchiMetal response
     return this.handleArchiMetalGeneral(userMessage, analysisResult, context);
   }
@@ -623,7 +629,8 @@ How can I help with your enterprise architecture challenge?`;
   private handleArchiMetalCRMChange(userMessage: string, analysisResult: any, context: ConversationContext, progressCallback?: ProgressCallback): string {
     // **RELATIONSHIP TRAVERSAL: Check for specific relationship queries**
     const message = userMessage.toLowerCase();
-    if (message.includes('what applications call') || message.includes('what uses') || message.includes('what depends on')) {
+    if (message.includes('what applications call') || message.includes('what uses') || message.includes('what depends on') ||
+        message.includes('data objects flow into') || message.includes('which data objects') || message.includes('data flow')) {
       return this.performRelationshipAnalysis(userMessage, progressCallback);
     }
 
@@ -736,6 +743,75 @@ Based on ArchiMetal Views 25-27 (Customer Order Processing), here's the detailed
 Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production architecture analysis...
 
 [Detailed production analysis would go here]`;
+  }
+
+  private handleArchiMetalOrganizationalStructure(userMessage: string, analysisResult: any, context: ConversationContext): string {
+    const businessActors = archiMateParser.getBusinessActors();
+    const businessProcesses = archiMateParser.getBusinessProcesses();
+
+    let response = `## 🏢 **ArchiMetal Organizational Structure Analysis**\n\n`;
+    response += `**Based on Actual ArchiMate Model Data**\n\n`;
+
+    if (businessActors.length > 0) {
+      response += `### 👥 **Business Actors** (${businessActors.length} total)\n\n`;
+
+      const actorsByCategory: {[key: string]: any[]} = {};
+      businessActors.forEach(actor => {
+        let category = 'Other';
+        const name = actor.name.toLowerCase();
+
+        if (name.includes('management') || name.includes('manager') || name.includes('director')) {
+          category = 'Management';
+        } else if (name.includes('sales') || name.includes('customer')) {
+          category = 'Sales & Customer Relations';
+        } else if (name.includes('production') || name.includes('manufacturing')) {
+          category = 'Production';
+        } else if (name.includes('logistics') || name.includes('supply')) {
+          category = 'Logistics & Supply Chain';
+        } else if (name.includes('finance') || name.includes('procurement')) {
+          category = 'Finance & Procurement';
+        }
+
+        if (!actorsByCategory[category]) actorsByCategory[category] = [];
+        actorsByCategory[category].push(actor);
+      });
+
+      for (const [category, actors] of Object.entries(actorsByCategory)) {
+        response += `**${category}:**\n`;
+        actors.forEach(actor => {
+          response += `- **${actor.name}** (ID: ${actor.id})\n`;
+        });
+        response += `\n`;
+      }
+    } else {
+      response += `❌ **No Business Actors found** in the ArchiMetal models.\n\n`;
+    }
+
+    if (businessProcesses.length > 0) {
+      response += `### 🔄 **Business Processes** (${businessProcesses.length} total)\n\n`;
+      businessProcesses.forEach(process => {
+        response += `- **${process.name}** (ID: ${process.id})\n`;
+      });
+      response += `\n`;
+    } else {
+      response += `❌ **No Business Processes found** in the ArchiMetal models.\n\n`;
+    }
+
+    const totalElements = businessActors.length + businessProcesses.length;
+    response += `### 📊 **Summary**\n\n`;
+    response += `- **Total Business Actors:** ${businessActors.length}\n`;
+    response += `- **Total Business Processes:** ${businessProcesses.length}\n`;
+    response += `- **Total Organizational Elements:** ${totalElements}\n\n`;
+
+    if (totalElements === 0) {
+      const models = archiMateParser.getAllModels();
+      const totalModelElements = models.reduce((sum, model) => sum + model.elements.size, 0);
+      response += `⚠️ **No organizational elements found**. Available: ${models.length} models with ${totalModelElements} elements\n`;
+    } else {
+      response += `**Analysis completed based on actual ArchiMetal model data.**\n`;
+    }
+
+    return response;
   }
 
   private handleArchiMetalGeneral(userMessage: string, analysisResult: any, context: ConversationContext): string {
@@ -860,8 +936,14 @@ Could you be more specific about what architectural challenge you're working on?
       progressCallback({ step: 'Finding target element in models', progress: 70 });
     }
 
-    // Extract target element from query
+    // Extract target element from query and determine query type
     let targetElementName = '';
+    let isDataObjectQuery = false;
+
+    if (message.includes('data objects flow into') || message.includes('which data objects')) {
+      isDataObjectQuery = true;
+    }
+
     if (message.includes('crm system')) targetElementName = 'CRM';
     else if (message.includes('crm')) targetElementName = 'CRM';
     else if (message.includes('salesforce')) targetElementName = 'Salesforce';
@@ -922,25 +1004,68 @@ Could you be more specific about what architectural challenge you're working on?
       response += `- **${type}:** ${rels.length} connections\n`;
     }
 
-    // **Answer the specific question: "What applications USE the CRM System?"**
-    response += `\n### 🎯 **Applications Using "${foundElement.name}"**\n`;
-    const usageRelationships = relationships.filter(rel => rel.target === foundElement.id);
+    // **Handle different query types**
+    if (isDataObjectQuery) {
+      response += `\n### 📊 **Data Objects Flowing Into "${foundElement.name}"**\n`;
 
-    if (usageRelationships.length > 0) {
-      usageRelationships.forEach(rel => {
+      // Find data objects that have relationships TO this element (data flowing into)
+      const dataObjectRelationships = relationships.filter(rel => {
         const sourceEl = models.find(m => m.elements.has(rel.source))?.elements.get(rel.source);
-        if (sourceEl) {
-          const relationshipType = rel.type.replace('archimate:', '');
-          response += `- **${sourceEl.name}** (${sourceEl.type.replace('archimate:', '')}) → *${relationshipType}* → ${foundElement.name}\n`;
-        }
+        return rel.target === foundElement.id && sourceEl && sourceEl.type.toLowerCase().includes('dataobject');
       });
+
+      if (dataObjectRelationships.length > 0) {
+        dataObjectRelationships.forEach(rel => {
+          const sourceEl = models.find(m => m.elements.has(rel.source))?.elements.get(rel.source);
+          if (sourceEl) {
+            response += `- **${sourceEl.name}** (${sourceEl.type.replace('archimate:', '')}) → *${rel.type.replace('archimate:', '')}* → ${foundElement.name}\n`;
+          }
+        });
+      } else {
+        response += `❌ **No data objects found with direct relationships to "${foundElement.name}"**\n`;
+        response += `\nSearching for data objects with similar names...\n`;
+
+        // Also search for data objects by name pattern
+        const dataObjectsByName: any[] = [];
+        for (const model of models) {
+          for (const element of model.elements.values()) {
+            if (element.type.toLowerCase().includes('dataobject') &&
+                (element.name.toLowerCase().includes(targetElementName.toLowerCase()) ||
+                 element.name.toLowerCase().includes('customer'))) {
+              dataObjectsByName.push(element);
+            }
+          }
+        }
+
+        if (dataObjectsByName.length > 0) {
+          response += `\n**Related Data Objects Found:**\n`;
+          dataObjectsByName.forEach(el => {
+            response += `- **${el.name}** (${el.type.replace('archimate:', '')})\n`;
+          });
+        }
+      }
     } else {
-      response += `No applications directly use "${foundElement.name}" as a target in the relationship graph.\n`;
+      // **Answer the specific question: "What applications USE the CRM System?"**
+      response += `\n### 🎯 **Applications Using "${foundElement.name}"**\n`;
+      const usageRelationships = relationships.filter(rel => rel.target === foundElement.id);
+
+      if (usageRelationships.length > 0) {
+        usageRelationships.forEach(rel => {
+          const sourceEl = models.find(m => m.elements.has(rel.source))?.elements.get(rel.source);
+          if (sourceEl) {
+            const relationshipType = rel.type.replace('archimate:', '');
+            response += `- **${sourceEl.name}** (${sourceEl.type.replace('archimate:', '')}) → *${relationshipType}* → ${foundElement.name}\n`;
+          }
+        });
+      } else {
+        response += `No applications directly use "${foundElement.name}" as a target in the relationship graph.\n`;
+      }
     }
 
-    // **Dependencies that CRM System uses**
-    response += `\n### 📤 **Dependencies of "${foundElement.name}"**\n`;
-    const dependencies = relationships.filter(rel => rel.source === foundElement.id);
+    // **Only show dependencies for non-data-object queries**
+    if (!isDataObjectQuery) {
+      response += `\n### 📤 **Dependencies of "${foundElement.name}"**\n`;
+      const dependencies = relationships.filter(rel => rel.source === foundElement.id);
 
     if (dependencies.length > 0) {
       dependencies.forEach(rel => {
@@ -953,17 +1078,48 @@ Could you be more specific about what architectural challenge you're working on?
     } else {
       response += `"${foundElement.name}" has no outgoing dependencies.\n`;
     }
+    } // End of !isDataObjectQuery conditional
 
-    // **Impact Analysis through relationship chains**
-    response += `\n### 💥 **Impact Chain Analysis**\n`;
+    // **ARCHITECTURAL IMPACT ANALYSIS - Complete Structured Analysis**
+    response += `\n### 💥 **Complete Impact Chain Analysis**\n`;
     const impactedElements = archiMateParser.getImpactedElements(foundElement.id, 2);
+
     if (impactedElements.length > 0) {
-      response += `**${impactedElements.length} elements** in the dependency chain would be affected:\n`;
-      impactedElements.slice(0, 8).forEach(el => {
-        response += `- ${el.name} (${el.type.replace('archimate:', '')})\n`;
+      response += `**Total Impact**: ${impactedElements.length} elements across the architectural layers\n\n`;
+
+      // Group elements by architectural layer and type for structured analysis
+      const elementsByCategory: {[key: string]: any[]} = {
+        'Business Layer': [],
+        'Application Layer': [],
+        'Technology Layer': [],
+        'Data Objects': [],
+        'Other Elements': []
+      };
+
+      impactedElements.forEach(el => {
+        const elementType = el.type.replace('archimate:', '');
+        if (elementType.includes('Business')) {
+          elementsByCategory['Business Layer'].push(el);
+        } else if (elementType.includes('Application')) {
+          elementsByCategory['Application Layer'].push(el);
+        } else if (elementType.includes('Technology')) {
+          elementsByCategory['Technology Layer'].push(el);
+        } else if (elementType.includes('DataObject')) {
+          elementsByCategory['Data Objects'].push(el);
+        } else {
+          elementsByCategory['Other Elements'].push(el);
+        }
       });
-      if (impactedElements.length > 8) {
-        response += `... and ${impactedElements.length - 8} more elements in the chain\n`;
+
+      // Display complete lists for each category
+      for (const [categoryName, elements] of Object.entries(elementsByCategory)) {
+        if (elements.length > 0) {
+          response += `#### ${categoryName} (${elements.length} elements)\n`;
+          elements.forEach(el => {
+            response += `- **${el.name}** (${el.type.replace('archimate:', '')})\n`;
+          });
+          response += `\n`;
+        }
       }
     } else {
       response += `No cascading impacts detected in the relationship graph.\n`;

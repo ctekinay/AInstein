@@ -100,7 +100,21 @@ src/
 - Relationship summary with counts and types
 - Applications/services using the target element
 - Dependencies of the target element
-- Impact chain analysis with affected element count
+- Complete impact chain analysis structured by architectural layer
+
+### Response Completeness Requirements
+- NEVER use placeholder text like "[Complete list]" or "[General information]"
+- ALWAYS provide the actual complete data when analyzing dependencies
+- When showing impact analysis, list ALL affected elements by name and type
+- Group elements by architectural layer but show complete lists for each group
+- If there are more than 20 elements, group them logically but still show all names
+
+### Response Formatting Requirements
+- **Never truncate dependency lists** with "and X more elements" - architects need complete information
+- **Group results by architectural layer**: Business, Application, Technology, Data Objects
+- **Show complete element lists** within each category with element counts
+- **Structured sections**: Break complex analyses into logical groups for readability
+- **Element details**: Always include element name and type for each dependency
 
 ### ArchiMetal Case Study Analysis Requirements
 - Reference actual Figure numbers (Figure 6, Figure 12, etc.), never fabricate "View" numbers
@@ -116,6 +130,14 @@ src/
 - Do not use generic terminology when specific element names exist
 - Do not fabricate "View 8" or similar non-existent references
 - Do not provide responses that sound like generic consulting advice
+
+### Organizational Analysis Requirements  
+When asked about organizational structure:
+- Extract ALL BusinessActor elements from loaded models by name
+- List ALL BusinessFunction elements and their relationships
+- Show the actual organizational hierarchy using parsed relationship data
+- Reference specific element IDs and names from the ArchiMate files
+- Provide concrete data, never abstract descriptions
 
 ### ArchiMate File Processing Requirements
 - Load and parse actual .archimate XML files from /ArchiMetal/ directory
