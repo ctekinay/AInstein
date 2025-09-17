@@ -25,8 +25,7 @@ export const MessageList = () => {
             Welcome to AInstein
           </h3>
           <p className="text-gray-600">
-            I'm your AI architecture assistant. I can help you analyze ArchiMate models,
-            generate ADRs, and make architectural decisions. How can I assist you today?
+            Your AI-powered architecture assistant that streamlines the entire ESA workflows. I can help you evaluate initiatives, analyze the impact of change across relevant business capabilities/services/objects and architectural layers and aspects, identify relevant stakeholders, automatically identify and update corresponding ArchiMate models, and generate ADRs to maintain alignment and transparency across the organization.
           </p>
         </div>
       </div>
