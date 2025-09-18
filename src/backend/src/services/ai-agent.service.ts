@@ -78,7 +78,20 @@ class AIAgentService {
     }
     const analysisResult = this.analyzeMessageContent(userMessage);
 
-    // Handle greetings and help first (preserve user experience)
+    // BUSINESS INTENT PRIORITY: Check for organizational/business content FIRST
+    // This ensures business questions with greetings (e.g., "Hi, list business actors")
+    // route to business analysis rather than generic greetings
+    const hasBusinessIntent = this.detectBusinessIntent(userMessage);
+
+    if (hasBusinessIntent) {
+      // Business intent detected - route to organizational analysis regardless of greeting
+      if (progressCallback) {
+        progressCallback({ step: 'Loading ArchiMetal models', progress: 50 });
+      }
+      return await this.handleArchiMetalScenario(userMessage, analysisResult, context, progressCallback);
+    }
+
+    // Only route to greetings/help if NO business intent is detected
     if (analysisResult.isGreeting) {
       return this.handleGreeting(userMessage, context);
     }
@@ -87,8 +100,7 @@ class AIAgentService {
       return this.handleHelpRequest(userMessage, context);
     }
 
-    // AInstein operates within specific organizational context
-    // All other queries are treated as organization-specific architecture requests
+    // Default: treat as organizational request (AInstein operates within specific context)
     if (progressCallback) {
       progressCallback({ step: 'Loading ArchiMetal models', progress: 50 });
     }
@@ -212,6 +224,43 @@ class AIAgentService {
     return helpKeywords.some(kw => message.includes(kw));
   }
 
+  private detectBusinessIntent(message: string): boolean {
+    const lowerMessage = message.toLowerCase();
+
+    // Organizational entities and concepts
+    const organizationalKeywords = [
+      'archimetal', 'alliander', 'business actors', 'business processes', 'organization', 'organisational',
+      'distribution center', 'dc ', 'department', 'unit', 'division', 'team'
+    ];
+
+    // Architectural analysis terms
+    const architecturalKeywords = [
+      'archimate', 'model', 'elements', 'relationships', 'views', 'components',
+      'applications', 'systems', 'technology', 'infrastructure', 'platform'
+    ];
+
+    // Business action verbs
+    const businessActions = [
+      'list', 'show', 'analyze', 'impact', 'add', 'create', 'implement', 'design',
+      'modify', 'update', 'replace', 'migrate', 'deploy', 'integrate'
+    ];
+
+    // Specific business questions
+    const businessQuestions = [
+      'what applications', 'which systems', 'how many', 'who are', 'what are',
+      'where is', 'what uses', 'what depends', 'what calls', 'data flow'
+    ];
+
+    // Check for any combination of business intent indicators
+    const hasOrganizational = organizationalKeywords.some(keyword => lowerMessage.includes(keyword));
+    const hasArchitectural = architecturalKeywords.some(keyword => lowerMessage.includes(keyword));
+    const hasBusinessAction = businessActions.some(action => lowerMessage.includes(action));
+    const hasBusinessQuestion = businessQuestions.some(question => lowerMessage.includes(question));
+
+    // Business intent if we have organizational/architectural context with business actions/questions
+    return (hasOrganizational || hasArchitectural) && (hasBusinessAction || hasBusinessQuestion);
+  }
+
   private handleArchitectureChangeRequest(userMessage: string, analysisResult: any, context: ConversationContext): string {
     return `I'll analyze the architecture change request you've described. Let me break down the impacts and recommendations...
 
@@ -297,15 +346,21 @@ class AIAgentService {
   }
 
   private handleGreeting(userMessage: string, context: ConversationContext): string {
-    return `Hello! I'm AInstein, your AI architecture assistant specializing in ArchiMate modeling and enterprise architecture.
+    return `Hello! I'm AInstein, your AI architecture assistant specializing in ArchiMetal organizational analysis.
 
-🎯 **I can help you with:**
-- ArchiMetal case study analysis (32 detailed views)
+🏢 **I focus on ArchiMetal business context:**
+- Business actors and organizational structure
 - Architecture impact assessments
-- ArchiMate model modifications
-- ADR generation and documentation
+- ArchiMate model analysis and modifications
+- Initiative planning and ADR generation
 
-What architectural challenge can I help you with today?`;
+**Try asking me about ArchiMetal specifically:**
+- "List all business actors in ArchiMetal"
+- "Show me the organizational structure"
+- "Analyze the impact of adding DC France"
+- "What applications use the CRM system?"
+
+What would you like to know about ArchiMetal's architecture?`;
   }
 
   private handleHelpRequest(userMessage: string, context: ConversationContext): string {
