@@ -67,6 +67,20 @@ src/
 - Constants: UPPER_CASE
 - Prefer named exports for all functions and utilities
 
+### Conversational Response Requirements
+
+#### Off-Topic Query Handling
+When users ask questions outside the enterprise architecture domain (weather, personal topics, general chat), respond with this exact pattern:
+
+"How about instead we start working on some of the ArchiMetal specific challenges you might be facing? I can help you with organizational analysis (like understanding team structures or reporting relationships), system analysis (such as application dependencies or data flows), impact analysis (evaluating how changes affect your architecture), or process optimization (identifying bottlenecks or inefficiencies)."
+
+#### Response Format Rules
+- Never use generic headers like "ArchiMetal Enterprise Architecture Analysis"
+- Never repeat the user's query back to them
+- Never include technical details about model counts when redirecting conversations
+- Maintain conversation history throughout architectural analysis sessions
+- When asked to "update the model," attempt the specific file modification rather than deflecting
+
 ## Development Guidelines
 
 ### TypeScript Standards
