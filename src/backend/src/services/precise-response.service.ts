@@ -115,19 +115,25 @@ export class PreciseResponseService {
   }
 
   /**
-   * Get only the list of business actors
+   * Get only the list of business actors with proper categorization
    */
   private getBusinessActorsListOnly(): string {
     const businessActorAnalysis = archiMateParser.getBusinessActorAnalysis();
-    const allActors = [
-      ...businessActorAnalysis.internalActors,
-      ...businessActorAnalysis.externalActors,
-      ...businessActorAnalysis.departments
-    ];
-    const sortedActors = allActors.sort((a, b) => a.name.localeCompare(b.name));
 
     let response = 'Business actors in ArchiMetal:\n\n';
-    sortedActors.forEach(actor => {
+
+    response += `**Internal Actors (${businessActorAnalysis.internalActors.length}):**\n`;
+    businessActorAnalysis.internalActors.forEach(actor => {
+      response += `- ${actor.name}\n`;
+    });
+
+    response += `\n**External Actors (${businessActorAnalysis.externalActors.length}):**\n`;
+    businessActorAnalysis.externalActors.forEach(actor => {
+      response += `- ${actor.name}\n`;
+    });
+
+    response += `\n**Departments/Functions (${businessActorAnalysis.departments.length}):**\n`;
+    businessActorAnalysis.departments.forEach(actor => {
       response += `- ${actor.name}\n`;
     });
 
