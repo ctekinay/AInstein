@@ -57,7 +57,7 @@ class ArchiMateParserService {
     });
 
     // Navigate to project root from backend directory
-    this.archiMetalPath = path.join(process.cwd(), '..', '..', 'ArchiMetal');
+    this.archiMetalPath = path.join(process.cwd(), '..', '..', 'knowledge_base', 'ArchiMetal_models');
   }
 
   async loadAllArchiMetalModels(): Promise<void> {

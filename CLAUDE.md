@@ -46,7 +46,7 @@ When users ask questions outside the enterprise architecture domain (weather, pe
 
 ### Core Processing Requirements
 - Follow ArchiMate 3.2 specification compliance
-- Load and parse actual .archimate XML files from `/ArchiMetal/` directory
+- Load and parse actual .archimate XML files from `/knowledge_base/ArchiMetal_models/` directory
 - Extract element IDs, names, types, and relationship mappings
 - Build dependency graph from actual model connections
 - Validate element existence before referencing in responses
@@ -122,14 +122,16 @@ src/
 │   ├── validation/   # Input validation and schema definitions
 │   ├── chat/         # Chat interface and WebSocket handling
 │   └── agent/        # AI agent orchestration and workflow
-├── ArchiMetal/        # Test case data and models
-│   ├── ArchiMetal_Transformation_Challenges/
-│   ├── ArchiMetal_CRM_Vision/
-│   ├── ArchiMetal_Transformation_Overview/
-│   ├── Detail_Enterprise_Architecture/
-│   └── Target_State_Scenario/
 └── knowledge_base/    # Consolidated knowledge and documentation
-    ├── archimetal/    # ArchiMetal case study documentation
+    ├── AInsteinKB.md  # Main knowledge base document
+    ├── enhanced_claude_md.md  # Enhanced guidelines
+    ├── archimetal/    # ArchiMetal case study PDF documentation
+    ├── ArchiMetal_models/  # ArchiMate model files
+    │   ├── ArchiMetal_Transformation_Challenges/
+    │   ├── ArchiMetal_CRM_Vision/
+    │   ├── ArchiMetal_Transformation_Overview/
+    │   ├── Detail_Enterprise_Architecture/
+    │   └── Target_State_Scenario/
     ├── project_docs/  # Project diagrams and progress tracking
     └── architecture_patterns/  # Architecture patterns (future use)
 ```
@@ -207,7 +209,7 @@ This system operates within Alliander's energy transition mission, supporting:
 - Handle architecturally sensitive but not classified information
 
 ### ArchiMetal Test Environment
-Due to the lack of production knowledge graphs from the company, the project uses **ArchiMetal** as a comprehensive test case located in `/ArchiMetal/`. This provides:
+Due to the lack of production knowledge graphs from the company, the project uses **ArchiMetal** as a comprehensive test case with models located in `/knowledge_base/ArchiMetal_models/`. This provides:
 - **32 ArchiMate views** covering business, application, technology, and implementation perspectives
 - Realistic ArchiMate model files organized by architectural views
 - Complete enterprise architecture scenarios covering transformation challenges

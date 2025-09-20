@@ -30,6 +30,15 @@ These files provide context for AInstein to:
 3. Provide accurate responses based on documented scenarios
 4. Maintain consistency with project requirements
 
-## Note
+## File Organization
 
-The ArchiMate model files (`.archimate`) remain in the `/ArchiMetal/` directory structure as they are actively parsed and processed by the application, not just used for reference.
+### `/ArchiMetal_models/`
+Contains all ArchiMate model files organized by domain:
+- `ArchiMetal_Transformation_Challenges/` - Transformation challenge models
+- `ArchiMetal_CRM_Vision/` - CRM system architecture models
+- `ArchiMetal_Transformation_Overview/` - High-level transformation views
+- `Detail_Enterprise_Architecture/` - Detailed enterprise architecture models
+- `Target_State_Scenario/` - Target state architecture models
+- `ArchiMetal-Views-Structure.jpg` - Visual overview of model structure
+
+These model files are actively parsed and processed by the application for architectural analysis.

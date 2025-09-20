@@ -121,7 +121,7 @@ app.get('/api/models/:modelName/download', async (req, res) => {
 
     // Fallback: Search in ArchiMetal directory
     // When running from src/backend, go up two levels to project root
-    const archiMetalPath = path.resolve(process.cwd(), '..', '..', 'ArchiMetal');
+    const archiMetalPath = path.resolve(process.cwd(), '..', '..', 'knowledge_base', 'ArchiMetal_models');
     logger.info(`Searching in ArchiMetal directory: ${archiMetalPath}`);
 
     if (!await fs.pathExists(archiMetalPath)) {
@@ -203,7 +203,7 @@ app.post('/api/models/:modelName/open-in-archi', async (req, res) => {
     logger.info(`Open in Archi request for model: ${modelName}, element: ${elementId}`);
 
     // Find the model file path
-    const archiMetalPath = path.resolve(process.cwd(), '..', '..', 'ArchiMetal');
+    const archiMetalPath = path.resolve(process.cwd(), '..', '..', 'knowledge_base', 'ArchiMetal_models');
 
     const findArchimateFile = async (dirPath: string, targetName: string): Promise<string | null> => {
       const items = await fs.readdir(dirPath, { withFileTypes: true });

@@ -240,7 +240,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                       console.error('Failed to open in Archi:', error);
 
                       // Fallback to copying path
-                      const archiPath = `/Users/chuck/Dropbox/OWLVIEW/Products/AInstein/ArchiMetal/${modelName}.archimate`;
+                      const archiPath = `/Users/chuck/Dropbox/OWLVIEW/Products/AInstein/knowledge_base/ArchiMetal_models/${modelName}/${modelName}.archimate`;
                       navigator.clipboard.writeText(archiPath).then(() => {
                         alert(`Could not open Archi automatically.\n\nFile path copied to clipboard!\n\nTo open in Archi:\n1. Open Archi application\n2. Go to File > Open\n3. Paste the path (${archiPath})\n4. Navigate to element ID: ${elementDetails.id}`);
                       }).catch(() => {

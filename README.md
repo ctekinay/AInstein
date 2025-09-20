@@ -45,7 +45,10 @@ src/
 │   ├── validation/   # Input validation and schema definitions
 │   ├── chat/         # Chat interface and WebSocket handling
 │   └── agent/        # AI agent orchestration and workflow
-└── ArchiMetal/        # Test case data and models
+└── knowledge_base/    # All knowledge and model files
+    ├── ArchiMetal_models/  # ArchiMate test case models
+    ├── archimetal/         # ArchiMetal PDF documentation
+    └── project_docs/       # Project documentation
 ```
 
 ## Development Status
