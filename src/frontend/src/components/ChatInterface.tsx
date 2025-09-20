@@ -5,11 +5,22 @@ import { apiClient } from '../utils/api';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { AgentStatus } from './AgentStatus';
+import { ElementViewer } from './ElementViewer';
 import { Wifi, WifiOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export const ChatInterface = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [elementViewerState, setElementViewerState] = useState<{
+    isOpen: boolean;
+    elementId: string | null;
+    modelName: string | null;
+  }>({
+    isOpen: false,
+    elementId: null,
+    modelName: null
+  });
+
   // Use useRef for synchronous guard that works immediately
   const initializationRef = useRef(false);
   // Generate a unique ID for this component instance to track mounting
@@ -23,7 +34,8 @@ export const ChatInterface = () => {
     setMessages,
     isConnected,
     isLoading,
-    setIsLoading
+    setIsLoading,
+    addMessage
   } = useChatStore();
 
   const { sendMessage } = useWebSocket(sessionId);
@@ -83,6 +95,51 @@ export const ChatInterface = () => {
 
     initializeChat();
   }, [setCurrentSession, setMessages, setIsLoading, sessionId]);
+
+  // Global click handler for element links
+  useEffect(() => {
+    const handleElementLinkClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+
+      // Handle both old link format and new span format
+      if (target.tagName === 'A' && target.classList.contains('element-link')) {
+        event.preventDefault();
+
+        const href = target.getAttribute('href');
+        if (href && href.startsWith('/viewer/element/')) {
+          const url = new URL(href, window.location.origin);
+          const elementId = href.split('/viewer/element/')[1].split('?')[0];
+          const modelName = url.searchParams.get('model');
+
+          if (elementId && modelName) {
+            setElementViewerState({
+              isOpen: true,
+              elementId,
+              modelName: decodeURIComponent(modelName)
+            });
+          }
+        }
+      }
+      // Handle new span-based element references
+      else if (target.tagName === 'SPAN' && target.classList.contains('element-id')) {
+        event.preventDefault();
+
+        const elementId = target.getAttribute('data-element-id');
+        const modelName = target.getAttribute('data-model');
+
+        if (elementId && modelName) {
+          setElementViewerState({
+            isOpen: true,
+            elementId,
+            modelName
+          });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleElementLinkClick);
+    return () => document.removeEventListener('click', handleElementLinkClick);
+  }, []);
 
   const handleSendMessage = (content: string) => {
     if (!sessionId) {
@@ -149,6 +206,33 @@ export const ChatInterface = () => {
           disabled={!isConnected || !sessionId}
         />
       </div>
+
+      {/* Element Viewer Modal */}
+      <ElementViewer
+        elementId={elementViewerState.elementId}
+        modelName={elementViewerState.modelName}
+        isOpen={elementViewerState.isOpen}
+        onClose={() => setElementViewerState({ isOpen: false, elementId: null, modelName: null })}
+        onNavigate={(newElementId, newModelName) => {
+          // Navigate to a different element
+          setElementViewerState({
+            isOpen: true,
+            elementId: newElementId,
+            modelName: newModelName
+          });
+        }}
+        onArchiOpened={(modelName, elementId) => {
+          // Add a message from AInstein when Archi is opened
+          const ainsteinMessage = {
+            id: `msg-${Date.now()}`,
+            content: `ArchiMate model is opened in Archi Application. Let me know if you have any questions or need further help with other architectural challenges.`,
+            sender: 'agent' as const,
+            timestamp: new Date(),
+            type: 'text' as const
+          };
+          addMessage(ainsteinMessage);
+        }}
+      />
     </div>
   );
 };
