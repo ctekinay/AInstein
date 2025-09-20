@@ -1,5 +1,7 @@
 import logger from '../utils/logger.js';
 import archiMateParser from './archimate-parser.service.js';
+import preciseResponseService from './precise-response.service.js';
+import featureFlagsService from './feature-flags.service.js';
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -118,7 +120,28 @@ class AIAgentService {
       return this.knowledgeBase?.offTopicRedirect || "How about instead we start working on some of the ArchiMetal specific challenges you might be facing? I can help you with organizational analysis, system analysis, impact analysis, or process optimization.";
     }
 
-    // First, analyze the message for specific scenarios and content
+    // Check if accuracy improvements are enabled
+    if (featureFlagsService.isEnabled('precise_response_validation')) {
+      // Use new precise response service for accurate query handling
+      if (progressCallback) {
+        progressCallback({ step: 'Analyzing query intent', progress: 35 });
+      }
+
+      try {
+        const preciseResponse = await preciseResponseService.generatePreciseResponse(userMessage, context);
+
+        if (progressCallback) {
+          progressCallback({ step: 'Validating response accuracy', progress: 90 });
+        }
+
+        return preciseResponse;
+      } catch (error) {
+        logger.warn('Precise response service failed, falling back to legacy handler:', error);
+        // Fall through to legacy handler
+      }
+    }
+
+    // Legacy response generation (fallback)
     if (progressCallback) {
       progressCallback({ step: 'Detecting scenario type', progress: 35 });
     }
@@ -417,14 +440,15 @@ class AIAgentService {
 
     // Organizational entities and concepts
     const organizationalKeywords = [
-      'archimetal', 'alliander', 'business actors', 'business processes', 'organization', 'organisational',
-      'distribution center', 'dc ', 'department', 'unit', 'division', 'team'
+      'archimetal', 'alliander', 'business actor', 'business actors', 'business process', 'business processes',
+      'business function', 'business functions', 'organization', 'organisational', 'organizational',
+      'distribution center', 'dc ', 'department', 'unit', 'division', 'team', 'actors', 'processes'
     ];
 
     // Architectural analysis terms
     const architecturalKeywords = [
-      'archimate', 'model', 'elements', 'relationships', 'views', 'components',
-      'applications', 'systems', 'technology', 'infrastructure', 'platform'
+      'archimate', 'model', 'models', 'elements', 'relationships', 'views', 'components',
+      'applications', 'systems', 'technology', 'infrastructure', 'platform', 'architecture'
     ];
 
     // Business action verbs
@@ -975,57 +999,49 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
 [Detailed production analysis would go here]`;
   }
 
-  private handleArchiMetalOrganizationalStructure(userMessage: string, analysisResult: any, context: ConversationContext): string {
-    const businessActors = archiMateParser.getBusinessActors();
+  private async handleArchiMetalOrganizationalStructure(userMessage: string, analysisResult: any, context: ConversationContext): Promise<string> {
+    // ALWAYS use the new precise response service (fix for accuracy issues)
+    try {
+      // Use precise response service for business actors queries
+      return await preciseResponseService.handleBusinessActorsQuery(userMessage);
+    } catch (error) {
+      logger.warn('Precise response service failed for organizational query, using fallback:', error);
+      // Fall through to legacy implementation only if precise service fails
+    }
+
+    // Improved implementation with proper categorization
+    const businessActorAnalysis = archiMateParser.getBusinessActorAnalysis();
     const businessProcesses = archiMateParser.getBusinessProcesses();
     const models = archiMateParser.getAllModels();
 
     let response = '';
 
     // Check if we have data
-    if (businessActors.length === 0) {
+    if (businessActorAnalysis.total === 0) {
       return "I don't see any business actors in the ArchiMetal models right now. Let me check if the models are properly loaded or if there might be a parsing issue.";
     }
 
     // Professional executive briefing format with credibility markers
     response = `Based on Actual ArchiMetal Model Data\n\n`;
-    response += `🏢 Organizational Structure Analysis (${businessActors.length} Business Actors | ${businessProcesses.length} Business Processes)\n\n`;
+    response += `🏢 Organizational Structure Analysis (${businessActorAnalysis.total} Business Actors | ${businessProcesses.length} Business Processes)\n\n`;
 
-    // Group actors by category for better understanding
-    const actorsByCategory: {[key: string]: any[]} = {};
-    businessActors.forEach(actor => {
-      let category = 'Core Organization';
-      const name = actor.name.toLowerCase();
-
-      if (name.includes('sales') || name.includes('customer') || name.includes('commercial')) {
-        category = 'Customer & Sales';
-      } else if (name.includes('production') || name.includes('manufacturing')) {
-        category = 'Production';
-      } else if (name.includes('logistics') || name.includes('supply') || name.includes('transportation')) {
-        category = 'Logistics & Supply';
-      } else if (name.includes('finance') || name.includes('procurement')) {
-        category = 'Finance & Procurement';
-      } else if (name.includes('hr') || name.includes('human resources') || name.includes('quality')) {
-        category = 'Support Functions';
-      } else if (name.includes('dc ') || name.includes('distribution center') || name.includes('hq') || name === 'archimetal') {
-        category = 'Core Organization';
-      } else if (name.includes('partner') || name === 'customer') {
-        category = 'External Partners';
-      }
-
-      if (!actorsByCategory[category]) actorsByCategory[category] = [];
-      actorsByCategory[category].push(actor);
+    // Use proper categorization instead of heuristics
+    response += `**Internal Organizational Actors (${businessActorAnalysis.internalActors.length}):**\n`;
+    businessActorAnalysis.internalActors.forEach(actor => {
+      response += `• ${actor.name}\n`;
     });
 
-    // Present categories with executive briefing structure and clickable element links
-    for (const [category, actors] of Object.entries(actorsByCategory)) {
-      response += `${category} (${actors.length} units)\n`;
-      actors.forEach(actor => {
-        // Create element reference with clickable ID for ElementViewer
-        response += `  • ${actor.name} [<span class="element-id" data-element-id="${actor.id}" data-model="${this.getModelNameForElement(actor.id, models)}" title="Click to view element details">${actor.id}</span>]\n`;
-      });
-      response += `\n`;
-    }
+    response += `\n**External Business Partners (${businessActorAnalysis.externalActors.length}):**\n`;
+    businessActorAnalysis.externalActors.forEach(actor => {
+      response += `• ${actor.name}\n`;
+    });
+
+    response += `\n**Internal Departments/Functions (${businessActorAnalysis.departments.length}):**\n`;
+    businessActorAnalysis.departments.forEach(actor => {
+      response += `• ${actor.name}\n`;
+    });
+
+    response += `\n*Note: Organization structure based on actual ArchiMate CompositionRelationship elements in the parsed models.*\n\n`;
 
     // Analyze organizational relationships if they exist
     const orgRelationships: any[] = [];
@@ -1131,7 +1147,7 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
 
     // Executive summary with concrete totals and follow-up options
     response += `📊 Architecture Summary\n`;
-    response += `Total Business Actors: ${businessActors.length}\n`;
+    response += `Total Business Actors: ${businessActorAnalysis.total}\n`;
     response += `Total Business Processes: ${businessProcesses.length}\n`;
     response += `Organizational Relationships: ${orgRelationships.length}\n`;
     response += `Loaded Models: ${models.length}\n\n`;
@@ -1177,8 +1193,13 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
     }
 
     // Step 1: Analyze existing DC patterns
-    const businessActors = archiMateParser.getBusinessActors();
-    const existingDCs = businessActors.filter(actor =>
+    const businessActorAnalysis = archiMateParser.getBusinessActorAnalysis();
+    const allActors = [
+      ...businessActorAnalysis.internalActors,
+      ...businessActorAnalysis.externalActors,
+      ...businessActorAnalysis.departments
+    ];
+    const existingDCs = allActors.filter(actor =>
       actor.name.toLowerCase().includes('dc ') ||
       actor.name.toLowerCase().includes('distribution')
     );
