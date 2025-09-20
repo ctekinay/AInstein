@@ -122,13 +122,16 @@ src/
 │   ├── validation/   # Input validation and schema definitions
 │   ├── chat/         # Chat interface and WebSocket handling
 │   └── agent/        # AI agent orchestration and workflow
-└── ArchiMetal/        # Test case data and models
-    ├── docs/          # ArchiMetal documentation and specifications
-    ├── ArchiMetal_Transformation_Challenges/
-    ├── ArchiMetal_CRM_Vision/
-    ├── ArchiMetal_Transformation_Overview/
-    ├── Detail_Enterprise_Architecture/
-    └── Target_State_Scenario/
+├── ArchiMetal/        # Test case data and models
+│   ├── ArchiMetal_Transformation_Challenges/
+│   ├── ArchiMetal_CRM_Vision/
+│   ├── ArchiMetal_Transformation_Overview/
+│   ├── Detail_Enterprise_Architecture/
+│   └── Target_State_Scenario/
+└── knowledge_base/    # Consolidated knowledge and documentation
+    ├── archimetal/    # ArchiMetal case study documentation
+    ├── project_docs/  # Project diagrams and progress tracking
+    └── architecture_patterns/  # Architecture patterns (future use)
 ```
 
 ### Development Standards

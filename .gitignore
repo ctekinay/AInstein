@@ -22,6 +22,8 @@ build/
 *.swp
 *.swo
 *~
+*.bak
+*.backup
 
 # OS generated files
 .DS_Store
