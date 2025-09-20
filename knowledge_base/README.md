@@ -13,8 +13,6 @@ Contains project-specific documentation and progress tracking:
 - `/diagrams/` - Architecture diagrams and visual documentation
 - `/progress/` - Project progress tracking files
 
-### `/architecture_patterns/`
-Reserved for architecture patterns, best practices, and reference architectures.
 
 ## Core Knowledge Files
 
