@@ -14,6 +14,85 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   const [copied, setCopied] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  // Function to safely render HTML content while preserving line breaks
+  const renderMessageContent = (content: string) => {
+    // Check for both <a> tags and <span> tags with element-id class
+    const linkPattern = /<a href="([^"]*)"([^>]*)>([^<]*)<\/a>/g;
+    const spanPattern = /<span class="element-id"([^>]*)>([^<]*)<\/span>/g;
+
+    const hasLinks = linkPattern.test(content) || spanPattern.test(content);
+
+    if (hasLinks) {
+      // Create a comprehensive pattern that matches both links and spans
+      const combinedPattern = /(<a href="[^"]*"[^>]*>[^<]*<\/a>|<span class="element-id"[^>]*>[^<]*<\/span>)/g;
+      const parts = content.split(combinedPattern);
+      const elements = [];
+
+      parts.forEach((part, index) => {
+        if (!part) return;
+
+        // Check if this part is an <a> tag
+        const linkMatch = part.match(/<a href="([^"]*)"([^>]*)>([^<]*)<\/a>/);
+        if (linkMatch) {
+          const href = linkMatch[1];
+          const attributes = linkMatch[2] || '';
+          const linkText = linkMatch[3];
+
+          // Extract attributes
+          const titleMatch = attributes.match(/title="([^"]*)"/);
+          const classMatch = attributes.match(/class="([^"]*)"/);
+          const targetMatch = attributes.match(/target="([^"]*)"/);
+
+          elements.push(
+            <a
+              key={index}
+              href={href}
+              title={titleMatch ? titleMatch[1] : ''}
+              className={`${classMatch ? classMatch[1] : ''} text-blue-600 hover:text-blue-800 underline font-medium`}
+              target={targetMatch ? targetMatch[1] : '_self'}
+              rel={targetMatch && targetMatch[1] === '_blank' ? 'noopener noreferrer' : ''}
+            >
+              {linkText}
+            </a>
+          );
+          return;
+        }
+
+        // Check if this part is a <span> tag with element-id
+        const spanMatch = part.match(/<span class="element-id"([^>]*)>([^<]*)<\/span>/);
+        if (spanMatch) {
+          const attributes = spanMatch[1] || '';
+          const spanText = spanMatch[2];
+
+          // Extract data attributes
+          const elementIdMatch = attributes.match(/data-element-id="([^"]*)"/);
+          const modelMatch = attributes.match(/data-model="([^"]*)"/);
+          const titleMatch = attributes.match(/title="([^"]*)"/);
+
+          elements.push(
+            <span
+              key={index}
+              className="element-id"
+              data-element-id={elementIdMatch ? elementIdMatch[1] : ''}
+              data-model={modelMatch ? modelMatch[1] : ''}
+              title={titleMatch ? titleMatch[1] : 'Click to view element details'}
+            >
+              {spanText}
+            </span>
+          );
+          return;
+        }
+
+        // Regular text
+        elements.push(part);
+      });
+
+      return elements;
+    }
+
+    return content;
+  };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(message.content);
@@ -57,7 +136,7 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
             ? 'bg-gray-100 text-gray-900 rounded-bl-sm'
             : 'bg-primary-500 text-white rounded-br-sm'
         )}>
-          <p className="whitespace-pre-wrap break-words">{message.content}</p>
+          <div className="whitespace-pre-wrap break-words">{renderMessageContent(message.content)}</div>
 
           {message.metadata && (
             <div className="mt-2 text-xs opacity-75">

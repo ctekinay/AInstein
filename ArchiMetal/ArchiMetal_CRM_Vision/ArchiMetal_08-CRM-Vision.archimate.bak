@@ -392,7 +392,7 @@
             </child>
           </child>
         </child>
-        <property key="Last Update" value="2025-09-18"/>
+        <property key="Last Update" value="2023-05-19"/>
         <property key="Last Updated by" value="CT"/>
       </element>
       <element xsi:type="archimate:ArchimateDiagramModel" name="Figure02_Value-Stream" id="id-670f8d6ff94c4e76bb3ad53e15dd108e">

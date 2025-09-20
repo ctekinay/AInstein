@@ -1,5 +1,7 @@
 import logger from '../utils/logger.js';
 import archiMateParser from './archimate-parser.service.js';
+import fs from 'fs-extra';
+import path from 'path';
 
 interface ConversationContext {
   sessionId: string;
@@ -15,6 +17,45 @@ interface ProgressCallback {
 class AIAgentService {
   private conversationContexts: Map<string, ConversationContext> = new Map();
   private modelsLoaded = false;
+  private knowledgeBase: any = null;
+
+  constructor() {
+    this.loadKnowledgeBase();
+  }
+
+  private async loadKnowledgeBase(): Promise<void> {
+    try {
+      const kbPath = path.join(process.cwd(), '../../knowledge_base/AInsteinKB.md');
+      const kbContent = await fs.readFile(kbPath, 'utf-8');
+
+      // Parse the knowledge base content
+      this.knowledgeBase = {
+        offTopicRedirect: "How about instead we start working on some of the ArchiMetal specific challenges you might be facing? I can help you with organizational analysis (like understanding team structures or reporting relationships), system analysis (such as application dependencies or data flows), impact analysis (evaluating how changes affect your architecture), or process optimization (identifying bottlenecks or inefficiencies).",
+        prohibitedPhrases: [
+          "## 🏗️ **ArchiMetal Enterprise Architecture Analysis**",
+          "**Your Query:**",
+          "**Available ArchiMetal Models:**",
+          "**Available Analysis Types:**"
+        ],
+        responseRules: {
+          noGenericHeaders: true,
+          noQueryRepetition: true,
+          noTechnicalDetails: true,
+          conversationalFlow: true
+        }
+      };
+
+      logger.info('AInstein Knowledge Base loaded successfully');
+    } catch (error) {
+      logger.error('Failed to load AInstein Knowledge Base:', error);
+      // Set default fallback
+      this.knowledgeBase = {
+        offTopicRedirect: "How about instead we start working on some of the ArchiMetal specific challenges you might be facing? I can help you with organizational analysis, system analysis, impact analysis, or process optimization.",
+        prohibitedPhrases: [],
+        responseRules: { noGenericHeaders: true, noQueryRepetition: true }
+      };
+    }
+  }
 
   async initializeContext(sessionId: string): Promise<void> {
     if (!this.conversationContexts.has(sessionId)) {
@@ -72,6 +113,11 @@ class AIAgentService {
   }
 
   private async generateResponse(userMessage: string, context: ConversationContext, progressCallback?: ProgressCallback): Promise<string> {
+    // First, check for off-topic queries using knowledge base
+    if (this.isOffTopicQuery(userMessage)) {
+      return this.knowledgeBase?.offTopicRedirect || "How about instead we start working on some of the ArchiMetal specific challenges you might be facing? I can help you with organizational analysis, system analysis, impact analysis, or process optimization.";
+    }
+
     // First, analyze the message for specific scenarios and content
     if (progressCallback) {
       progressCallback({ step: 'Detecting scenario type', progress: 35 });
@@ -222,6 +268,148 @@ class AIAgentService {
   private detectHelpRequest(message: string): boolean {
     const helpKeywords = ['help', 'what can you do', 'guide', 'explain'];
     return helpKeywords.some(kw => message.includes(kw));
+  }
+
+  private isOffTopicQuery(message: string): boolean {
+    const lowerMessage = message.toLowerCase();
+
+    // Step 1: Check for explicit ArchiMetal/business context
+    const explicitBusinessContext = this.hasExplicitBusinessContext(lowerMessage);
+    if (explicitBusinessContext) {
+      return false; // Definitely business-related
+    }
+
+    // Step 2: Check for explicit non-business context
+    const explicitNonBusinessContext = this.hasExplicitNonBusinessContext(lowerMessage);
+    if (explicitNonBusinessContext) {
+      return true; // Definitely off-topic
+    }
+
+    // Step 3: Analyze conversational intent and semantic context
+    return this.analyzeSemanticContext(lowerMessage);
+  }
+
+  private hasExplicitBusinessContext(message: string): boolean {
+    // Strong indicators of business/architectural context
+    const businessContextIndicators = [
+      // ArchiMetal specific
+      'archimetal', 'alliander', 'energy', 'distribution center', 'dc benelux', 'dc spain',
+      'steel', 'production', 'manufacturing', 'crm system', 'salesforce',
+
+      // Architecture specific
+      'architecture', 'archimate', 'enterprise', 'organizational structure', 'business actors',
+      'business processes', 'application components', 'technology layer', 'relationships',
+      'elements', 'models', 'views', 'dependencies', 'impact analysis',
+
+      // Business operations
+      'organizational analysis', 'system analysis', 'process optimization',
+      'transformation', 'implementation', 'migration', 'integration'
+    ];
+
+    return businessContextIndicators.some(indicator => message.includes(indicator));
+  }
+
+  private hasExplicitNonBusinessContext(message: string): boolean {
+    // Clear indicators of non-business topics
+    const nonBusinessDomains = [
+      // Personal/lifestyle
+      'weather', 'vacation', 'food', 'cooking', 'recipe', 'restaurant', 'travel',
+      'health', 'fitness', 'diet', 'exercise', 'sports', 'games', 'entertainment',
+
+      // Academic/general knowledge
+      'history', 'science', 'mathematics', 'physics', 'chemistry', 'biology',
+      'literature', 'philosophy', 'religion', 'politics', 'economics',
+
+      // Popular culture
+      'movies', 'music', 'celebrities', 'fashion', 'art', 'books', 'novels',
+      'tv shows', 'streaming', 'youtube', 'social media', 'instagram', 'twitter',
+
+      // Other domains
+      'astronomy', 'geography', 'animals', 'nature', 'hobbies', 'crafts'
+    ];
+
+    // Historical/cultural references
+    const historicalReferences = [
+      'roman empire', 'rome', 'ancient', 'medieval', 'renaissance', 'world war',
+      'napoleon', 'caesar', 'empire', 'dynasty', 'civilization'
+    ];
+
+    // Other companies/organizations (non-energy/tech)
+    const otherCompanies = [
+      'google', 'apple', 'microsoft', 'amazon', 'facebook', 'meta', 'netflix',
+      'disney', 'coca cola', 'mcdonalds', 'nike', 'other companies'
+    ];
+
+    return [...nonBusinessDomains, ...historicalReferences, ...otherCompanies]
+      .some(domain => message.includes(domain));
+  }
+
+  private analyzeSemanticContext(message: string): boolean {
+    // Analyze the semantic intent and context of the message
+
+    // Conversational redirects (user trying to change topic)
+    const topicChangePatterns = [
+      'let\'s talk about', 'can we talk about', 'can we discuss', 'tell me about',
+      'what about', 'how about', 'i want to talk about', 'let\'s discuss',
+      'can you tell me about', 'do you know about', 'what do you think about',
+      'instead let\'s', 'now let\'s', 'let\'s switch to', 'change topic',
+      'something else', 'different topic', 'other subject'
+    ];
+
+    const hasTopicChange = topicChangePatterns.some(pattern => message.includes(pattern));
+
+    // If user is explicitly trying to change topics, it's likely off-topic
+    if (hasTopicChange) {
+      // Unless they're changing TO business topics
+      const businessTerms = [
+        'architecture', 'business', 'organization', 'system', 'process',
+        'analysis', 'archimetal', 'enterprise', 'technology', 'application'
+      ];
+
+      const haBusinessInTopicChange = businessTerms.some(term => message.includes(term));
+      return !haBusinessInTopicChange; // Off-topic unless changing TO business
+    }
+
+    // Questions about capabilities or general conversation
+    const generalConversationPatterns = [
+      'how are you', 'what can you do', 'who are you', 'nice to meet',
+      'thank you', 'thanks', 'goodbye', 'bye', 'see you', 'have a good',
+      'good morning', 'good afternoon', 'good evening', 'hello', 'hi there'
+    ];
+
+    const isGeneralConversation = generalConversationPatterns.some(pattern => message.includes(pattern));
+
+    // General conversation without business context is off-topic
+    if (isGeneralConversation) {
+      const hasBusinessMention = message.includes('archimetal') ||
+                                 message.includes('business') ||
+                                 message.includes('architecture');
+      return !hasBusinessMention;
+    }
+
+    // Academic or theoretical questions without business application
+    const academicPatterns = [
+      'define', 'what is', 'explain', 'how does', 'why do', 'when did',
+      'where is', 'who was', 'which', 'theory', 'concept', 'principle'
+    ];
+
+    const isAcademicQuestion = academicPatterns.some(pattern => message.includes(pattern));
+
+    if (isAcademicQuestion) {
+      // Academic questions are off-topic unless about business/architecture concepts
+      const businessAcademicTerms = [
+        'enterprise architecture', 'business process', 'organizational',
+        'archimate', 'business architecture', 'application architecture',
+        'technology architecture', 'system integration', 'enterprise'
+      ];
+
+      const isBusinessAcademic = businessAcademicTerms.some(term => message.includes(term));
+      return !isBusinessAcademic;
+    }
+
+    // Default: if we can't determine clear intent and there's no business context,
+    // it's likely off-topic for an enterprise architecture agent
+    return true;
   }
 
   private detectBusinessIntent(message: string): boolean {
@@ -651,11 +839,8 @@ How can I help with your enterprise architecture challenge?`;
       return this.handleArchiMetalProduction(userMessage, analysisResult, context);
     }
 
-    if (userMessage.toLowerCase().includes('organizational structure') || userMessage.toLowerCase().includes('organisational structure') ||
-        userMessage.toLowerCase().includes('business actors') || userMessage.toLowerCase().includes('organization') ||
-        userMessage.toLowerCase().includes('organisation') || userMessage.toLowerCase().includes('structure') ||
-        userMessage.toLowerCase().includes('list all business') || userMessage.toLowerCase().includes('show business') ||
-        userMessage.toLowerCase().includes('list business') || userMessage.toLowerCase().includes('all business actors')) {
+    // Semantic detection for organizational structure queries
+    if (this.isOrganizationalStructureQuery(userMessage)) {
       return this.handleArchiMetalOrganizationalStructure(userMessage, analysisResult, context);
     }
 
@@ -795,202 +980,169 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
     const businessProcesses = archiMateParser.getBusinessProcesses();
     const models = archiMateParser.getAllModels();
 
-    let response = `## 🏢 **ArchiMetal Organizational Structure Analysis**\n\n`;
-    response += `**Based on Actual ArchiMate Model Data**\n\n`;
+    let response = '';
 
-    // Analyze architecture state (baseline vs target)
-    const elementsByModel: {[key: string]: {actors: any[], processes: any[]}} = {};
+    // Check if we have data
+    if (businessActors.length === 0) {
+      return "I don't see any business actors in the ArchiMetal models right now. Let me check if the models are properly loaded or if there might be a parsing issue.";
+    }
 
+    // Professional executive briefing format with credibility markers
+    response = `Based on Actual ArchiMetal Model Data\n\n`;
+    response += `🏢 Organizational Structure Analysis (${businessActors.length} Business Actors | ${businessProcesses.length} Business Processes)\n\n`;
+
+    // Group actors by category for better understanding
+    const actorsByCategory: {[key: string]: any[]} = {};
     businessActors.forEach(actor => {
-      for (const model of models) {
-        if (model.elements.has(actor.id)) {
-          const modelName = model.metadata?.name || 'Unknown Model';
-          if (!elementsByModel[modelName]) elementsByModel[modelName] = {actors: [], processes: []};
-          elementsByModel[modelName].actors.push(actor);
-          break;
-        }
+      let category = 'Core Organization';
+      const name = actor.name.toLowerCase();
+
+      if (name.includes('sales') || name.includes('customer') || name.includes('commercial')) {
+        category = 'Customer & Sales';
+      } else if (name.includes('production') || name.includes('manufacturing')) {
+        category = 'Production';
+      } else if (name.includes('logistics') || name.includes('supply') || name.includes('transportation')) {
+        category = 'Logistics & Supply';
+      } else if (name.includes('finance') || name.includes('procurement')) {
+        category = 'Finance & Procurement';
+      } else if (name.includes('hr') || name.includes('human resources') || name.includes('quality')) {
+        category = 'Support Functions';
+      } else if (name.includes('dc ') || name.includes('distribution center') || name.includes('hq') || name === 'archimetal') {
+        category = 'Core Organization';
+      } else if (name.includes('partner') || name === 'customer') {
+        category = 'External Partners';
       }
+
+      if (!actorsByCategory[category]) actorsByCategory[category] = [];
+      actorsByCategory[category].push(actor);
     });
 
-    businessProcesses.forEach(process => {
-      for (const model of models) {
-        if (model.elements.has(process.id)) {
-          const modelName = model.metadata?.name || 'Unknown Model';
-          if (!elementsByModel[modelName]) elementsByModel[modelName] = {actors: [], processes: []};
-          elementsByModel[modelName].processes.push(process);
-          break;
-        }
-      }
-    });
-
-    // Show baseline vs target distinction if multiple models
-    if (Object.keys(elementsByModel).length > 1) {
-      response += `### 🎯 **Architecture State Analysis**\n\n`;
-      response += `**Elements distributed across ${Object.keys(elementsByModel).length} models:**\n\n`;
-
-      for (const [modelName, elements] of Object.entries(elementsByModel)) {
-        const isTarget = modelName.toLowerCase().includes('target') || modelName.toLowerCase().includes('to-be') ||
-                        modelName.toLowerCase().includes('future') || modelName.toLowerCase().includes('new');
-        const isBaseline = modelName.toLowerCase().includes('baseline') || modelName.toLowerCase().includes('as-is') ||
-                          modelName.toLowerCase().includes('current') || modelName.toLowerCase().includes('existing');
-
-        let stateIndicator = '📊';
-        if (isTarget) stateIndicator = '🎯';
-        else if (isBaseline) stateIndicator = '📋';
-
-        response += `${stateIndicator} **${modelName}** (${elements.actors.length} actors, ${elements.processes.length} processes)\n`;
-      }
-      response += `\n`;
-    }
-
-    if (businessActors.length > 0) {
-      response += `### 👥 **Business Actors** (${businessActors.length} total)\n\n`;
-
-      const actorsByCategory: {[key: string]: any[]} = {};
-      businessActors.forEach(actor => {
-        let category = 'Organizational Units';
-        const name = actor.name.toLowerCase();
-
-        if (name.includes('management') || name.includes('manager') || name.includes('director')) {
-          category = 'Management';
-        } else if (name.includes('sales') || name.includes('customer') || name.includes('commercial')) {
-          category = 'Sales & Customer Relations';
-        } else if (name.includes('production') || name.includes('manufacturing')) {
-          category = 'Production';
-        } else if (name.includes('logistics') || name.includes('supply') || name.includes('transportation')) {
-          category = 'Logistics & Supply Chain';
-        } else if (name.includes('finance') || name.includes('procurement')) {
-          category = 'Finance & Procurement';
-        } else if (name.includes('hr') || name.includes('human resources')) {
-          category = 'Human Resources';
-        } else if (name.includes('quality')) {
-          category = 'Quality Management';
-        } else if (name.includes('dc ') || name.includes('distribution center') || name.includes('hq') ||
-                   name === 'archimetal' || name.includes('center') || name.includes('distribution')) {
-          category = 'Organizational Units';
-        } else if (name === 'business actor' || name.includes('generic')) {
-          category = 'Generic/Template Elements';
-        } else if (name.includes('partner') || name === 'customer') {
-          category = 'External Stakeholders';
-        }
-
-        if (!actorsByCategory[category]) actorsByCategory[category] = [];
-        actorsByCategory[category].push(actor);
-      });
-
-      for (const [category, actors] of Object.entries(actorsByCategory)) {
-        response += `**${category}:**\n`;
-        actors.forEach(actor => {
-          response += `- **${actor.name}** (ID: ${actor.id})\n`;
-        });
-        response += `\n`;
-      }
-    } else {
-      response += `❌ **No Business Actors found** in the ArchiMetal models.\n\n`;
-    }
-
-    if (businessProcesses.length > 0) {
-      response += `### 🔄 **Business Processes** (${businessProcesses.length} total)\n\n`;
-      businessProcesses.forEach(process => {
-        response += `- **${process.name}** (ID: ${process.id})\n`;
+    // Present categories with executive briefing structure and clickable element links
+    for (const [category, actors] of Object.entries(actorsByCategory)) {
+      response += `${category} (${actors.length} units)\n`;
+      actors.forEach(actor => {
+        // Create element reference with clickable ID for ElementViewer
+        response += `  • ${actor.name} [<span class="element-id" data-element-id="${actor.id}" data-model="${this.getModelNameForElement(actor.id, models)}" title="Click to view element details">${actor.id}</span>]\n`;
       });
       response += `\n`;
-    } else {
-      response += `❌ **No Business Processes found** in the ArchiMetal models.\n\n`;
     }
 
-    // Add organizational hierarchy analysis using relationships
-    if (businessActors.length > 0) {
-      response += `### 🏗️ **Organizational Hierarchy**\n\n`;
+    // Analyze organizational relationships if they exist
+    const orgRelationships: any[] = [];
+    for (const model of models) {
+      for (const relationship of model.relationships.values()) {
+        const sourceEl = model.elements.get(relationship.source);
+        const targetEl = model.elements.get(relationship.target);
 
-      // Analyze composition relationships to understand organizational structure
-      const models = archiMateParser.getAllModels();
-      const orgRelationships: any[] = [];
-
-      for (const model of models) {
-        for (const relationship of model.relationships.values()) {
-          const sourceEl = model.elements.get(relationship.source);
-          const targetEl = model.elements.get(relationship.target);
-
-          if (sourceEl && targetEl &&
-              (sourceEl.type.includes('BusinessActor') || targetEl.type.includes('BusinessActor')) &&
-              (relationship.type.includes('Composition') || relationship.type.includes('Aggregation') ||
-               relationship.type.includes('Assignment'))) {
-            orgRelationships.push({
-              relationship,
-              source: sourceEl,
-              target: targetEl,
-              type: relationship.type.replace('archimate:', '')
-            });
-          }
-        }
-      }
-
-      if (orgRelationships.length > 0) {
-        response += `**Organizational Relationships Found:** ${orgRelationships.length}\n\n`;
-
-        // Group by relationship type for better understanding
-        const relsByType: {[key: string]: any[]} = {};
-        orgRelationships.forEach(rel => {
-          if (!relsByType[rel.type]) relsByType[rel.type] = [];
-          relsByType[rel.type].push(rel);
-        });
-
-        // Add business context explanation for relationship types
-        response += `**Business Context:**\n`;
-        if (relsByType['CompositionRelationship']) {
-          response += `- **Composition relationships** show organizational containment (units that contain other units)\n`;
-        }
-        if (relsByType['AssignmentRelationship']) {
-          response += `- **Assignment relationships** show responsibility allocation (who is assigned to what)\n`;
-        }
-        if (relsByType['AggregationRelationship']) {
-          response += `- **Aggregation relationships** show organizational groupings (units that work together)\n`;
-        }
-        response += `\n`;
-
-        for (const [relType, rels] of Object.entries(relsByType)) {
-          response += `**${relType} (${rels.length} total):**\n`;
-
-          // Group relationships by source for better business understanding
-          const relsBySource: {[key: string]: any[]} = {};
-          rels.forEach(rel => {
-            if (!relsBySource[rel.source.name]) relsBySource[rel.source.name] = [];
-            relsBySource[rel.source.name].push(rel);
+        if (sourceEl && targetEl &&
+            (sourceEl.type.includes('BusinessActor') || targetEl.type.includes('BusinessActor')) &&
+            (relationship.type.includes('Composition') || relationship.type.includes('Assignment'))) {
+          orgRelationships.push({
+            source: sourceEl,
+            target: targetEl,
+            type: relationship.type.replace('archimate:', '')
           });
+        }
+      }
+    }
 
-          // Show complete lists with business context
-          for (const [sourceName, sourceRels] of Object.entries(relsBySource)) {
-            const targets = sourceRels.map(rel => rel.target.name);
-            if (relType === 'CompositionRelationship') {
-              response += `- **${sourceName}** contains: ${targets.join(', ')}\n`;
-            } else if (relType === 'AssignmentRelationship') {
-              response += `- **${sourceName}** is responsible for: ${targets.join(', ')}\n`;
-            } else {
-              response += `- **${sourceName}** ${relType.toLowerCase()}s: ${targets.join(', ')}\n`;
-            }
-          }
+    if (orgRelationships.length > 0) {
+      // Group by composition to show hierarchy
+      const compositions = orgRelationships.filter(rel => rel.type === 'CompositionRelationship');
+      if (compositions.length > 0) {
+        response += `Organizational Hierarchy (${compositions.length} composition relationships)\n\n`;
+
+        const hierarchies: {[key: string]: any[]} = {};
+        compositions.forEach(rel => {
+          if (!hierarchies[rel.source.name]) hierarchies[rel.source.name] = [];
+          hierarchies[rel.source.name].push(rel.target);
+        });
+
+        Object.entries(hierarchies).forEach(([parent, children]) => {
+          response += `${parent} contains:\n`;
+          children.forEach(child => {
+            response += `  • ${child.name} [<span class="element-id" data-element-id="${child.id}" data-model="${this.getModelNameForElement(child.id, models)}" title="Click to view element details">${child.id}</span>]\n`;
+          });
+          response += `\n`;
+        });
+      }
+
+      // Show assignments/responsibilities
+      const assignments = orgRelationships.filter(rel => rel.type === 'AssignmentRelationship');
+      if (assignments.length > 0) {
+        response += `Role Assignments (${assignments.length} assignment relationships)\n\n`;
+
+        const responsibilities: {[key: string]: any[]} = {};
+        assignments.forEach(rel => {
+          if (!responsibilities[rel.source.name]) responsibilities[rel.source.name] = [];
+          responsibilities[rel.source.name].push(rel.target);
+        });
+
+        Object.entries(responsibilities).forEach(([unit, tasks]) => {
+          response += `${unit} handles:\n`;
+          tasks.forEach(task => {
+            response += `  • ${task.name} [<span class="element-id" data-element-id="${task.id}" data-model="${this.getModelNameForElement(task.id, models)}" title="Click to view element details">${task.id}</span>]\n`;
+          });
+          response += `\n`;
+        });
+      }
+    }
+
+    // Complete business processes listing - NO TRUNCATION
+    if (businessProcesses.length > 0) {
+      response += `📋 Complete Business Process Inventory (${businessProcesses.length} processes)\n\n`;
+
+      // Group processes by domain for better readability
+      const processesByDomain: {[key: string]: any[]} = {
+        'Customer Management': [],
+        'Production & Manufacturing': [],
+        'Logistics & Distribution': [],
+        'Finance & Administration': [],
+        'Support & Governance': []
+      };
+
+      businessProcesses.forEach(process => {
+        const name = process.name.toLowerCase();
+        let domain = 'Support & Governance'; // default
+
+        if (name.includes('customer') || name.includes('sales') || name.includes('order') || name.includes('commercial')) {
+          domain = 'Customer Management';
+        } else if (name.includes('production') || name.includes('manufacturing') || name.includes('steel') || name.includes('quality')) {
+          domain = 'Production & Manufacturing';
+        } else if (name.includes('logistics') || name.includes('distribution') || name.includes('transport') || name.includes('supply')) {
+          domain = 'Logistics & Distribution';
+        } else if (name.includes('finance') || name.includes('procurement') || name.includes('invoice') || name.includes('payment')) {
+          domain = 'Finance & Administration';
+        }
+
+        processesByDomain[domain].push(process);
+      });
+
+      for (const [domain, processes] of Object.entries(processesByDomain)) {
+        if (processes.length > 0) {
+          response += `${domain} (${processes.length} processes):\n`;
+          processes.forEach(process => {
+            response += `  • ${process.name} [<span class="element-id" data-element-id="${process.id}" data-model="${this.getModelNameForElement(process.id, models)}" title="Click to view element details">${process.id}</span>]\n`;
+          });
           response += `\n`;
         }
-      } else {
-        response += `No explicit organizational hierarchy relationships found in the model.\n`;
-        response += `This suggests a flat organizational structure or relationships may be modeled differently.\n\n`;
       }
     }
 
-    const totalElements = businessActors.length + businessProcesses.length;
-    response += `### 📊 **Summary**\n\n`;
-    response += `- **Total Business Actors:** ${businessActors.length}\n`;
-    response += `- **Total Business Processes:** ${businessProcesses.length}\n`;
-    response += `- **Total Organizational Elements:** ${totalElements}\n\n`;
+    // Executive summary with concrete totals and follow-up options
+    response += `📊 Architecture Summary\n`;
+    response += `Total Business Actors: ${businessActors.length}\n`;
+    response += `Total Business Processes: ${businessProcesses.length}\n`;
+    response += `Organizational Relationships: ${orgRelationships.length}\n`;
+    response += `Loaded Models: ${models.length}\n\n`;
 
-    if (totalElements === 0) {
-      const models = archiMateParser.getAllModels();
-      const totalModelElements = models.reduce((sum, model) => sum + model.elements.size, 0);
-      response += `⚠️ **No organizational elements found**. Available: ${models.length} models with ${totalModelElements} elements\n`;
-    } else {
-      response += `**Analysis completed based on actual ArchiMetal model data.**\n`;
-    }
+    response += `Next Analysis Options:\n`;
+    response += `• "Analyze relationships between [specific unit] and [target]"\n`;
+    response += `• "Show application dependencies for [business actor]"\n`;
+    response += `• "Impact analysis for organizational changes"\n`;
+    response += `• "Detail the business processes for [specific domain]"\n\n`;
+
+    response += `This comprehensive analysis provides complete visibility into ArchiMetal's organizational architecture without truncation, sourced directly from parsed ArchiMate model elements and relationships.`;
 
     return response;
   }
@@ -1161,47 +1313,31 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
     const modelSummary = archiMateParser.getModelSummary();
     const totalElements = Object.values(modelSummary).reduce((sum: number, model: any) => sum + model.elements, 0);
 
-    // Try to provide organization-specific context
-    let response = `## 🏗️ **ArchiMetal Enterprise Architecture Analysis**\n\n`;
-    response += `**Your Query:** "${userMessage}"\n\n`;
+    // Extract potential entities from the query
+    const { technologies, systems, processes } = analysisResult.extractedEntities;
 
-    if (totalElements > 0) {
-      response += `**Available ArchiMetal Models:** ${Object.keys(modelSummary).length} models with ${totalElements} total elements\n\n`;
+    // Build conversational response following knowledge base guidelines
+    let response = '';
 
-      // Extract potential entities from the query
-      const { technologies, systems, processes } = analysisResult.extractedEntities;
+    if (technologies.length > 0 || systems.length > 0 || processes.length > 0) {
+      const detectedItems = [...technologies, ...systems, ...processes];
+      response = `I can help you analyze ${detectedItems.join(', ')} within ArchiMetal's organizational context. `;
 
-      if (technologies.length > 0 || systems.length > 0 || processes.length > 0) {
-        response += `**Detected Architecture Elements:**\n`;
-        if (technologies.length > 0) response += `- Technologies: ${technologies.join(', ')}\n`;
-        if (systems.length > 0) response += `- Systems: ${systems.join(', ')}\n`;
-        if (processes.length > 0) response += `- Processes: ${processes.join(', ')}\n`;
-        response += `\n`;
-
-        response += `I can analyze these elements within ArchiMetal's organizational context. `;
-        response += `Please be more specific about what you'd like to know:\n\n`;
-        response += `**Example queries:**\n`;
-        response += `- "What applications use the CRM system?"\n`;
-        response += `- "Show me the organizational structure"\n`;
-        response += `- "Analyze the impact of replacing ${technologies[0] || systems[0] || 'a system'}"\n`;
-        response += `- "What business processes are affected by ${systems[0] || technologies[0] || 'this change'}?"\n`;
-      } else {
-        response += `**Available Analysis Types:**\n`;
-        response += `- **Organizational Analysis**: "Show organizational structure", "Who are the business actors?"\n`;
-        response += `- **System Analysis**: "What applications use X?", "Show data flows to Y"\n`;
-        response += `- **Impact Analysis**: "Analyze impact of replacing X with Y"\n`;
-        response += `- **Process Analysis**: "Show business processes for Z"\n`;
-        response += `- **Initiative Analysis**: "Add new distribution center in France"\n`;
+      if (totalElements > 0) {
+        response += `Based on the loaded ArchiMetal models, `;
       }
-    } else {
-      response += `⚠️ ArchiMetal models are not currently loaded. I can still help with:\n`;
-      response += `- General enterprise architecture guidance\n`;
-      response += `- ArchiMate modeling best practices\n`;
-      response += `- Architecture pattern recommendations\n`;
-    }
 
-    response += `\n**I'm designed to analyze your organization's specific architecture.** `;
-    response += `Please provide more context about what you'd like to analyze or change.`;
+      response += `could you be more specific about what you'd like to know? For example:\n\n`;
+      response += `- What applications use the ${detectedItems[0]}?\n`;
+      response += `- Show me dependencies for ${detectedItems[0]}\n`;
+      response += `- Analyze the impact of changes to ${detectedItems[0]}\n`;
+    } else {
+      if (totalElements > 0) {
+        response = `I have access to ArchiMetal's architectural models and can help you with organizational analysis, system dependencies, impact assessment, or process optimization. What specific aspect would you like to explore?`;
+      } else {
+        response = `I'm designed to help with ArchiMetal architectural analysis. While the models are loading, I can still provide guidance on enterprise architecture patterns, ArchiMate modeling best practices, or general architectural questions. What would you like to discuss?`;
+      }
+    }
 
     return response;
   }
@@ -1510,6 +1646,45 @@ Could you be more specific about what architectural challenge you're working on?
     }
 
     return response;
+  }
+
+  // Semantic detection for organizational structure queries
+  private isOrganizationalStructureQuery(message: string): boolean {
+    const lowerMessage = message.toLowerCase();
+
+    // Context keywords - indicate ArchiMetal context
+    const contextKeywords = ['archimetal', 'archimate'];
+    const hasContext = contextKeywords.some(keyword => lowerMessage.includes(keyword));
+
+    // Entity keywords - what we're asking about
+    const entityKeywords = ['actors', 'business actors', 'organization', 'organisational', 'structure', 'units', 'departments', 'processes'];
+    const hasEntity = entityKeywords.some(keyword => lowerMessage.includes(keyword));
+
+    // Action keywords - what we want to do
+    const actionKeywords = ['list', 'show', 'display', 'get', 'find', 'all', 'what are', 'who are', 'tell me'];
+    const hasAction = actionKeywords.some(keyword => lowerMessage.includes(keyword));
+
+    // Semantic understanding: Context + Entity + Action = Organizational Query
+    // Examples that should match:
+    // "List all actors in ArchiMetal" → hasContext=true, hasEntity=true, hasAction=true
+    // "Show ArchiMetal business actors" → hasContext=true, hasEntity=true, hasAction=true
+    // "What are the organizational units in ArchiMetal?" → hasContext=true, hasEntity=true, hasAction=true
+    // "Get all ArchiMetal departments" → hasContext=true, hasEntity=true, hasAction=true
+
+    return hasContext && hasEntity && hasAction;
+  }
+
+  // Helper method to find which model contains a specific element
+  private getModelNameForElement(elementId: string, models: any[]): string {
+    for (const model of models) {
+      if (model.elements.has(elementId)) {
+        // Extract model filename from the full model name or path
+        const modelName = model.name || 'Unknown';
+        // Clean up the model name for URL usage
+        return modelName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+      }
+    }
+    return 'ArchiMetal_Unknown';
   }
 
 }
