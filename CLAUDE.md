@@ -132,7 +132,8 @@ src/
     │   ├── ArchiMetal_Transformation_Overview/
     │   ├── Detail_Enterprise_Architecture/
     │   └── Target_State_Scenario/
-    └── project_docs/  # Project diagrams and progress tracking
+    ├── project_docs/  # Project diagrams and progress tracking
+    └── architecture_patterns/  # Knowledge graph of architectural patterns
 ```
 
 ### Development Standards

@@ -1,0 +1,291 @@
+@prefix ampattern: <http://archimetal.ai/ontology/patterns#> .
+@prefix am: <http://archimetal.ai/ontology/archimate#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Architectural Pattern Classification Ontology
+# Extends ArchiMate ontology with pattern-specific concepts
+
+ampattern: a owl:Ontology ;
+    dcterms:title "Architectural Pattern Classification Ontology" ;
+    dcterms:description "Ontology for classifying and analyzing architectural patterns" ;
+    dcterms:version "1.0" ;
+    dcterms:created "2024-09-20"^^xsd:date ;
+    owl:imports am: .
+
+# ===== PATTERN CORE CONCEPTS =====
+
+ampattern:Pattern a owl:Class ;
+    rdfs:label "Architectural Pattern" ;
+    rdfs:comment "Reusable solution to a commonly occurring architectural problem" ;
+    rdfs:subClassOf owl:Thing .
+
+ampattern:PatternCategory a owl:Class ;
+    rdfs:label "Pattern Category" ;
+    rdfs:comment "Classification of architectural patterns by domain or concern" .
+
+ampattern:PatternContext a owl:Class ;
+    rdfs:label "Pattern Context" ;
+    rdfs:comment "Situation or environment where a pattern is applicable" .
+
+ampattern:PatternProblem a owl:Class ;
+    rdfs:label "Pattern Problem" ;
+    rdfs:comment "Recurring problem that the pattern addresses" .
+
+ampattern:PatternSolution a owl:Class ;
+    rdfs:label "Pattern Solution" ;
+    rdfs:comment "Architectural solution provided by the pattern" .
+
+# ===== PATTERN TYPES BY LAYER =====
+
+ampattern:BusinessPattern a owl:Class ;
+    rdfs:label "Business Pattern" ;
+    rdfs:comment "Pattern addressing business layer concerns" ;
+    rdfs:subClassOf ampattern:Pattern .
+
+ampattern:ApplicationPattern a owl:Class ;
+    rdfs:label "Application Pattern" ;
+    rdfs:comment "Pattern addressing application layer concerns" ;
+    rdfs:subClassOf ampattern:Pattern .
+
+ampattern:TechnologyPattern a owl:Class ;
+    rdfs:label "Technology Pattern" ;
+    rdfs:comment "Pattern addressing technology layer concerns" ;
+    rdfs:subClassOf ampattern:Pattern .
+
+ampattern:IntegrationPattern a owl:Class ;
+    rdfs:label "Integration Pattern" ;
+    rdfs:comment "Pattern addressing cross-layer integration concerns" ;
+    rdfs:subClassOf ampattern:Pattern .
+
+ampattern:TransformationPattern a owl:Class ;
+    rdfs:label "Transformation Pattern" ;
+    rdfs:comment "Pattern addressing migration and transformation concerns" ;
+    rdfs:subClassOf ampattern:Pattern .
+
+# ===== SPECIFIC PATTERN CATEGORIES =====
+
+# Business Patterns
+ampattern:OrganizationalPattern a owl:Class ;
+    rdfs:label "Organizational Pattern" ;
+    rdfs:comment "Patterns for organizational structure and governance" ;
+    rdfs:subClassOf ampattern:BusinessPattern .
+
+ampattern:ProcessPattern a owl:Class ;
+    rdfs:label "Process Pattern" ;
+    rdfs:comment "Patterns for business process design and optimization" ;
+    rdfs:subClassOf ampattern:BusinessPattern .
+
+ampattern:ServicePattern a owl:Class ;
+    rdfs:label "Service Pattern" ;
+    rdfs:comment "Patterns for business service delivery" ;
+    rdfs:subClassOf ampattern:BusinessPattern .
+
+# Application Patterns
+ampattern:ComponentPattern a owl:Class ;
+    rdfs:label "Component Pattern" ;
+    rdfs:comment "Patterns for application component design" ;
+    rdfs:subClassOf ampattern:ApplicationPattern .
+
+ampattern:DataPattern a owl:Class ;
+    rdfs:label "Data Pattern" ;
+    rdfs:comment "Patterns for data management and flow" ;
+    rdfs:subClassOf ampattern:ApplicationPattern .
+
+ampattern:APIPattern a owl:Class ;
+    rdfs:label "API Pattern" ;
+    rdfs:comment "Patterns for application programming interfaces" ;
+    rdfs:subClassOf ampattern:ApplicationPattern .
+
+# Technology Patterns
+ampattern:InfrastructurePattern a owl:Class ;
+    rdfs:label "Infrastructure Pattern" ;
+    rdfs:comment "Patterns for IT infrastructure design" ;
+    rdfs:subClassOf ampattern:TechnologyPattern .
+
+ampattern:PlatformPattern a owl:Class ;
+    rdfs:label "Platform Pattern" ;
+    rdfs:comment "Patterns for technology platform architecture" ;
+    rdfs:subClassOf ampattern:TechnologyPattern .
+
+ampattern:SecurityPattern a owl:Class ;
+    rdfs:label "Security Pattern" ;
+    rdfs:comment "Patterns for security architecture" ;
+    rdfs:subClassOf ampattern:TechnologyPattern .
+
+# ===== PATTERN QUALITIES =====
+
+ampattern:PatternQuality a owl:Class ;
+    rdfs:label "Pattern Quality" ;
+    rdfs:comment "Quality attribute addressed by a pattern" .
+
+ampattern:Scalability a owl:Class ;
+    rdfs:label "Scalability" ;
+    rdfs:subClassOf ampattern:PatternQuality .
+
+ampattern:Reliability a owl:Class ;
+    rdfs:label "Reliability" ;
+    rdfs:subClassOf ampattern:PatternQuality .
+
+ampattern:Performance a owl:Class ;
+    rdfs:label "Performance" ;
+    rdfs:subClassOf ampattern:PatternQuality .
+
+ampattern:Security a owl:Class ;
+    rdfs:label "Security" ;
+    rdfs:subClassOf ampattern:PatternQuality .
+
+ampattern:Maintainability a owl:Class ;
+    rdfs:label "Maintainability" ;
+    rdfs:subClassOf ampattern:PatternQuality .
+
+ampattern:Interoperability a owl:Class ;
+    rdfs:label "Interoperability" ;
+    rdfs:subClassOf ampattern:PatternQuality .
+
+# ===== PATTERN RELATIONSHIPS =====
+
+ampattern:hasContext a owl:ObjectProperty ;
+    rdfs:label "has context" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:PatternContext .
+
+ampattern:solvesProblem a owl:ObjectProperty ;
+    rdfs:label "solves problem" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:PatternProblem .
+
+ampattern:providesSolution a owl:ObjectProperty ;
+    rdfs:label "provides solution" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:PatternSolution .
+
+ampattern:addressesQuality a owl:ObjectProperty ;
+    rdfs:label "addresses quality" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:PatternQuality .
+
+ampattern:belongsToCategory a owl:ObjectProperty ;
+    rdfs:label "belongs to category" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:PatternCategory .
+
+ampattern:hasParticipant a owl:ObjectProperty ;
+    rdfs:label "has participant" ;
+    rdfs:comment "ArchiMate element that participates in the pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range am:Element .
+
+ampattern:hasKeyRole a owl:ObjectProperty ;
+    rdfs:label "has key role" ;
+    rdfs:comment "ArchiMate element that plays a key role in the pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range am:Element .
+
+ampattern:dependsOn a owl:ObjectProperty ;
+    rdfs:label "depends on" ;
+    rdfs:comment "Pattern dependency relationship" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:Pattern .
+
+ampattern:conflictsWith a owl:ObjectProperty ;
+    rdfs:label "conflicts with" ;
+    rdfs:comment "Pattern that conflicts with this pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:Pattern .
+
+ampattern:complementedBy a owl:ObjectProperty ;
+    rdfs:label "complemented by" ;
+    rdfs:comment "Pattern that complements this pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range ampattern:Pattern .
+
+# ===== PATTERN PROPERTIES =====
+
+ampattern:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:intent a owl:DatatypeProperty ;
+    rdfs:label "intent" ;
+    rdfs:comment "Main purpose and goal of the pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:applicability a owl:DatatypeProperty ;
+    rdfs:label "applicability" ;
+    rdfs:comment "When and where to apply this pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:consequences a owl:DatatypeProperty ;
+    rdfs:label "consequences" ;
+    rdfs:comment "Trade-offs and results of applying the pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:implementation a owl:DatatypeProperty ;
+    rdfs:label "implementation" ;
+    rdfs:comment "How to implement the pattern" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:maturityLevel a owl:DatatypeProperty ;
+    rdfs:label "maturity level" ;
+    rdfs:comment "Maturity level of the pattern (experimental, proven, established)" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:complexity a owl:DatatypeProperty ;
+    rdfs:label "complexity" ;
+    rdfs:comment "Implementation complexity (low, medium, high)" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:impactLevel a owl:DatatypeProperty ;
+    rdfs:label "impact level" ;
+    rdfs:comment "Level of impact when applying pattern (low, medium, high, critical)" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:riskLevel a owl:DatatypeProperty ;
+    rdfs:label "risk level" ;
+    rdfs:comment "Risk level associated with pattern implementation" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:confidence a owl:DatatypeProperty ;
+    rdfs:label "confidence" ;
+    rdfs:comment "Confidence level in pattern effectiveness (0.0 to 1.0)" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:decimal .
+
+# ===== ARCHIMETAL SPECIFIC EXTENSIONS =====
+
+ampattern:extractedFrom a owl:DatatypeProperty ;
+    rdfs:label "extracted from" ;
+    rdfs:comment "Source ArchiMetal model or document" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:archiMetalFigure a owl:DatatypeProperty ;
+    rdfs:label "ArchiMetal figure" ;
+    rdfs:comment "Figure number in ArchiMetal documentation" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:businessScenario a owl:DatatypeProperty ;
+    rdfs:label "business scenario" ;
+    rdfs:comment "ArchiMetal business scenario where pattern applies" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .
+
+ampattern:transformationPhase a owl:DatatypeProperty ;
+    rdfs:label "transformation phase" ;
+    rdfs:comment "Phase in ArchiMetal transformation journey" ;
+    rdfs:domain ampattern:Pattern ;
+    rdfs:range xsd:string .

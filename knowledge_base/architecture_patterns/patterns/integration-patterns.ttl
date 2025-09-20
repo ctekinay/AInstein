@@ -1,0 +1,154 @@
+@prefix ampattern: <http://archimetal.ai/ontology/patterns#> .
+@prefix am: <http://archimetal.ai/ontology/archimate#> .
+@prefix amrel: <http://archimetal.ai/ontology/archimate/relationships#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Integration Patterns extracted from ArchiMetal Models
+
+# ===== EAI BUS PATTERN =====
+
+ampattern:EAIBusPattern a ampattern:IntegrationPattern ;
+    rdfs:label "Enterprise Application Integration Bus Pattern" ;
+    ampattern:description "Centralized integration hub that facilitates communication between multiple applications through standardized interfaces and message transformation" ;
+    ampattern:intent "Reduce point-to-point integration complexity by providing a central mediation layer" ;
+    ampattern:applicability "When multiple applications need to exchange data and services in a controlled, monitored way" ;
+    ampattern:consequences "Reduces integration complexity but introduces single point of failure; requires governance and monitoring" ;
+    ampattern:extractedFrom "ArchiMetal Figure 12, 19" ;
+    ampattern:archiMetalFigure "12, 19" ;
+    ampattern:businessScenario "Application landscape transformation from baseline to target state" ;
+    ampattern:maturityLevel "established" ;
+    ampattern:complexity "high" ;
+    ampattern:impactLevel "high" ;
+    ampattern:confidence "0.9"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Interoperability, ampattern:Maintainability ;
+    ampattern:hasKeyRole ampattern:EAIBusComponent ;
+    ampattern:hasParticipant ampattern:CRMSystem, ampattern:CustomerOrderMonitoring, ampattern:DCCustomerRelations .
+
+ampattern:EAIBusComponent a am:ApplicationComponent ;
+    rdfs:label "EAI Bus" ;
+    am:hasName "EAI Bus" ;
+    am:belongsToLayer "application" ;
+    am:hasDocumentation "Central integration hub managing data flows between applications" .
+
+ampattern:CRMSystem a am:ApplicationComponent ;
+    rdfs:label "CRM System" ;
+    am:hasName "CRM System" ;
+    am:belongsToLayer "application" .
+
+ampattern:CustomerOrderMonitoring a am:ApplicationComponent ;
+    rdfs:label "Customer Order Monitoring" ;
+    am:hasName "Customer Order Monitoring" ;
+    am:belongsToLayer "application" .
+
+ampattern:DCCustomerRelations a am:ApplicationComponent ;
+    rdfs:label "DC Customer Relations" ;
+    am:hasName "DC Customer Relations" ;
+    am:belongsToLayer "application" .
+
+# Relationships in EAI Bus Pattern
+ampattern:EAIBusComponent amrel:serving ampattern:CRMSystem .
+ampattern:EAIBusComponent amrel:serving ampattern:CustomerOrderMonitoring .
+ampattern:EAIBusComponent amrel:serving ampattern:DCCustomerRelations .
+ampattern:CRMSystem amrel:serving ampattern:EAIBusComponent .
+ampattern:CustomerOrderMonitoring amrel:access ampattern:EAIBusComponent .
+ampattern:DCCustomerRelations amrel:access ampattern:EAIBusComponent .
+
+# ===== API GATEWAY PATTERN =====
+
+ampattern:APIGatewayPattern a ampattern:IntegrationPattern ;
+    rdfs:label "API Gateway Pattern" ;
+    ampattern:description "Single entry point for all client requests that routes to appropriate backend services" ;
+    ampattern:intent "Provide unified interface for multiple microservices while handling cross-cutting concerns" ;
+    ampattern:applicability "In microservices architectures where multiple services need to be exposed to clients" ;
+    ampattern:consequences "Simplifies client interactions but can become bottleneck; requires careful capacity planning" ;
+    ampattern:extractedFrom "ArchiMetal transformation scenarios" ;
+    ampattern:businessScenario "Modernization to service-oriented architecture" ;
+    ampattern:maturityLevel "proven" ;
+    ampattern:complexity "medium" ;
+    ampattern:impactLevel "medium" ;
+    ampattern:confidence "0.85"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Security, ampattern:Performance, ampattern:Scalability ;
+    ampattern:complementedBy ampattern:EAIBusPattern .
+
+# ===== DATA SYNCHRONIZATION PATTERN =====
+
+ampattern:DataSyncPattern a ampattern:IntegrationPattern ;
+    rdfs:label "Data Synchronization Pattern" ;
+    ampattern:description "Ensures data consistency across multiple systems through event-driven synchronization" ;
+    ampattern:intent "Maintain data consistency while allowing systems to operate independently" ;
+    ampattern:applicability "When multiple systems maintain overlapping data that must remain synchronized" ;
+    ampattern:consequences "Ensures consistency but increases complexity; requires conflict resolution strategies" ;
+    ampattern:extractedFrom "ArchiMetal customer data flows" ;
+    ampattern:archiMetalFigure "11, 15" ;
+    ampattern:businessScenario "Customer data management across business units" ;
+    ampattern:maturityLevel "proven" ;
+    ampattern:complexity "high" ;
+    ampattern:impactLevel "high" ;
+    ampattern:riskLevel "medium" ;
+    ampattern:confidence "0.8"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Reliability, ampattern:Performance ;
+    ampattern:hasParticipant ampattern:CustomerData, ampattern:CRMSystem, ampattern:CustomerOrderMonitoring .
+
+ampattern:CustomerData a am:DataObject ;
+    rdfs:label "Customer Data" ;
+    am:hasName "Customer Data" ;
+    am:belongsToLayer "application" ;
+    am:hasDocumentation "Master customer information shared across systems" .
+
+# ===== LEGACY SYSTEM WRAPPER PATTERN =====
+
+ampattern:LegacyWrapperPattern a ampattern:IntegrationPattern ;
+    rdfs:label "Legacy System Wrapper Pattern" ;
+    ampattern:description "Provides modern interface to legacy systems without modifying their internal structure" ;
+    ampattern:intent "Enable integration with legacy systems while preserving existing functionality" ;
+    ampattern:applicability "When legacy systems must be integrated but cannot be modified or replaced immediately" ;
+    ampattern:consequences "Enables integration without disruption but may limit functionality and performance" ;
+    ampattern:extractedFrom "ArchiMetal baseline architecture analysis" ;
+    ampattern:archiMetalFigure "12" ;
+    ampattern:businessScenario "Integration of existing steel production systems" ;
+    ampattern:transformationPhase "baseline" ;
+    ampattern:maturityLevel "established" ;
+    ampattern:complexity "medium" ;
+    ampattern:impactLevel "low" ;
+    ampattern:riskLevel "low" ;
+    ampattern:confidence "0.95"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Interoperability, ampattern:Maintainability ;
+    ampattern:dependsOn ampattern:EAIBusPattern .
+
+# ===== SERVICE MESH PATTERN =====
+
+ampattern:ServiceMeshPattern a ampattern:IntegrationPattern ;
+    rdfs:label "Service Mesh Pattern" ;
+    ampattern:description "Infrastructure layer for service-to-service communication with traffic management, security, and observability" ;
+    ampattern:intent "Handle service communication concerns separately from business logic" ;
+    ampattern:applicability "In complex microservices environments requiring advanced traffic management" ;
+    ampattern:consequences "Provides comprehensive service communication capabilities but adds operational complexity" ;
+    ampattern:extractedFrom "ArchiMetal target architecture patterns" ;
+    ampattern:archiMetalFigure "19" ;
+    ampattern:businessScenario "Advanced microservices transformation" ;
+    ampattern:transformationPhase "target" ;
+    ampattern:maturityLevel "experimental" ;
+    ampattern:complexity "high" ;
+    ampattern:impactLevel "medium" ;
+    ampattern:riskLevel "high" ;
+    ampattern:confidence "0.7"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Security, ampattern:Reliability, ampattern:Performance ;
+    ampattern:complementedBy ampattern:APIGatewayPattern ;
+    ampattern:conflictsWith ampattern:LegacyWrapperPattern .
+
+# ===== PATTERN RELATIONSHIPS =====
+
+# Complementary patterns
+ampattern:EAIBusPattern ampattern:complementedBy ampattern:DataSyncPattern .
+ampattern:APIGatewayPattern ampattern:complementedBy ampattern:ServiceMeshPattern .
+
+# Dependency patterns
+ampattern:ServiceMeshPattern ampattern:dependsOn ampattern:APIGatewayPattern .
+ampattern:DataSyncPattern ampattern:dependsOn ampattern:EAIBusPattern .
+
+# Evolution patterns (legacy to modern)
+ampattern:LegacyWrapperPattern ampattern:complementedBy ampattern:APIGatewayPattern .
+ampattern:EAIBusPattern ampattern:complementedBy ampattern:ServiceMeshPattern .

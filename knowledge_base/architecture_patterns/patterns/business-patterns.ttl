@@ -1,0 +1,206 @@
+@prefix ampattern: <http://archimetal.ai/ontology/patterns#> .
+@prefix am: <http://archimetal.ai/ontology/archimate#> .
+@prefix amrel: <http://archimetal.ai/ontology/archimate/relationships#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Business Patterns extracted from ArchiMetal Models
+
+# ===== DISTRIBUTED BUSINESS UNITS PATTERN =====
+
+ampattern:DistributedBusinessUnitsPattern a ampattern:OrganizationalPattern ;
+    rdfs:label "Distributed Business Units Pattern" ;
+    ampattern:description "Geographically distributed business units with specialized responsibilities and local autonomy" ;
+    ampattern:intent "Enable local responsiveness while maintaining organizational coherence and coordination" ;
+    ampattern:applicability "When organization operates across multiple geographic regions with local market requirements" ;
+    ampattern:consequences "Increases local responsiveness but requires coordination mechanisms and may duplicate capabilities" ;
+    ampattern:extractedFrom "ArchiMetal Figure 1, 9" ;
+    ampattern:archiMetalFigure "1, 9" ;
+    ampattern:businessScenario "ArchiMetal multi-regional steel manufacturing and distribution" ;
+    ampattern:maturityLevel "established" ;
+    ampattern:complexity "high" ;
+    ampattern:impactLevel "high" ;
+    ampattern:confidence "0.95"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Scalability, ampattern:Performance ;
+    ampattern:hasKeyRole ampattern:ArchiMetalHQ ;
+    ampattern:hasParticipant ampattern:DCBenelux, ampattern:DCSpain, ampattern:DCEastEurope .
+
+# Business Actors in the pattern
+ampattern:ArchiMetalHQ a am:BusinessActor ;
+    rdfs:label "ArchiMetal" ;
+    am:hasName "ArchiMetal" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Global headquarters coordinating distributed operations" .
+
+ampattern:DCBenelux a am:BusinessActor ;
+    rdfs:label "DC Benelux" ;
+    am:hasName "DC Benelux" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Benelux distribution center with regional customer focus" .
+
+ampattern:DCSpain a am:BusinessActor ;
+    rdfs:label "DC Spain" ;
+    am:hasName "DC Spain" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Spanish distribution center serving Iberian market" .
+
+ampattern:DCEastEurope a am:BusinessActor ;
+    rdfs:label "DC East Europe" ;
+    am:hasName "DC East Europe" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Eastern European distribution center for emerging markets" .
+
+# Organizational relationships
+ampattern:ArchiMetalHQ amrel:aggregation ampattern:DCBenelux .
+ampattern:ArchiMetalHQ amrel:aggregation ampattern:DCSpain .
+ampattern:ArchiMetalHQ amrel:aggregation ampattern:DCEastEurope .
+
+# ===== CUSTOMER-CENTRIC PROCESS PATTERN =====
+
+ampattern:CustomerCentricProcessPattern a ampattern:ProcessPattern ;
+    rdfs:label "Customer-Centric Process Pattern" ;
+    ampattern:description "End-to-end customer journey processes that span multiple organizational units" ;
+    ampattern:intent "Optimize customer experience by designing processes around customer needs rather than organizational boundaries" ;
+    ampattern:applicability "When customer satisfaction and experience are primary business drivers" ;
+    ampattern:consequences "Improves customer experience but requires cross-functional coordination and may conflict with functional optimization" ;
+    ampattern:extractedFrom "ArchiMetal Figure 21-27" ;
+    ampattern:archiMetalFigure "21, 22, 23, 24, 25, 26, 27" ;
+    ampattern:businessScenario "Customer order lifecycle from registration to fulfillment" ;
+    ampattern:maturityLevel "proven" ;
+    ampattern:complexity "high" ;
+    ampattern:impactLevel "high" ;
+    ampattern:confidence "0.9"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Performance, ampattern:Reliability ;
+    ampattern:hasKeyRole ampattern:CustomerService ;
+    ampattern:hasParticipant ampattern:RegisterCustomer, ampattern:DevelopContract, ampattern:RegisterOrder, ampattern:ProcessOrder .
+
+# Business processes in the pattern
+ampattern:RegisterCustomer a am:BusinessProcess ;
+    rdfs:label "Register New Customer" ;
+    am:hasName "Register New Customer" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Process for onboarding new customers into the system" .
+
+ampattern:DevelopContract a am:BusinessProcess ;
+    rdfs:label "Develop Contract" ;
+    am:hasName "Develop Contract" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Contract development and negotiation process" .
+
+ampattern:RegisterOrder a am:BusinessProcess ;
+    rdfs:label "Register Customer Order" ;
+    am:hasName "Register Customer Order" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Customer order registration and validation" .
+
+ampattern:ProcessOrder a am:BusinessProcess ;
+    rdfs:label "Process Customer Order" ;
+    am:hasName "Process Customer Order" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "End-to-end order processing and fulfillment" .
+
+ampattern:CustomerService a am:BusinessFunction ;
+    rdfs:label "Customer Service" ;
+    am:hasName "Customer Service" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Customer-facing service delivery function" .
+
+# Process flow relationships
+ampattern:RegisterCustomer amrel:triggering ampattern:DevelopContract .
+ampattern:DevelopContract amrel:triggering ampattern:RegisterOrder .
+ampattern:RegisterOrder amrel:triggering ampattern:ProcessOrder .
+ampattern:CustomerService amrel:realization ampattern:RegisterCustomer .
+ampattern:CustomerService amrel:realization ampattern:RegisterOrder .
+
+# ===== STAKEHOLDER COLLABORATION PATTERN =====
+
+ampattern:StakeholderCollaborationPattern a ampattern:OrganizationalPattern ;
+    rdfs:label "Stakeholder Collaboration Pattern" ;
+    ampattern:description "Structured collaboration between internal and external stakeholders for value creation" ;
+    ampattern:intent "Ensure effective collaboration and alignment between all parties involved in value delivery" ;
+    ampattern:applicability "When business value depends on coordination between multiple internal and external parties" ;
+    ampattern:consequences "Improves stakeholder alignment but requires governance and communication overhead" ;
+    ampattern:extractedFrom "ArchiMetal Figure 28" ;
+    ampattern:archiMetalFigure "28" ;
+    ampattern:businessScenario "Stakeholder ecosystem in steel manufacturing and distribution" ;
+    ampattern:maturityLevel "proven" ;
+    ampattern:complexity "medium" ;
+    ampattern:impactLevel "medium" ;
+    ampattern:confidence "0.85"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Interoperability, ampattern:Reliability ;
+    ampattern:hasParticipant ampattern:ArchiMetalHQ, ampattern:ExternalCustomer, ampattern:Supplier, ampattern:Regulatory .
+
+ampattern:ExternalCustomer a am:BusinessActor ;
+    rdfs:label "External Customer" ;
+    am:hasName "External Customer" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "External customers purchasing steel products" .
+
+ampattern:Supplier a am:BusinessActor ;
+    rdfs:label "Supplier" ;
+    am:hasName "Supplier" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Raw material and component suppliers" .
+
+ampattern:Regulatory a am:BusinessActor ;
+    rdfs:label "Regulatory Body" ;
+    am:hasName "Regulatory Body" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Government and industry regulatory organizations" .
+
+# Stakeholder relationships
+ampattern:ArchiMetalHQ amrel:serving ampattern:ExternalCustomer .
+ampattern:Supplier amrel:serving ampattern:ArchiMetalHQ .
+ampattern:Regulatory amrel:influence ampattern:ArchiMetalHQ .
+
+# ===== VALUE STREAM PATTERN =====
+
+ampattern:ValueStreamPattern a ampattern:ProcessPattern ;
+    rdfs:label "Value Stream Pattern" ;
+    ampattern:description "End-to-end flow of value creation from raw materials to customer delivery" ;
+    ampattern:intent "Optimize entire value chain for maximum customer value with minimum waste" ;
+    ampattern:applicability "In manufacturing and production environments with clear value flow" ;
+    ampattern:consequences "Optimizes overall value delivery but may require reorganization of traditional functional structures" ;
+    ampattern:extractedFrom "ArchiMetal Figure 2, 3, 4, 5" ;
+    ampattern:archiMetalFigure "2, 3, 4, 5" ;
+    ampattern:businessScenario "Steel production value stream from raw materials to finished products" ;
+    ampattern:maturityLevel "established" ;
+    ampattern:complexity "high" ;
+    ampattern:impactLevel "high" ;
+    ampattern:confidence "0.9"^^xsd:decimal ;
+    ampattern:addressesQuality ampattern:Performance, ampattern:Reliability ;
+    ampattern:hasParticipant ampattern:SteelProduction, ampattern:HotStripMill, ampattern:QualityControl .
+
+ampattern:SteelProduction a am:BusinessProcess ;
+    rdfs:label "Steel Production" ;
+    am:hasName "Steel Production" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Core steel manufacturing process" .
+
+ampattern:HotStripMill a am:BusinessProcess ;
+    rdfs:label "Hot Strip Mill" ;
+    am:hasName "Hot Strip Mill" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Hot rolling process for steel strip production" .
+
+ampattern:QualityControl a am:BusinessProcess ;
+    rdfs:label "Quality Control" ;
+    am:hasName "Quality Control" ;
+    am:belongsToLayer "business" ;
+    am:hasDocumentation "Quality assurance and testing processes" .
+
+# Value stream flow
+ampattern:SteelProduction amrel:triggering ampattern:HotStripMill .
+ampattern:HotStripMill amrel:triggering ampattern:QualityControl .
+
+# ===== PATTERN RELATIONSHIPS =====
+
+# Supporting patterns
+ampattern:DistributedBusinessUnitsPattern ampattern:complementedBy ampattern:StakeholderCollaborationPattern .
+ampattern:CustomerCentricProcessPattern ampattern:dependsOn ampattern:DistributedBusinessUnitsPattern .
+ampattern:ValueStreamPattern ampattern:complementedBy ampattern:CustomerCentricProcessPattern .
+
+# Process hierarchy
+ampattern:CustomerCentricProcessPattern ampattern:complementedBy ampattern:ValueStreamPattern .

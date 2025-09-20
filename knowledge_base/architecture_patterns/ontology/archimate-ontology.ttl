@@ -1,0 +1,256 @@
+@prefix am: <http://archimetal.ai/ontology/archimate#> .
+@prefix amrel: <http://archimetal.ai/ontology/archimate/relationships#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# ArchiMate 3.2 Core Ontology for AInstein
+# Based on The Open Group ArchiMate 3.2 Specification
+
+am: a owl:Ontology ;
+    dcterms:title "ArchiMate 3.2 Core Ontology" ;
+    dcterms:description "RDF/OWL representation of ArchiMate 3.2 metamodel for architectural pattern analysis" ;
+    dcterms:version "1.0" ;
+    dcterms:created "2024-09-20"^^xsd:date ;
+    owl:versionInfo "Based on ArchiMate 3.2 Specification" .
+
+# ===== CORE CONCEPTS =====
+
+am:Element a owl:Class ;
+    rdfs:label "Element" ;
+    rdfs:comment "Base class for all ArchiMate elements" ;
+    rdfs:subClassOf owl:Thing .
+
+am:Relationship a owl:Class ;
+    rdfs:label "Relationship" ;
+    rdfs:comment "Base class for all ArchiMate relationships" ;
+    rdfs:subClassOf owl:Thing .
+
+# ===== BUSINESS LAYER =====
+
+am:BusinessElement a owl:Class ;
+    rdfs:label "Business Element" ;
+    rdfs:subClassOf am:Element .
+
+am:BusinessActor a owl:Class ;
+    rdfs:label "Business Actor" ;
+    rdfs:comment "Organizational entity capable of performing behavior" ;
+    rdfs:subClassOf am:BusinessElement .
+
+am:BusinessRole a owl:Class ;
+    rdfs:label "Business Role" ;
+    rdfs:comment "Responsibility for performing specific behavior" ;
+    rdfs:subClassOf am:BusinessElement .
+
+am:BusinessFunction a owl:Class ;
+    rdfs:label "Business Function" ;
+    rdfs:comment "Collection of business behavior based on capabilities" ;
+    rdfs:subClassOf am:BusinessElement .
+
+am:BusinessProcess a owl:Class ;
+    rdfs:label "Business Process" ;
+    rdfs:comment "Sequence of business behaviors that produces a specific outcome" ;
+    rdfs:subClassOf am:BusinessElement .
+
+am:BusinessService a owl:Class ;
+    rdfs:label "Business Service" ;
+    rdfs:comment "Explicitly defined exposed business behavior" ;
+    rdfs:subClassOf am:BusinessElement .
+
+am:BusinessObject a owl:Class ;
+    rdfs:label "Business Object" ;
+    rdfs:comment "Passive element relevant from a business perspective" ;
+    rdfs:subClassOf am:BusinessElement .
+
+# ===== APPLICATION LAYER =====
+
+am:ApplicationElement a owl:Class ;
+    rdfs:label "Application Element" ;
+    rdfs:subClassOf am:Element .
+
+am:ApplicationComponent a owl:Class ;
+    rdfs:label "Application Component" ;
+    rdfs:comment "Encapsulation of application functionality" ;
+    rdfs:subClassOf am:ApplicationElement .
+
+am:ApplicationService a owl:Class ;
+    rdfs:label "Application Service" ;
+    rdfs:comment "Explicitly defined exposed application behavior" ;
+    rdfs:subClassOf am:ApplicationElement .
+
+am:ApplicationInterface a owl:Class ;
+    rdfs:label "Application Interface" ;
+    rdfs:comment "Point of access where application services are made available" ;
+    rdfs:subClassOf am:ApplicationElement .
+
+am:DataObject a owl:Class ;
+    rdfs:label "Data Object" ;
+    rdfs:comment "Passive element suitable for automated processing" ;
+    rdfs:subClassOf am:ApplicationElement .
+
+# ===== TECHNOLOGY LAYER =====
+
+am:TechnologyElement a owl:Class ;
+    rdfs:label "Technology Element" ;
+    rdfs:subClassOf am:Element .
+
+am:Node a owl:Class ;
+    rdfs:label "Node" ;
+    rdfs:comment "Computational or physical resource" ;
+    rdfs:subClassOf am:TechnologyElement .
+
+am:Device a owl:Class ;
+    rdfs:label "Device" ;
+    rdfs:comment "Physical IT resource" ;
+    rdfs:subClassOf am:TechnologyElement .
+
+am:SystemSoftware a owl:Class ;
+    rdfs:label "System Software" ;
+    rdfs:comment "Software environment for other software" ;
+    rdfs:subClassOf am:TechnologyElement .
+
+am:TechnologyService a owl:Class ;
+    rdfs:label "Technology Service" ;
+    rdfs:comment "Explicitly defined exposed technology behavior" ;
+    rdfs:subClassOf am:TechnologyElement .
+
+am:TechnologyInterface a owl:Class ;
+    rdfs:label "Technology Interface" ;
+    rdfs:comment "Point of access where technology services are made available" ;
+    rdfs:subClassOf am:TechnologyElement .
+
+am:Artifact a owl:Class ;
+    rdfs:label "Artifact" ;
+    rdfs:comment "Piece of data used or produced in a software development process" ;
+    rdfs:subClassOf am:TechnologyElement .
+
+# ===== IMPLEMENTATION & MIGRATION =====
+
+am:ImplementationElement a owl:Class ;
+    rdfs:label "Implementation Element" ;
+    rdfs:subClassOf am:Element .
+
+am:WorkPackage a owl:Class ;
+    rdfs:label "Work Package" ;
+    rdfs:comment "Series of actions identified and designed to achieve specific results" ;
+    rdfs:subClassOf am:ImplementationElement .
+
+am:Deliverable a owl:Class ;
+    rdfs:label "Deliverable" ;
+    rdfs:comment "Precisely-defined outcome of a work package" ;
+    rdfs:subClassOf am:ImplementationElement .
+
+am:Gap a owl:Class ;
+    rdfs:label "Gap" ;
+    rdfs:comment "Statement of difference between two states" ;
+    rdfs:subClassOf am:ImplementationElement .
+
+am:Plateau a owl:Class ;
+    rdfs:label "Plateau" ;
+    rdfs:comment "Relatively stable state of the architecture" ;
+    rdfs:subClassOf am:ImplementationElement .
+
+# ===== RELATIONSHIPS =====
+
+# Structural Relationships
+amrel:composition a owl:ObjectProperty ;
+    rdfs:label "composition" ;
+    rdfs:comment "Whole-part relationship" ;
+    rdfs:subPropertyOf amrel:structuralRelationship .
+
+amrel:aggregation a owl:ObjectProperty ;
+    rdfs:label "aggregation" ;
+    rdfs:comment "Groups elements that belong together" ;
+    rdfs:subPropertyOf amrel:structuralRelationship .
+
+amrel:assignment a owl:ObjectProperty ;
+    rdfs:label "assignment" ;
+    rdfs:comment "Allocation of responsibility, performance of behavior, or execution" ;
+    rdfs:subPropertyOf amrel:structuralRelationship .
+
+amrel:realization a owl:ObjectProperty ;
+    rdfs:label "realization" ;
+    rdfs:comment "More abstract element is realized by a more concrete element" ;
+    rdfs:subPropertyOf amrel:structuralRelationship .
+
+# Dependency Relationships
+amrel:serving a owl:ObjectProperty ;
+    rdfs:label "serving" ;
+    rdfs:comment "Element provides services to another element" ;
+    rdfs:subPropertyOf amrel:dependencyRelationship .
+
+amrel:access a owl:ObjectProperty ;
+    rdfs:label "access" ;
+    rdfs:comment "Ability of behavior and active structure elements to access passive structure elements" ;
+    rdfs:subPropertyOf amrel:dependencyRelationship .
+
+amrel:influence a owl:ObjectProperty ;
+    rdfs:label "influence" ;
+    rdfs:comment "Element affects implementation or achievement of some motivation element" ;
+    rdfs:subPropertyOf amrel:dependencyRelationship .
+
+# Dynamic Relationships
+amrel:triggering a owl:ObjectProperty ;
+    rdfs:label "triggering" ;
+    rdfs:comment "Temporal or causal relationship between elements" ;
+    rdfs:subPropertyOf amrel:dynamicRelationship .
+
+amrel:flow a owl:ObjectProperty ;
+    rdfs:label "flow" ;
+    rdfs:comment "Transfer from one element to another" ;
+    rdfs:subPropertyOf amrel:dynamicRelationship .
+
+# Other Relationships
+amrel:specialization a owl:ObjectProperty ;
+    rdfs:label "specialization" ;
+    rdfs:comment "Element is a particular kind of another element" ;
+    rdfs:subPropertyOf amrel:otherRelationship .
+
+amrel:association a owl:ObjectProperty ;
+    rdfs:label "association" ;
+    rdfs:comment "Relationship between elements not covered by other relationships" ;
+    rdfs:subPropertyOf amrel:otherRelationship .
+
+# ===== PROPERTIES =====
+
+am:hasId a owl:DatatypeProperty ;
+    rdfs:label "has identifier" ;
+    rdfs:domain am:Element ;
+    rdfs:range xsd:string .
+
+am:hasName a owl:DatatypeProperty ;
+    rdfs:label "has name" ;
+    rdfs:domain am:Element ;
+    rdfs:range xsd:string .
+
+am:hasDocumentation a owl:DatatypeProperty ;
+    rdfs:label "has documentation" ;
+    rdfs:domain am:Element ;
+    rdfs:range xsd:string .
+
+am:hasType a owl:DatatypeProperty ;
+    rdfs:label "has type" ;
+    rdfs:domain am:Element ;
+    rdfs:range xsd:string .
+
+am:belongsToLayer a owl:DatatypeProperty ;
+    rdfs:label "belongs to layer" ;
+    rdfs:domain am:Element ;
+    rdfs:range xsd:string .
+
+am:hasView a owl:ObjectProperty ;
+    rdfs:label "has view" ;
+    rdfs:comment "Element appears in architectural view" ;
+    rdfs:domain am:Element ;
+    rdfs:range am:View .
+
+am:View a owl:Class ;
+    rdfs:label "View" ;
+    rdfs:comment "Representation of a system from the perspective of a related set of concerns" .
+
+am:hasViewpoint a owl:DatatypeProperty ;
+    rdfs:label "has viewpoint" ;
+    rdfs:domain am:View ;
+    rdfs:range xsd:string .

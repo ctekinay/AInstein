@@ -1,0 +1,150 @@
+# SPARQL Queries for Architectural Pattern Discovery and Analysis
+
+# Query 1: Find all integration patterns with their complexity and impact levels
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?complexity ?impact ?confidence WHERE {
+  ?pattern a ampattern:IntegrationPattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:complexity ?complexity .
+  ?pattern ampattern:impactLevel ?impact .
+  ?pattern ampattern:confidence ?confidence .
+}
+ORDER BY DESC(?confidence) ?complexity
+
+# Query 2: Find patterns applicable to CRM system changes
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX am: <http://archimetal.ai/ontology/archimate#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?description ?participant WHERE {
+  ?pattern a ampattern:Pattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:description ?description .
+  ?pattern ampattern:hasParticipant ?participant .
+  ?participant am:hasName ?participantName .
+  FILTER(regex(?participantName, "CRM", "i"))
+}
+
+# Query 3: Find high-impact patterns with their risk levels
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?impact ?risk ?maturity WHERE {
+  ?pattern a ampattern:Pattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:impactLevel ?impact .
+  OPTIONAL { ?pattern ampattern:riskLevel ?risk }
+  ?pattern ampattern:maturityLevel ?maturity .
+  FILTER(?impact = "high")
+}
+ORDER BY ?risk ?maturity
+
+# Query 4: Find pattern dependencies and relationships
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern1 ?label1 ?relationship ?pattern2 ?label2 WHERE {
+  ?pattern1 a ampattern:Pattern .
+  ?pattern1 rdfs:label ?label1 .
+  ?pattern2 a ampattern:Pattern .
+  ?pattern2 rdfs:label ?label2 .
+  {
+    ?pattern1 ampattern:dependsOn ?pattern2 .
+    BIND("depends on" AS ?relationship)
+  } UNION {
+    ?pattern1 ampattern:complementedBy ?pattern2 .
+    BIND("complemented by" AS ?relationship)
+  } UNION {
+    ?pattern1 ampattern:conflictsWith ?pattern2 .
+    BIND("conflicts with" AS ?relationship)
+  }
+}
+ORDER BY ?label1 ?relationship
+
+# Query 5: Find patterns by ArchiMetal figure reference
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?figure ?scenario WHERE {
+  ?pattern a ampattern:Pattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:archiMetalFigure ?figure .
+  ?pattern ampattern:businessScenario ?scenario .
+}
+ORDER BY ?figure
+
+# Query 6: Find patterns addressing specific quality attributes
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?quality WHERE {
+  ?pattern a ampattern:Pattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:addressesQuality ?quality .
+  ?quality rdfs:label ?qualityLabel .
+  FILTER(?qualityLabel = "Scalability" || ?qualityLabel = "Performance")
+}
+
+# Query 7: Find business patterns with their organizational impact
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX am: <http://archimetal.ai/ontology/archimate#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?actor ?actorName WHERE {
+  ?pattern a ampattern:BusinessPattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:hasParticipant ?actor .
+  ?actor a am:BusinessActor .
+  ?actor am:hasName ?actorName .
+}
+ORDER BY ?label ?actorName
+
+# Query 8: Find experimental patterns with high complexity
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?confidence ?risk WHERE {
+  ?pattern a ampattern:Pattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:maturityLevel "experimental" .
+  ?pattern ampattern:complexity "high" .
+  ?pattern ampattern:confidence ?confidence .
+  OPTIONAL { ?pattern ampattern:riskLevel ?risk }
+}
+ORDER BY DESC(?confidence)
+
+# Query 9: Find patterns involved in transformation phases
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pattern ?label ?phase ?scenario WHERE {
+  ?pattern a ampattern:Pattern .
+  ?pattern rdfs:label ?label .
+  ?pattern ampattern:transformationPhase ?phase .
+  ?pattern ampattern:businessScenario ?scenario .
+}
+ORDER BY ?phase ?label
+
+# Query 10: Find pattern evolution paths (baseline to target)
+PREFIX ampattern: <http://archimetal.ai/ontology/patterns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?baselinePattern ?baselineLabel ?targetPattern ?targetLabel ?relationship WHERE {
+  ?baselinePattern a ampattern:Pattern .
+  ?baselinePattern rdfs:label ?baselineLabel .
+  ?baselinePattern ampattern:transformationPhase "baseline" .
+
+  ?targetPattern a ampattern:Pattern .
+  ?targetPattern rdfs:label ?targetLabel .
+  ?targetPattern ampattern:transformationPhase "target" .
+
+  {
+    ?baselinePattern ampattern:complementedBy ?targetPattern .
+    BIND("evolves to" AS ?relationship)
+  } UNION {
+    ?targetPattern ampattern:dependsOn ?baselinePattern .
+    BIND("replaces" AS ?relationship)
+  }
+}

@@ -13,6 +13,13 @@ Contains project-specific documentation and progress tracking:
 - `/diagrams/` - Architecture diagrams and visual documentation
 - `/progress/` - Project progress tracking files
 
+### `/architecture_patterns/`
+Contains comprehensive knowledge graph of architectural patterns:
+- `/ontology/` - Core semantic models and vocabularies (RDF/Turtle)
+- `/patterns/` - Extracted architectural patterns by category
+- `/queries/` - SPARQL queries for pattern discovery and analysis
+- `extraction-guide.md` - Guide for automated and manual pattern extraction
+
 
 ## Core Knowledge Files
 
