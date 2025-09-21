@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.1/archimate3_Diagram.xsd" identifier="id-ainstein-agentic-rag">
+  <name xml:lang="en">AInstein Agentic RAG Architecture</name>
+
+  <!-- ========================================== -->
+  <!-- ELEMENTS SECTION -->
+  <!-- ========================================== -->
+  <elements>
+
+    <!-- BUSINESS LAYER ELEMENTS -->
+
+    <!-- Business Actors -->
+    <element identifier="id-enterprise-architect" xsi:type="BusinessActor">
+      <name xml:lang="en">Enterprise Architect</name>
+      <documentation xml:lang="en">Alliander enterprise architects who use AInstein for architectural guidance and decision-making</documentation>
+    </element>
+
+    <element identifier="id-esa" xsi:type="BusinessActor">
+      <name xml:lang="en">Energy System Architect (ESA)</name>
+      <documentation xml:lang="en">Energy System Architects who are the primary bottleneck that AInstein aims to address</documentation>
+    </element>
+
+    <element identifier="id-dutch-stakeholder" xsi:type="BusinessActor">
+      <name xml:lang="en">Dutch-speaking Stakeholder</name>
+      <documentation xml:lang="en">Dutch-speaking business stakeholders requiring native language architectural communication</documentation>
+    </element>
+
+    <element identifier="id-international-stakeholder" xsi:type="BusinessActor">
+      <name xml:lang="en">International Stakeholder</name>
+      <documentation xml:lang="en">English-speaking international stakeholders and partners</documentation>
+    </element>
+
+    <!-- Business Services -->
+    <element identifier="id-arch-decision-service" xsi:type="BusinessService">
+      <name xml:lang="en">Architectural Decision Support</name>
+      <documentation xml:lang="en">Intelligent architectural guidance and decision-making support</documentation>
+    </element>
+
+    <element identifier="id-model-analysis-service" xsi:type="BusinessService">
+      <name xml:lang="en">ArchiMate Model Analysis</name>
+      <documentation xml:lang="en">Automated analysis and validation of ArchiMate enterprise architecture models</documentation>
+    </element>
+
+    <element identifier="id-multilingual-service" xsi:type="BusinessService">
+      <name xml:lang="en">Multilingual Architecture Communication</name>
+      <documentation xml:lang="en">Native Dutch and English architectural communication services</documentation>
+    </element>
+
+    <element identifier="id-auto-doc-service" xsi:type="BusinessService">
+      <name xml:lang="en">Automated Documentation Generation</name>
+      <documentation xml:lang="en">Automatic generation of ADRs and architectural documentation</documentation>
+    </element>
+
+    <!-- Business Processes -->
+    <element identifier="id-arch-query-process" xsi:type="BusinessProcess">
+      <name xml:lang="en">Architectural Query Processing</name>
+      <documentation xml:lang="en">End-to-end process for handling architectural queries from receipt to response delivery</documentation>
+    </element>
+
+    <element identifier="id-model-update-process" xsi:type="BusinessProcess">
+      <name xml:lang="en">Model Update Workflow</name>
+      <documentation xml:lang="en">Process for analyzing, validating, and implementing architectural model changes</documentation>
+    </element>
+
+    <element identifier="id-approval-process" xsi:type="BusinessProcess">
+      <name xml:lang="en">Stakeholder Approval Workflow</name>
+      <documentation xml:lang="en">Multi-level approval process for significant architectural changes</documentation>
+    </element>
+
+    <element identifier="id-language-process" xsi:type="BusinessProcess">
+      <name xml:lang="en">Language Detection and Adaptation</name>
+      <documentation xml:lang="en">Process for detecting user language preferences and adapting responses accordingly</documentation>
+    </element>
+
+    <!-- APPLICATION LAYER ELEMENTS -->
+
+    <!-- Application Collaborations -->
+    <element identifier="id-multi-agent-system" xsi:type="ApplicationCollaboration">
+      <name xml:lang="en">AInstein Multi-Agent System</name>
+      <documentation xml:lang="en">Orchestrated collaboration of specialized AI agents for comprehensive architectural intelligence</documentation>
+    </element>
+
+    <!-- Core Agent Components -->
+    <element identifier="id-orchestrator" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Agent Orchestrator</name>
+      <documentation xml:lang="en">Central coordination component managing agent workflows, task distribution, and result synthesis using LangGraph/CrewAI</documentation>
+    </element>
+
+    <element identifier="id-parser-agent" xsi:type="ApplicationComponent">
+      <name xml:lang="en">ArchiMate Parser Agent</name>
+      <documentation xml:lang="en">Specialized agent for XML parsing, relationship mapping, and ArchiMate model integrity validation</documentation>
+    </element>
+
+    <element identifier="id-business-agent" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Business Analysis Agent</name>
+      <documentation xml:lang="en">Agent focused on business impact analysis, stakeholder effects, and organizational change assessment</documentation>
+    </element>
+
+    <element identifier="id-technical-agent" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Technical Architecture Agent</name>
+      <documentation xml:lang="en">Agent specialized in application and technology layer analysis, dependency tracking, and technical recommendations</documentation>
+    </element>
+
+    <element identifier="id-compliance-agent" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Compliance Agent</name>
+      <documentation xml:lang="en">Agent ensuring adherence to TOGAF standards, enterprise guidelines, and response format compliance</documentation>
+    </element>
+
+    <element identifier="id-integration-agent" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Integration Agent</name>
+      <documentation xml:lang="en">Agent managing external system integration, GitHub operations, and enterprise tool connectivity</documentation>
+    </element>
+
+    <element identifier="id-translation-agent" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Translation Agent</name>
+      <documentation xml:lang="en">Specialized multilingual agent providing Dutch/English translation with cultural adaptation and terminology consistency</documentation>
+    </element>
+
+    <!-- Supporting Application Components -->
+    <element identifier="id-request-router" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Request Router</name>
+      <documentation xml:lang="en">Intent classification engine determining query types and required agent assignments</documentation>
+    </element>
+
+    <element identifier="id-workflow-engine" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Workflow Engine</name>
+      <documentation xml:lang="en">Complex task planning and execution engine for multi-step architectural workflows</documentation>
+    </element>
+
+    <element identifier="id-context-manager" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Context Manager</name>
+      <documentation xml:lang="en">Session-aware context handling and conversation history management</documentation>
+    </element>
+
+    <element identifier="id-retrieval-engine" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Hybrid Retrieval Engine</name>
+      <documentation xml:lang="en">Advanced retrieval system combining semantic search, graph traversal, and keyword matching</documentation>
+    </element>
+
+    <element identifier="id-embedding-service" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Embedding Service</name>
+      <documentation xml:lang="en">Domain-specific embedding generation for ArchiMate concepts and multilingual content</documentation>
+    </element>
+
+    <!-- Frontend Components -->
+    <element identifier="id-web-interface" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Web Chat Interface</name>
+      <documentation xml:lang="en">React/TypeScript web application providing conversational interface for architectural queries</documentation>
+    </element>
+
+    <element identifier="id-mobile-app" xsi:type="ApplicationComponent">
+      <name xml:lang="en">Mobile Application</name>
+      <documentation xml:lang="en">React Native mobile application for on-the-go architectural assistance</documentation>
+    </element>
+
+    <!-- Application Services -->
+    <element identifier="id-orchestration-service" xsi:type="ApplicationService">
+      <name xml:lang="en">Agent Orchestration Service</name>
+      <documentation xml:lang="en">Service coordinating multi-agent workflows and inter-agent communication</documentation>
+    </element>
+
+    <element identifier="id-archimate-service" xsi:type="ApplicationService">
+      <name xml:lang="en">ArchiMate Processing Service</name>
+      <documentation xml:lang="en">Service for parsing, analyzing, and manipulating ArchiMate XML models</documentation>
+    </element>
+
+    <element identifier="id-knowledge-service" xsi:type="ApplicationService">
+      <name xml:lang="en">Knowledge Retrieval Service</name>
+      <documentation xml:lang="en">Intelligent information retrieval across multiple knowledge sources and formats</documentation>
+    </element>
+
+    <element identifier="id-translation-service" xsi:type="ApplicationService">
+      <name xml:lang="en">Translation Service</name>
+      <documentation xml:lang="en">Real-time Dutch/English translation with architectural terminology preservation</documentation>
+    </element>
+
+    <element identifier="id-enterprise-service" xsi:type="ApplicationService">
+      <name xml:lang="en">Enterprise Integration Service</name>
+      <documentation xml:lang="en">Service managing connectivity with BiZZdesign, GitHub, and other enterprise tools</documentation>
+    </element>
+
+    <!-- Application Interfaces -->
+    <element identifier="id-rest-api" xsi:type="ApplicationInterface">
+      <name xml:lang="en">RESTful API</name>
+      <documentation xml:lang="en">REST API for external system integration and programmatic access</documentation>
+    </element>
+
+    <element identifier="id-websocket-api" xsi:type="ApplicationInterface">
+      <name xml:lang="en">WebSocket API</name>
+      <documentation xml:lang="en">WebSocket interface for real-time bidirectional communication</documentation>
+    </element>
+
+    <element identifier="id-github-api" xsi:type="ApplicationInterface">
+      <name xml:lang="en">GitHub API Integration</name>
+      <documentation xml:lang="en">Integration interface with GitHub Enterprise for model versioning and collaboration</documentation>
+    </element>
+
+    <element identifier="id-bizzdesign-api" xsi:type="ApplicationInterface">
+      <name xml:lang="en">BiZZdesign API Integration</name>
+      <documentation xml:lang="en">Integration interface with BiZZdesign Enterprise Studio for model synchronization</documentation>
+    </element>
+
+    <!-- Data Objects -->
+    <element identifier="id-model-data" xsi:type="DataObject">
+      <name xml:lang="en">ArchiMate Model Data</name>
+      <documentation xml:lang="en">Structured ArchiMate XML model data including elements, relationships, and properties</documentation>
+    </element>
+
+    <element identifier="id-knowledge-base" xsi:type="DataObject">
+      <name xml:lang="en">Architecture Knowledge Base</name>
+      <documentation xml:lang="en">Comprehensive knowledge base including guidelines, patterns, and best practices</documentation>
+    </element>
+
+    <element identifier="id-multilingual-content" xsi:type="DataObject">
+      <name xml:lang="en">Multilingual Content</name>
+      <documentation xml:lang="en">Dutch and English architectural content with terminology mappings</documentation>
+    </element>
+
+    <element identifier="id-session-data" xsi:type="DataObject">
+      <name xml:lang="en">Session Context Data</name>
+      <documentation xml:lang="en">User session data including conversation history and preferences</documentation>
+    </element>
+
+    <element identifier="id-embeddings" xsi:type="DataObject">
+      <name xml:lang="en">Vector Embeddings</name>
+      <documentation xml:lang="en">High-dimensional vector representations of architectural concepts and content</documentation>
+    </element>
+
+    <!-- TECHNOLOGY LAYER ELEMENTS -->
+
+    <!-- Technology Services -->
+    <element identifier="id-vector-db-service" xsi:type="TechnologyService">
+      <name xml:lang="en">Vector Database Service</name>
+      <documentation xml:lang="en">Weaviate/Qdrant vector database service for semantic search and similarity matching</documentation>
+    </element>
+
+    <element identifier="id-graph-db-service" xsi:type="TechnologyService">
+      <name xml:lang="en">Graph Database Service</name>
+      <documentation xml:lang="en">Neo4j graph database service for ArchiMate relationship modeling and traversal</documentation>
+    </element>
+
+    <element identifier="id-container-service" xsi:type="TechnologyService">
+      <name xml:lang="en">Container Orchestration Service</name>
+      <documentation xml:lang="en">Kubernetes container orchestration for scalable microservices deployment</documentation>
+    </element>
+
+    <element identifier="id-gateway-service" xsi:type="TechnologyService">
+      <name xml:lang="en">API Gateway Service</name>
+      <documentation xml:lang="en">Enterprise API gateway for authentication, routing, and rate limiting</documentation>
+    </element>
+
+    <element identifier="id-iam-service" xsi:type="TechnologyService">
+      <name xml:lang="en">Identity Management Service</name>
+      <documentation xml:lang="en">IDMS/IAM integration for enterprise authentication and authorization</documentation>
+    </element>
+
+    <!-- Technology Components (Nodes) -->
+    <element identifier="id-frontend-cluster" xsi:type="Node">
+      <name xml:lang="en">Frontend Cluster</name>
+      <documentation xml:lang="en">Kubernetes cluster hosting React/TypeScript frontend applications</documentation>
+    </element>
+
+    <element identifier="id-backend-cluster" xsi:type="Node">
+      <name xml:lang="en">Backend Microservices Cluster</name>
+      <documentation xml:lang="en">Kubernetes cluster hosting Node.js/Python microservices</documentation>
+    </element>
+
+    <element identifier="id-ai-cluster" xsi:type="Node">
+      <name xml:lang="en">AI/ML Processing Cluster</name>
+      <documentation xml:lang="en">GPU-enabled cluster for AI model inference and embedding generation</documentation>
+    </element>
+
+    <element identifier="id-database-cluster" xsi:type="Node">
+      <name xml:lang="en">Database Cluster</name>
+      <documentation xml:lang="en">Persistent storage cluster for vector, graph, and relational databases</documentation>
+    </element>
+
+    <!-- Infrastructure Components -->
+    <element identifier="id-load-balancer" xsi:type="Device">
+      <name xml:lang="en">Load Balancer</name>
+      <documentation xml:lang="en">Enterprise load balancer for traffic distribution and high availability</documentation>
+    </element>
+
+    <element identifier="id-firewall" xsi:type="Device">
+      <name xml:lang="en">Enterprise Firewall</name>
+      <documentation xml:lang="en">Enterprise firewall for network security and access control</documentation>
+    </element>
+
+    <!-- System Software -->
+    <element identifier="id-docker" xsi:type="SystemSoftware">
+      <name xml:lang="en">Docker Runtime</name>
+      <documentation xml:lang="en">Docker container runtime for application packaging and deployment</documentation>
+    </element>
+
+    <element identifier="id-kubernetes" xsi:type="SystemSoftware">
+      <name xml:lang="en">Kubernetes Engine</name>
+      <documentation xml:lang="en">Kubernetes orchestration engine for container management and scaling</documentation>
+    </element>
+
+    <!-- IMPLEMENTATION & MIGRATION ELEMENTS -->
+
+    <!-- Plateaus -->
+    <element identifier="id-current-plateau" xsi:type="Plateau">
+      <name xml:lang="en">Current State: Single Agent System</name>
+      <documentation xml:lang="en">Current AInstein implementation with single ai-agent.service.ts and basic functionality</documentation>
+    </element>
+
+    <element identifier="id-transition-plateau" xsi:type="Plateau">
+      <name xml:lang="en">Transition State: Enhanced RAG</name>
+      <documentation xml:lang="en">Enhanced system with vector databases, multilingual support, and improved context management</documentation>
+    </element>
+
+    <element identifier="id-target-plateau" xsi:type="Plateau">
+      <name xml:lang="en">Target State: Full Agentic RAG</name>
+      <documentation xml:lang="en">Complete multi-agent system with orchestration, enterprise integration, and autonomous operation</documentation>
+    </element>
+
+    <!-- Work Packages -->
+    <element identifier="id-phase1-wp" xsi:type="WorkPackage">
+      <name xml:lang="en">Phase 1: Foundation Enhancement</name>
+      <documentation xml:lang="en">Enhance current system with vector search, basic Dutch support, and improved context management (Months 1-2)</documentation>
+    </element>
+
+    <element identifier="id-phase2-wp" xsi:type="WorkPackage">
+      <name xml:lang="en">Phase 2: Agent Specialization</name>
+      <documentation xml:lang="en">Implement core specialized agents with basic orchestration and enterprise integration (Months 3-4)</documentation>
+    </element>
+
+    <element identifier="id-phase3-wp" xsi:type="WorkPackage">
+      <name xml:lang="en">Phase 3: Advanced Orchestration</name>
+      <documentation xml:lang="en">Complete multi-agent architecture with advanced workflows and production-grade features (Months 5-6)</documentation>
+    </element>
+
+    <!-- Deliverables -->
+    <element identifier="id-retrieval-deliverable" xsi:type="Deliverable">
+      <name xml:lang="en">Enhanced Knowledge Retrieval System</name>
+      <documentation xml:lang="en">Vector database implementation with domain-specific embeddings and hybrid search</documentation>
+    </element>
+
+    <element identifier="id-multiagent-deliverable" xsi:type="Deliverable">
+      <name xml:lang="en">Multi-Agent Architecture</name>
+      <documentation xml:lang="en">Complete set of specialized agents with orchestration capabilities</documentation>
+    </element>
+
+    <element identifier="id-integration-deliverable" xsi:type="Deliverable">
+      <name xml:lang="en">Enterprise Integration Suite</name>
+      <documentation xml:lang="en">Full integration with BiZZdesign, GitHub, and enterprise authentication systems</documentation>
+    </element>
+
+    <element identifier="id-multilingual-deliverable" xsi:type="Deliverable">
+      <name xml:lang="en">Multilingual Support System</name>
+      <documentation xml:lang="en">Complete Dutch/English support with cultural adaptation and terminology consistency</documentation>
+    </element>
+
+    <!-- MOTIVATION ELEMENTS -->
+
+    <!-- Stakeholders -->
+    <element identifier="id-alliander" xsi:type="Stakeholder">
+      <name xml:lang="en">Alliander N.V.</name>
+      <documentation xml:lang="en">Dutch Distribution System Operator driving energy transition with AI-powered architecture automation</documentation>
+    </element>
+
+    <element identifier="id-ea-team" xsi:type="Stakeholder">
+      <name xml:lang="en">Enterprise Architecture Team</name>
+      <documentation xml:lang="en">Enterprise architects requiring intelligent architectural decision support</documentation>
+    </element>
+
+    <element identifier="id-energy-program" xsi:type="Stakeholder">
+      <name xml:lang="en">Energy Transition Program</name>
+      <documentation xml:lang="en">Strategic program requiring rapid architectural adaptation for renewable energy integration</documentation>
+    </element>
+
+    <!-- Drivers -->
+    <element identifier="id-esa-bottleneck" xsi:type="Driver">
+      <name xml:lang="en">ESA Bottleneck Elimination</name>
+      <documentation xml:lang="en">Critical need to remove Energy System Architect bottlenecks constraining energy transition progress</documentation>
+    </element>
+
+    <element identifier="id-dutch-requirement" xsi:type="Driver">
+      <name xml:lang="en">Dutch Language Requirements</name>
+      <documentation xml:lang="en">Native Dutch language support required for local workforce and regulatory compliance</documentation>
+    </element>
+
+    <element identifier="id-integration-need" xsi:type="Driver">
+      <name xml:lang="en">Enterprise Integration Needs</name>
+      <documentation xml:lang="en">Seamless integration with existing enterprise architecture tools and workflows</documentation>
+    </element>
+
+    <!-- Goals -->
+    <element identifier="id-time-reduction" xsi:type="Goal">
+      <name xml:lang="en">60% Reduction in Architectural Analysis Time</name>
+      <documentation xml:lang="en">Achieve significant time savings in architectural decision-making processes</documentation>
+    </element>
+
+    <element identifier="id-autonomous-ai" xsi:type="Goal">
+      <name xml:lang="en">Autonomous Architectural Intelligence</name>
+      <documentation xml:lang="en">Develop self-reasoning AI capable of independent architectural analysis and recommendations</documentation>
+    </element>
+
+    <element identifier="id-multilingual-excellence" xsi:type="Goal">
+      <name xml:lang="en">Multilingual Architecture Excellence</name>
+      <documentation xml:lang="en">Deliver world-class architectural guidance in both Dutch and English</documentation>
+    </element>
+
+    <!-- Outcomes -->
+    <element identifier="id-energy-acceleration" xsi:type="Outcome">
+      <name xml:lang="en">Accelerated Energy Transition</name>
+      <documentation xml:lang="en">Faster implementation of renewable energy infrastructure through intelligent architecture automation</documentation>
+    </element>
+
+    <element identifier="id-arch-consistency" xsi:type="Outcome">
+      <name xml:lang="en">Enhanced Architectural Consistency</name>
+      <documentation xml:lang="en">Improved consistency and quality of architectural decisions across the organization</documentation>
+    </element>
+
+    <!-- Requirements -->
+    <element identifier="id-archimate-compliance" xsi:type="Requirement">
+      <name xml:lang="en">ArchiMate 3.2 Compliance</name>
+      <documentation xml:lang="en">Full compliance with ArchiMate 3.2 specification for model processing and generation</documentation>
+    </element>
+
+    <element identifier="id-security-requirement" xsi:type="Requirement">
+      <name xml:lang="en">Enterprise Security Standards</name>
+      <documentation xml:lang="en">Adherence to enterprise security policies including IDMS/IAM integration and audit requirements</documentation>
+    </element>
+
+    <element identifier="id-performance-requirement" xsi:type="Requirement">
+      <name xml:lang="en">Real-time Response Performance</name>
+      <documentation xml:lang="en">Sub-3-second response times for architectural queries with 99.9% availability</documentation>
+    </element>
+
+  </elements>
+
+  <!-- ========================================== -->
+  <!-- RELATIONSHIPS SECTION -->
+  <!-- ========================================== -->
+  <relationships>
+
+    <!-- Business to Application Relationships -->
+    <relationship identifier="id-rel-1" xsi:type="Serving" source="id-multi-agent-system" target="id-arch-decision-service" />
+    <relationship identifier="id-rel-2" xsi:type="Serving" source="id-archimate-service" target="id-model-analysis-service" />
+    <relationship identifier="id-rel-3" xsi:type="Serving" source="id-translation-service" target="id-multilingual-service" />
+    <relationship identifier="id-rel-4" xsi:type="Serving" source="id-enterprise-service" target="id-auto-doc-service" />
+
+    <!-- Agent Orchestration Relationships -->
+    <relationship identifier="id-rel-5" xsi:type="Composition" source="id-multi-agent-system" target="id-orchestrator" />
+    <relationship identifier="id-rel-6" xsi:type="Composition" source="id-multi-agent-system" target="id-parser-agent" />
+    <relationship identifier="id-rel-7" xsi:type="Composition" source="id-multi-agent-system" target="id-business-agent" />
+    <relationship identifier="id-rel-8" xsi:type="Composition" source="id-multi-agent-system" target="id-technical-agent" />
+    <relationship identifier="id-rel-9" xsi:type="Composition" source="id-multi-agent-system" target="id-compliance-agent" />
+    <relationship identifier="id-rel-10" xsi:type="Composition" source="id-multi-agent-system" target="id-integration-agent" />
+    <relationship identifier="id-rel-11" xsi:type="Composition" source="id-multi-agent-system" target="id-translation-agent" />
+
+    <!-- Agent Coordination Relationships -->
+    <relationship identifier="id-rel-12" xsi:type="Flow" source="id-orchestrator" target="id-parser-agent" />
+    <relationship identifier="id-rel-13" xsi:type="Flow" source="id-orchestrator" target="id-business-agent" />
+    <relationship identifier="id-rel-14" xsi:type="Flow" source="id-orchestrator" target="id-technical-agent" />
+    <relationship identifier="id-rel-15" xsi:type="Flow" source="id-orchestrator" target="id-compliance-agent" />
+    <relationship identifier="id-rel-16" xsi:type="Flow" source="id-orchestrator" target="id-integration-agent" />
+    <relationship identifier="id-rel-17" xsi:type="Flow" source="id-orchestrator" target="id-translation-agent" />
+
+    <!-- Supporting Component Relationships -->
+    <relationship identifier="id-rel-18" xsi:type="Serving" source="id-request-router" target="id-orchestrator" />
+    <relationship identifier="id-rel-19" xsi:type="Serving" source="id-workflow-engine" target="id-orchestrator" />
+    <relationship identifier="id-rel-20" xsi:type="Serving" source="id-context-manager" target="id-orchestrator" />
+    <relationship identifier="id-rel-21" xsi:type="Serving" source="id-retrieval-engine" target="id-parser-agent" />
+    <relationship identifier="id-rel-22" xsi:type="Serving" source="id-retrieval-engine" target="id-business-agent" />
+    <relationship identifier="id-rel-23" xsi:type="Serving" source="id-retrieval-engine" target="id-technical-agent" />
+    <relationship identifier="id-rel-24" xsi:type="Serving" source="id-embedding-service" target="id-retrieval-engine" />
+
+    <!-- Knowledge Access Relationships -->
+    <relationship identifier="id-rel-25" xsi:type="Access" source="id-parser-agent" target="id-model-data" />
+    <relationship identifier="id-rel-26" xsi:type="Access" source="id-business-agent" target="id-knowledge-base" />
+    <relationship identifier="id-rel-27" xsi:type="Access" source="id-translation-agent" target="id-multilingual-content" />
+    <relationship identifier="id-rel-28" xsi:type="Access" source="id-context-manager" target="id-session-data" />
+    <relationship identifier="id-rel-29" xsi:type="Access" source="id-embedding-service" target="id-embeddings" />
+
+    <!-- Technology Support Relationships -->
+    <relationship identifier="id-rel-30" xsi:type="Serving" source="id-vector-db-service" target="id-retrieval-engine" />
+    <relationship identifier="id-rel-31" xsi:type="Serving" source="id-graph-db-service" target="id-retrieval-engine" />
+    <relationship identifier="id-rel-32" xsi:type="Serving" source="id-container-service" target="id-backend-cluster" />
+    <relationship identifier="id-rel-33" xsi:type="Serving" source="id-gateway-service" target="id-web-interface" />
+    <relationship identifier="id-rel-34" xsi:type="Serving" source="id-iam-service" target="id-enterprise-service" />
+
+    <!-- Infrastructure Realization Relationships -->
+    <relationship identifier="id-rel-35" xsi:type="Realization" source="id-backend-cluster" target="id-multi-agent-system" />
+    <relationship identifier="id-rel-36" xsi:type="Realization" source="id-frontend-cluster" target="id-web-interface" />
+    <relationship identifier="id-rel-37" xsi:type="Realization" source="id-ai-cluster" target="id-embedding-service" />
+    <relationship identifier="id-rel-38" xsi:type="Realization" source="id-database-cluster" target="id-vector-db-service" />
+    <relationship identifier="id-rel-39" xsi:type="Realization" source="id-database-cluster" target="id-graph-db-service" />
+    <relationship identifier="id-rel-40" xsi:type="Realization" source="id-kubernetes" target="id-container-service" />
+    <relationship identifier="id-rel-41" xsi:type="Realization" source="id-docker" target="id-kubernetes" />
+
+    <!-- Migration Relationships -->
+    <relationship identifier="id-rel-42" xsi:type="Triggering" source="id-phase1-wp" target="id-transition-plateau" />
+    <relationship identifier="id-rel-43" xsi:type="Triggering" source="id-phase2-wp" target="id-target-plateau" />
+    <relationship identifier="id-rel-44" xsi:type="Triggering" source="id-phase3-wp" target="id-target-plateau" />
+    <relationship identifier="id-rel-45" xsi:type="Realization" source="id-retrieval-deliverable" target="id-transition-plateau" />
+    <relationship identifier="id-rel-46" xsi:type="Realization" source="id-multiagent-deliverable" target="id-target-plateau" />
+    <relationship identifier="id-rel-47" xsi:type="Realization" source="id-integration-deliverable" target="id-target-plateau" />
+    <relationship identifier="id-rel-48" xsi:type="Realization" source="id-multilingual-deliverable" target="id-target-plateau" />
+
+    <!-- Enterprise Integration Relationships -->
+    <relationship identifier="id-rel-49" xsi:type="Association" source="id-integration-agent" target="id-github-api" />
+    <relationship identifier="id-rel-50" xsi:type="Association" source="id-integration-agent" target="id-bizzdesign-api" />
+    <relationship identifier="id-rel-51" xsi:type="Serving" source="id-rest-api" target="id-enterprise-service" />
+    <relationship identifier="id-rel-52" xsi:type="Serving" source="id-websocket-api" target="id-web-interface" />
+
+    <!-- User Access Relationships -->
+    <relationship identifier="id-rel-53" xsi:type="Assignment" source="id-enterprise-architect" target="id-web-interface" />
+    <relationship identifier="id-rel-54" xsi:type="Assignment" source="id-esa" target="id-web-interface" />
+    <relationship identifier="id-rel-55" xsi:type="Assignment" source="id-dutch-stakeholder" target="id-mobile-app" />
+    <relationship identifier="id-rel-56" xsi:type="Assignment" source="id-international-stakeholder" target="id-mobile-app" />
+
+    <!-- Motivation Relationships -->
+    <relationship identifier="id-rel-57" xsi:type="Influence" source="id-esa-bottleneck" target="id-autonomous-ai" />
+    <relationship identifier="id-rel-58" xsi:type="Influence" source="id-dutch-requirement" target="id-multilingual-excellence" />
+    <relationship identifier="id-rel-59" xsi:type="Influence" source="id-integration-need" target="id-time-reduction" />
+    <relationship identifier="id-rel-60" xsi:type="Realization" source="id-autonomous-ai" target="id-energy-acceleration" />
+    <relationship identifier="id-rel-61" xsi:type="Realization" source="id-multilingual-excellence" target="id-arch-consistency" />
+    <relationship identifier="id-rel-62" xsi:type="Realization" source="id-time-reduction" target="id-energy-acceleration" />
+
+    <!-- Requirement Relationships -->
+    <relationship identifier="id-rel-63" xsi:type="Realization" source="id-compliance-agent" target="id-archimate-compliance" />
+    <relationship identifier="id-rel-64" xsi:type="Realization" source="id-iam-service" target="id-security-requirement" />
+    <relationship identifier="id-rel-65" xsi:type="Realization" source="id-retrieval-engine" target="id-performance-requirement" />
+
+    <!-- Process Relationships -->
+    <relationship identifier="id-rel-66" xsi:type="Realization" source="id-arch-query-process" target="id-arch-decision-service" />
+    <relationship identifier="id-rel-67" xsi:type="Realization" source="id-model-update-process" target="id-model-analysis-service" />
+    <relationship identifier="id-rel-68" xsi:type="Realization" source="id-language-process" target="id-multilingual-service" />
+    <relationship identifier="id-rel-69" xsi:type="Triggering" source="id-arch-query-process" target="id-language-process" />
+    <relationship identifier="id-rel-70" xsi:type="Triggering" source="id-language-process" target="id-model-update-process" />
+
+  </relationships>
+
+  <!-- ========================================== -->
+  <!-- ORGANIZATIONS (FOLDER STRUCTURE) -->
+  <!-- ========================================== -->
+  <organizations>
+    <item>
+      <label xml:lang="en">Business Layer</label>
+      <item identifierRef="id-enterprise-architect" />
+      <item identifierRef="id-esa" />
+      <item identifierRef="id-dutch-stakeholder" />
+      <item identifierRef="id-international-stakeholder" />
+      <item identifierRef="id-arch-decision-service" />
+      <item identifierRef="id-model-analysis-service" />
+      <item identifierRef="id-multilingual-service" />
+      <item identifierRef="id-auto-doc-service" />
+      <item identifierRef="id-arch-query-process" />
+      <item identifierRef="id-model-update-process" />
+      <item identifierRef="id-approval-process" />
+      <item identifierRef="id-language-process" />
+    </item>
+    <item>
+      <label xml:lang="en">Application Layer</label>
+      <item>
+        <label xml:lang="en">Multi-Agent System</label>
+        <item identifierRef="id-multi-agent-system" />
+        <item identifierRef="id-orchestrator" />
+        <item identifierRef="id-parser-agent" />
+        <item identifierRef="id-business-agent" />
+        <item identifierRef="id-technical-agent" />
+        <item identifierRef="id-compliance-agent" />
+        <item identifierRef="id-integration-agent" />
+        <item identifierRef="id-translation-agent" />
+      </item>
+      <item>
+        <label xml:lang="en">Supporting Components</label>
+        <item identifierRef="id-request-router" />
+        <item identifierRef="id-workflow-engine" />
+        <item identifierRef="id-context-manager" />
+        <item identifierRef="id-retrieval-engine" />
+        <item identifierRef="id-embedding-service" />
+      </item>
+      <item>
+        <label xml:lang="en">User Interfaces</label>
+        <item identifierRef="id-web-interface" />
+        <item identifierRef="id-mobile-app" />
+      </item>
+      <item>
+        <label xml:lang="en">Application Services</label>
+        <item identifierRef="id-orchestration-service" />
+        <item identifierRef="id-archimate-service" />
+        <item identifierRef="id-knowledge-service" />
+        <item identifierRef="id-translation-service" />
+        <item identifierRef="id-enterprise-service" />
+      </item>
+      <item>
+        <label xml:lang="en">Application Interfaces</label>
+        <item identifierRef="id-rest-api" />
+        <item identifierRef="id-websocket-api" />
+        <item identifierRef="id-github-api" />
+        <item identifierRef="id-bizzdesign-api" />
+      </item>
+      <item>
+        <label xml:lang="en">Data Objects</label>
+        <item identifierRef="id-model-data" />
+        <item identifierRef="id-knowledge-base" />
+        <item identifierRef="id-multilingual-content" />
+        <item identifierRef="id-session-data" />
+        <item identifierRef="id-embeddings" />
+      </item>
+    </item>
+    <item>
+      <label xml:lang="en">Technology Layer</label>
+      <item>
+        <label xml:lang="en">Technology Services</label>
+        <item identifierRef="id-vector-db-service" />
+        <item identifierRef="id-graph-db-service" />
+        <item identifierRef="id-container-service" />
+        <item identifierRef="id-gateway-service" />
+        <item identifierRef="id-iam-service" />
+      </item>
+      <item>
+        <label xml:lang="en">Infrastructure Clusters</label>
+        <item identifierRef="id-frontend-cluster" />
+        <item identifierRef="id-backend-cluster" />
+        <item identifierRef="id-ai-cluster" />
+        <item identifierRef="id-database-cluster" />
+      </item>
+      <item>
+        <label xml:lang="en">Infrastructure Components</label>
+        <item identifierRef="id-load-balancer" />
+        <item identifierRef="id-firewall" />
+        <item identifierRef="id-docker" />
+        <item identifierRef="id-kubernetes" />
+      </item>
+    </item>
+    <item>
+      <label xml:lang="en">Implementation &amp; Migration</label>
+      <item>
+        <label xml:lang="en">Architecture Plateaus</label>
+        <item identifierRef="id-current-plateau" />
+        <item identifierRef="id-transition-plateau" />
+        <item identifierRef="id-target-plateau" />
+      </item>
+      <item>
+        <label xml:lang="en">Work Packages</label>
+        <item identifierRef="id-phase1-wp" />
+        <item identifierRef="id-phase2-wp" />
+        <item identifierRef="id-phase3-wp" />
+      </item>
+      <item>
+        <label xml:lang="en">Deliverables</label>
+        <item identifierRef="id-retrieval-deliverable" />
+        <item identifierRef="id-multiagent-deliverable" />
+        <item identifierRef="id-integration-deliverable" />
+        <item identifierRef="id-multilingual-deliverable" />
+      </item>
+    </item>
+    <item>
+      <label xml:lang="en">Motivation</label>
+      <item>
+        <label xml:lang="en">Stakeholders</label>
+        <item identifierRef="id-alliander" />
+        <item identifierRef="id-ea-team" />
+        <item identifierRef="id-energy-program" />
+      </item>
+      <item>
+        <label xml:lang="en">Drivers</label>
+        <item identifierRef="id-esa-bottleneck" />
+        <item identifierRef="id-dutch-requirement" />
+        <item identifierRef="id-integration-need" />
+      </item>
+      <item>
+        <label xml:lang="en">Goals</label>
+        <item identifierRef="id-time-reduction" />
+        <item identifierRef="id-autonomous-ai" />
+        <item identifierRef="id-multilingual-excellence" />
+      </item>
+      <item>
+        <label xml:lang="en">Outcomes</label>
+        <item identifierRef="id-energy-acceleration" />
+        <item identifierRef="id-arch-consistency" />
+      </item>
+      <item>
+        <label xml:lang="en">Requirements</label>
+        <item identifierRef="id-archimate-compliance" />
+        <item identifierRef="id-security-requirement" />
+        <item identifierRef="id-performance-requirement" />
+      </item>
+    </item>
+    <item>
+      <label xml:lang="en">Views</label>
+      <item identifierRef="id-view-cooperation" />
+      <item identifierRef="id-view-technology" />
+      <item identifierRef="id-view-migration" />
+      <item identifierRef="id-view-information" />
+      <item identifierRef="id-view-process" />
+      <item identifierRef="id-view-motivation" />
+    </item>
+  </organizations>
+
+  <!-- ========================================== -->
+  <!-- VIEWS SECTION -->
+  <!-- ========================================== -->
+  <views>
+    <diagrams>
+
+      <!-- Multi-Agent System Cooperation View -->
+      <view identifier="id-view-cooperation" xsi:type="Diagram">
+        <name xml:lang="en">Multi-Agent System Cooperation</name>
+        <documentation xml:lang="en">Shows how the 6 specialized agents work together within the orchestrated multi-agent system</documentation>
+      </view>
+
+      <!-- Technology Infrastructure View -->
+      <view identifier="id-view-technology" xsi:type="Diagram">
+        <name xml:lang="en">Technology Infrastructure</name>
+        <documentation xml:lang="en">Shows the underlying technology stack and deployment architecture supporting the AI agents</documentation>
+      </view>
+
+      <!-- Implementation Roadmap View -->
+      <view identifier="id-view-migration" xsi:type="Diagram">
+        <name xml:lang="en">Implementation Roadmap</name>
+        <documentation xml:lang="en">Shows the 3-phase migration strategy from current single-agent to full agentic RAG system</documentation>
+      </view>
+
+      <!-- Information Structure View -->
+      <view identifier="id-view-information" xsi:type="Diagram">
+        <name xml:lang="en">Knowledge Architecture</name>
+        <documentation xml:lang="en">Shows how different types of knowledge are structured, accessed, and processed by the AI agents</documentation>
+      </view>
+
+      <!-- Business Process Cooperation View -->
+      <view identifier="id-view-process" xsi:type="Diagram">
+        <name xml:lang="en">Multilingual Workflow Process</name>
+        <documentation xml:lang="en">Shows how Dutch/English processing works end-to-end in the system</documentation>
+      </view>
+
+      <!-- Motivation View -->
+      <view identifier="id-view-motivation" xsi:type="Diagram">
+        <name xml:lang="en">Strategic Drivers and Goals</name>
+        <documentation xml:lang="en">Connects business drivers to technical solutions showing the strategic rationale for the AI system</documentation>
+      </view>
+
+    </diagrams>
+  </views>
+
+</model>

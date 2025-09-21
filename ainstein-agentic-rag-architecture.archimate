@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="ainstein-agentic-rag-architecture" id="id-0197d4bab1f442f39a0bcff1c167f69d" version="5.0.0">
+  <folder name="Strategy" id="id-d1facf43adce4837afc26fb642ed9178" type="strategy"/>
+  <folder name="Business" id="id-e8a626c674f844e6b7804a0b5b9210d5" type="business"/>
+  <folder name="Application" id="id-0a61378d17d24396bc975428b7b069c0" type="application"/>
+  <folder name="Technology &amp; Physical" id="id-61344ce2abce42e388c9c4c2d5b2ee9b" type="technology"/>
+  <folder name="Motivation" id="id-ec1e01a2983444fcb4c82cfdd621c74e" type="motivation"/>
+  <folder name="Implementation &amp; Migration" id="id-784581f8b85943fb8fb07a5ae088fea6" type="implementation_migration"/>
+  <folder name="Other" id="id-315ae96fa297492ab1804c4fb9ddfc7b" type="other"/>
+  <folder name="Relations" id="id-e1a7f326fb2c4025913107a614ff1bc9" type="relations"/>
+  <folder name="Views" id="id-fc71ec80a81d4e87a77edf884944ae3c" type="diagrams">
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Default View" id="id-dec84b5c1a90482d92655471e53cdc5d"/>
+  </folder>
+</archimate:model>

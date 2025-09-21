@@ -486,110 +486,119 @@ export class PreciseResponseService {
       proc.name.toLowerCase().includes('order')
     );
 
-    let response = `### **Impact Analysis: Adding DC France to ArchiMetal Architecture**\n\n`;
+    let response = `# Impact Analysis: Adding DC France to ArchiMetal Architecture\n\n`;
 
-    // ArchiMetal context and business strategy
-    response += `**ArchiMetal Business Context:**\n`;
+    // Business Context Section
+    response += `## Business Context\n\n`;
     response += `DC France supports ArchiMetal's automotive market entry strategy. French automotive manufacturers require local presence for flat steel products. This aligns with the transformation program's goal of 'improving CRM capability and developing new customer services.'\n\n`;
 
-    // Critical architectural decision
-    response += `**🎯 Critical Architectural Decision:**\n`;
-    response += `**Are we adding DC France to:**\n`;
+    // Critical Architectural Decision
+    response += `## Critical Architectural Decision\n\n`;
+    response += `**Are we adding DC France to:**\n\n`;
     response += `• **Baseline Architecture** (Figure 12): Perpetuates existing data silos and customer fragmentation\n`;
     response += `• **Target Architecture** (Figure 19): Leverages centralized CRM via EAI Bus integration\n\n`;
     response += `**✅ Recommendation**: Implement DC France using Target Architecture patterns to avoid technical debt and support the transformation program.\n\n`;
 
-    // Current state analysis with Figure references
-    response += `**Current Distribution Infrastructure (Figure 12 Analysis):**\n`;
+    // Current State Analysis
+    response += `## Current State Analysis\n\n`;
+    response += `### Distribution Infrastructure (Figure 12)\n\n`;
     if (distributionCenters.length > 0) {
-      response += `Found **${distributionCenters.length} existing distribution centers** in ArchiMetal's current baseline architecture:\n`;
+      response += `Found **${distributionCenters.length} existing distribution centers** in ArchiMetal's current baseline architecture:\n\n`;
       distributionCenters.forEach(dc => {
         response += `- ${dc.name} <span class="element-id" data-element-id="${dc.id}" data-model="${dc.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${dc.id}</span>\n`;
       });
-      response += `\n**⚠️ Customer Data Fragmentation Risk**: Adding DC France exacerbates ArchiMetal's core business challenge where 'customer databases and applications of different DCs do not work together'.\n`;
+      response += `\n**⚠️ Customer Data Fragmentation Risk**\n\n`;
+      response += `Adding DC France exacerbates ArchiMetal's core business challenge where 'customer databases and applications of different DCs do not work together'.\n\n`;
     } else {
-      response += `No existing distribution centers found in current model.\n`;
+      response += `No existing distribution centers found in current model.\n\n`;
     }
-    response += '\n';
 
-    // EAI Bus Integration Analysis
-    response += `**EAI Bus Integration Requirements (Figure 12 → Figure 19):**\n`;
+    // EAI Bus Integration
+    response += `## Target State Design\n\n`;
+    response += `### EAI Bus Integration Requirements (Figure 12 → Figure 19)\n\n`;
     if (eaiBus) {
       response += `Based on Figure 12's Application Landscape, DC France must integrate with ArchiMetal's Enterprise Application Integration (EAI) Bus <span class="element-id" data-element-id="${eaiBus.id}" data-model="${eaiBus.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${eaiBus.id}</span>.\n\n`;
-      response += `**DC France → EAI Bus Integration Pattern:**\n`;
-      response += `• Order Management Application → EAI Bus → PC System\n`;
-      response += `• Customer Data Management → EAI Bus → Central CRM (Target State)\n`;
-      response += `• Financial Application → EAI Bus → HQ Finance\n`;
-      response += `• Shipping Application → EAI Bus → Logistics Coordination\n\n`;
-      response += `**⚠️ Data Transformation Logic**: Each DC-to-EAI Bus connection requires unique transformation logic (current pain point that DC France must address).\n`;
+      response += `**DC France → EAI Bus Integration Pattern:**\n\n`;
+      response += `- Order Management Application → EAI Bus → PC System\n`;
+      response += `- Customer Data Management → EAI Bus → Central CRM (Target State)\n`;
+      response += `- Financial Application → EAI Bus → HQ Finance\n`;
+      response += `- Shipping Application → EAI Bus → Logistics Coordination\n\n`;
+      response += `**⚠️ Data Transformation Logic**\n\n`;
+      response += `Each DC-to-EAI Bus connection requires unique transformation logic (current pain point that DC France must address).\n\n`;
     } else {
-      response += `EAI Bus component not found in current model - integration architecture needs definition.\n`;
+      response += `EAI Bus component not found in current model - integration architecture needs definition.\n\n`;
     }
-    response += '\n';
 
-    // CRM Integration for Target Architecture
+    // CRM Integration
+    response += `### CRM Integration for Customer Data Unification\n\n`;
     if (crmApps.length > 0) {
-      response += `**CRM Integration for Customer Data Unification:**\n`;
-      response += `**${crmApps.length} CRM applications** identified for DC France integration:\n`;
+      response += `**${crmApps.length} CRM applications** identified for DC France integration:\n\n`;
       crmApps.forEach(app => {
         response += `- ${app.name} <span class="element-id" data-element-id="${app.id}" data-model="${app.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${app.id}</span>\n`;
       });
-      response += `\n**Target State Benefits**: DC France will leverage centralized CRM via EAI Bus, solving the customer data fragmentation problem.\n`;
+      response += `\n**Target State Benefits**\n\n`;
+      response += `DC France will leverage centralized CRM via EAI Bus, solving the customer data fragmentation problem.\n\n`;
     } else {
-      response += `**Missing CRM Components**: No CRM applications found - critical for Target Architecture implementation.\n`;
+      response += `**Missing CRM Components**: No CRM applications found - critical for Target Architecture implementation.\n\n`;
     }
-    response += '\n';
 
-    // Order Process Impact with specific ArchiMetal context
-    response += `**Order Management Process Impact:**\n`;
+    // Order Process Impact
+    response += `### Order Management Process Impact\n\n`;
     if (orderProcesses.length > 0) {
-      response += `**${orderProcesses.length} order-related processes** require DC France integration:\n`;
+      response += `**${orderProcesses.length} order-related processes** require DC France integration:\n\n`;
       orderProcesses.forEach(proc => {
         response += `- ${proc.name} <span class="element-id" data-element-id="${proc.id}" data-model="${proc.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${proc.id}</span>\n`;
       });
-      response += `\n**ArchiMetal-Specific Requirements:**\n`;
-      response += `• French automotive customer workflows\n`;
-      response += `• Flat steel product specifications and pricing\n`;
-      response += `• Local French delivery and logistics coordination\n`;
-      response += `• Integration with existing DC order routing logic\n`;
+      response += `\n**ArchiMetal-Specific Requirements:**\n\n`;
+      response += `- French automotive customer workflows\n`;
+      response += `- Flat steel product specifications and pricing\n`;
+      response += `- Local French delivery and logistics coordination\n`;
+      response += `- Integration with existing DC order routing logic\n\n`;
     } else {
-      response += `Order processes not found in current model - process architecture needs definition.\n`;
+      response += `Order processes not found in current model - process architecture needs definition.\n\n`;
     }
-    response += '\n';
 
-    // New architectural elements with Target Architecture context
-    response += `**New ArchiMate Elements Required (Target Architecture):**\n`;
-    response += `• **Business Actor**: DC France <span class="element-id" data-element-id="new-dc-france" data-model="ArchiMetal" title="New element to be created">NEW</span>\n`;
-    response += `• **Business Location**: France Regional Service Area\n`;
-    response += `• **Application Components**: \n`;
-    response += `  - French Order Management (EAI Bus connected)\n`;
-    response += `  - French Customer Data Management (CRM integrated)\n`;
-    response += `  - French Financial Application (HQ integrated)\n`;
-    response += `• **Data Objects**: \n`;
-    response += `  - French Customer Database (unified via CRM)\n`;
-    response += `  - French Automotive Product Catalog\n`;
-    response += `  - EUR Pricing and Contract Data\n`;
-    response += `• **Technology Components**: French Data Center Infrastructure\n\n`;
+    // Required Changes Section
+    response += `## Required Changes\n\n`;
+    response += `### New ArchiMate Elements Required (Target Architecture)\n\n`;
+    response += `**Business Layer:**\n\n`;
+    response += `- **Business Actor**: DC France *(to be created)*\n`;
+    response += `- **Business Location**: France Regional Service Area *(to be created)*\n\n`;
+    response += `**Application Layer:**\n\n`;
+    response += `- French Order Management (EAI Bus connected) *(to be created)*\n`;
+    response += `- French Customer Data Management (CRM integrated) *(to be created)*\n`;
+    response += `- French Financial Application (HQ integrated) *(to be created)*\n\n`;
+    response += `**Data Layer:**\n\n`;
+    response += `- French Customer Database (unified via CRM) *(to be created)*\n`;
+    response += `- French Automotive Product Catalog *(to be created)*\n`;
+    response += `- EUR Pricing and Contract Data *(to be created)*\n\n`;
+    response += `**Technology Layer:**\n\n`;
+    response += `- French Data Center Infrastructure *(to be created)*\n\n`;
 
-    // Implementation strategy with transformation context
-    response += `**Implementation Strategy (Baseline → Target):**\n`;
+    // Implementation Strategy
+    response += `## Implementation Strategy\n\n`;
+    response += `### Phased Approach (Baseline → Target)\n\n`;
     response += `**Phase 1**: Establish DC France with minimal EAI Bus connectivity\n`;
     response += `**Phase 2**: Integrate with centralized CRM system (Figure 19 pattern)\n`;
     response += `**Phase 3**: Full Target Architecture implementation with data unification\n\n`;
 
-    // ArchiMate model updates needed
-    response += `**Required ArchiMate Model Updates:**\n`;
-    response += `• Update Application Landscape view (Figure 12) with DC France applications\n`;
-    response += `• Extend EAI Bus relationship model for DC France connectivity\n`;
-    response += `• Add DC France to Target CRM Architecture (Figure 19)\n`;
-    response += `• Generate ADR documenting architectural decision rationale\n\n`;
+    // ArchiMate Model Updates
+    response += `### Required ArchiMate Model Updates\n\n`;
+    response += `- Update Application Landscape view (Figure 12) with DC France applications\n`;
+    response += `- Extend EAI Bus relationship model for DC France connectivity\n`;
+    response += `- Add DC France to Target CRM Architecture (Figure 19)\n`;
+    response += `- Generate ADR documenting architectural decision rationale\n\n`;
 
-    // Critical success factors
-    response += `**Critical Success Factors:**\n`;
-    response += `• **Customer Data Strategy**: Implement Target Architecture to prevent further fragmentation\n`;
-    response += `• **EAI Bus Scalability**: Ensure integration pattern supports additional DCs\n`;
-    response += `• **Automotive Market Focus**: Design processes specifically for French automotive customers\n`;
-    response += `• **Transformation Alignment**: Support overall CRM capability improvement program\n`;
+    // Critical Success Factors
+    response += `### Critical Success Factors\n\n`;
+    response += `**Customer Data Strategy**\n`;
+    response += `Implement Target Architecture to prevent further fragmentation\n\n`;
+    response += `**EAI Bus Scalability**\n`;
+    response += `Ensure integration pattern supports additional DCs\n\n`;
+    response += `**Automotive Market Focus**\n`;
+    response += `Design processes specifically for French automotive customers\n\n`;
+    response += `**Transformation Alignment**\n`;
+    response += `Support overall CRM capability improvement program\n`;
 
     return response;
   }
