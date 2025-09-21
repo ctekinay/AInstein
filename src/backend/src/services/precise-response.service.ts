@@ -670,69 +670,95 @@ export class PreciseResponseService {
   }
 
   /**
-   * Execute DC France model changes
+   * Provide honest guidance for DC France model changes
    */
   private executeDCFranceModelChanges(): string {
-    const timestamp = new Date().toISOString();
-    const changeId = `change-${Date.now()}`;
+    let response = `# Implementation Guide: DC France ArchiMate Model Updates\n\n`;
 
-    let response = `# DC France ArchiMate Model Updates Applied\n\n`;
+    response += `## ⚠️ Important Note\n\n`;
+    response += `I cannot directly modify ArchiMate files or execute actual model changes. However, I can provide detailed guidance for implementing these changes in your modeling environment.\n\n`;
 
-    response += `## Execution Summary\n\n`;
-    response += `**Change ID**: ${changeId}\n`;
-    response += `**Timestamp**: ${timestamp}\n`;
-    response += `**Status**: ✅ Successfully Applied\n\n`;
+    response += `## Required ArchiMate Model Changes\n\n`;
+    response += `Based on the previous analysis, here are the specific changes you need to implement:\n\n`;
 
-    response += `## Created Elements\n\n`;
-    response += `### Business Layer\n\n`;
-    response += `- **Business Actor**: DC France \`id-dc-france-${changeId}\`\n`;
-    response += `- **Business Location**: France Regional Service Area \`id-france-location-${changeId}\`\n\n`;
+    response += `### 1. Business Layer Elements to Create\n\n`;
+    response += `**Business Actor**: DC France\n`;
+    response += `- **Type**: \`archimate:BusinessActor\`\n`;
+    response += `- **Name**: \`DC France\`\n`;
+    response += `- **Documentation**: Distribution center serving French automotive market\n\n`;
 
-    response += `### Application Layer\n\n`;
-    response += `- **Application Component**: French Order Management \`id-french-om-${changeId}\`\n`;
-    response += `- **Application Component**: French Customer Data Management \`id-french-cdm-${changeId}\`\n`;
-    response += `- **Application Component**: French Financial Application \`id-french-fin-${changeId}\`\n\n`;
+    response += `**Business Location**: France Regional Service Area\n`;
+    response += `- **Type**: \`archimate:Location\`\n`;
+    response += `- **Name**: \`France Regional Service Area\`\n`;
+    response += `- **Documentation**: Geographic service area for French customers\n\n`;
 
-    response += `### Data Layer\n\n`;
-    response += `- **Data Object**: French Customer Database \`id-french-custdb-${changeId}\`\n`;
-    response += `- **Data Object**: French Automotive Product Catalog \`id-french-catalog-${changeId}\`\n`;
-    response += `- **Data Object**: EUR Pricing and Contract Data \`id-eur-pricing-${changeId}\`\n\n`;
+    response += `### 2. Application Layer Elements to Create\n\n`;
+    response += `**Application Component**: French Order Management\n`;
+    response += `- **Type**: \`archimate:ApplicationComponent\`\n`;
+    response += `- **Name**: \`French Order Management\`\n`;
+    response += `- **Documentation**: Order processing system for DC France\n\n`;
 
-    response += `## Created Relationships\n\n`;
-    response += `- DC France → EAI Bus (ServingRelationship)\n`;
-    response += `- French Order Management → EAI Bus (FlowRelationship)\n`;
-    response += `- French Customer Data Management → CRM System (AssociationRelationship)\n`;
-    response += `- DC France → French Order Management (AssignmentRelationship)\n\n`;
+    response += `**Application Component**: French Customer Data Management\n`;
+    response += `- **Type**: \`archimate:ApplicationComponent\`\n`;
+    response += `- **Name**: \`French Customer Data Management\`\n`;
+    response += `- **Documentation**: Customer data system integrated with central CRM\n\n`;
 
-    response += `## Modified Files\n\n`;
-    response += `- \`/ArchiMetal_models/Detail_Enterprise_Architecture/DC_Operations.archimate\`\n`;
-    response += `- \`/ArchiMetal_models/ArchiMetal_Transformation_Overview/Target_State.archimate\`\n`;
-    response += `- \`/ArchiMetal_models/ArchiMetal_CRM_Vision/Integration_Architecture.archimate\`\n\n`;
+    response += `### 3. Required Relationships\n\n`;
+    response += `**DC France → EAI Bus**\n`;
+    response += `- **Type**: \`archimate:ServingRelationship\`\n`;
+    response += `- **Source**: DC France\n`;
+    response += `- **Target**: EAI Bus \`id-b67b02752ebc4b929c9a9fc76211cff9\`\n\n`;
 
-    response += `## Generated Documentation\n\n`;
-    response += `**ADR Generated**: \`ADR-2024-001-DC-France-Integration.md\`\n\n`;
-    response += `### Decision Record Summary\n\n`;
+    response += `**French Order Management → EAI Bus**\n`;
+    response += `- **Type**: \`archimate:FlowRelationship\`\n`;
+    response += `- **Source**: French Order Management\n`;
+    response += `- **Target**: EAI Bus\n\n`;
+
+    response += `## Implementation Steps\n\n`;
+    response += `### Using Archi (ArchiMate Modeling Tool)\n\n`;
+    response += `1. **Open your ArchiMate model** in Archi or your preferred modeling tool\n`;
+    response += `2. **Navigate to the Business Layer** view\n`;
+    response += `3. **Create DC France business actor** using the specifications above\n`;
+    response += `4. **Add to Application Layer** - create the French applications\n`;
+    response += `5. **Establish relationships** with existing EAI Bus and CRM systems\n`;
+    response += `6. **Update views**: Add DC France to Figure 12 and Figure 19 equivalent views\n\n`;
+
+    response += `### Files to Modify\n\n`;
+    response += `You will need to update these model files (or equivalent in your environment):\n\n`;
+    response += `- Application Landscape view (equivalent to Figure 12)\n`;
+    response += `- Target CRM Architecture view (equivalent to Figure 19)\n`;
+    response += `- Business actor organization charts\n`;
+    response += `- EAI Bus integration diagrams\n\n`;
+
+    response += `## Documentation to Generate\n\n`;
+    response += `### Architecture Decision Record (ADR)\n\n`;
+    response += `Create an ADR with these sections:\n\n`;
     response += `**Title**: Adding DC France to ArchiMetal Target Architecture\n\n`;
-    response += `**Status**: Approved\n\n`;
-    response += `**Decision**: Implement DC France using Target Architecture pattern with EAI Bus integration\n\n`;
-    response += `**Rationale**: Prevents customer data fragmentation and aligns with CRM transformation program\n\n`;
+    response += `**Context**: French automotive market expansion requirements\n\n`;
+    response += `**Decision**: Implement DC France using Target Architecture pattern (Figure 19)\n\n`;
+    response += `**Rationale**:\n`;
+    response += `- Prevents customer data fragmentation\n`;
+    response += `- Aligns with CRM transformation program\n`;
+    response += `- Leverages EAI Bus for integration\n\n`;
 
-    response += `## Version Control\n\n`;
-    response += `**Git Commit**: \`feat(archimate): add DC France to target architecture\`\n`;
-    response += `**Branch**: \`feature/dc-france-integration\`\n`;
-    response += `**Commit Hash**: \`${changeId.substring(0, 7)}\`\n\n`;
+    response += `**Consequences**:\n`;
+    response += `- Requires EAI Bus capacity planning\n`;
+    response += `- Need for French-specific data transformation logic\n`;
+    response += `- Implementation phases required\n\n`;
 
-    response += `## Validation Results\n\n`;
-    response += `✅ Model integrity maintained\n`;
-    response += `✅ No broken relationships detected\n`;
-    response += `✅ All elements properly typed\n`;
-    response += `✅ Naming conventions followed\n\n`;
+    response += `## Next Actions Required\n\n`;
+    response += `1. **Model Updates**: Implement the above changes in your ArchiMate tool\n`;
+    response += `2. **Review**: Validate with architecture board before proceeding\n`;
+    response += `3. **Capacity Planning**: Assess EAI Bus capacity for additional DC\n`;
+    response += `4. **Implementation Planning**: Schedule phased rollout\n`;
+    response += `5. **ADR Creation**: Document the architectural decision\n\n`;
 
-    response += `## Next Steps\n\n`;
-    response += `1. Review generated ADR with architecture board\n`;
-    response += `2. Validate EAI Bus capacity for additional DC\n`;
-    response += `3. Schedule implementation planning session\n`;
-    response += `4. Update project roadmap with DC France phases\n`;
+    response += `## Integration with Your Workflow\n\n`;
+    response += `This analysis provides the foundation for actual implementation. The specific technical steps will depend on your:\n\n`;
+    response += `- ArchiMate modeling tool (Archi, BiZZdesign, etc.)\n`;
+    response += `- Version control system for models\n`;
+    response += `- ADR documentation process\n`;
+    response += `- Architecture governance workflow\n`;
 
     return response;
   }
@@ -741,17 +767,28 @@ export class PreciseResponseService {
    * Execute generic model changes
    */
   private executeGenericModelChanges(query: string): string {
-    let response = `# Model Update Execution Required\n\n`;
-    response += `To execute model changes, I need to identify the specific modifications from your previous analysis.\n\n`;
-    response += `**Please confirm which changes to apply:**\n\n`;
-    response += `1. If you analyzed DC France impact, say: "Apply DC France changes"\n`;
-    response += `2. If you have other specific changes, please specify the elements to create/modify\n\n`;
-    response += `**Note**: Model updates will include:\n`;
-    response += `- Creating new ArchiMate elements\n`;
-    response += `- Establishing relationships\n`;
-    response += `- Generating ADR documentation\n`;
-    response += `- Updating model files\n`;
-    response += `- Creating git commits\n`;
+    let response = `# Implementation Guidance Required\n\n`;
+    response += `## System Limitations\n\n`;
+    response += `I cannot directly modify ArchiMate files, execute model changes, or create actual documentation. However, I can provide detailed implementation guidance.\n\n`;
+    response += `## Available Assistance\n\n`;
+    response += `I can help you with:\n\n`;
+    response += `1. **Detailed element specifications** for your modeling tool\n`;
+    response += `2. **Relationship mapping** between new and existing elements\n`;
+    response += `3. **Implementation step-by-step guides**\n`;
+    response += `4. **ADR template creation** with decision rationale\n`;
+    response += `5. **Validation checklists** for model integrity\n\n`;
+
+    response += `## To Get Specific Guidance\n\n`;
+    response += `Please specify:\n\n`;
+    response += `- **What elements** you want to add/modify\n`;
+    response += `- **Which relationships** need to be established\n`;
+    response += `- **What views/models** need updating\n`;
+    response += `- **Your modeling tool** (Archi, BiZZdesign, etc.)\n\n`;
+
+    response += `## Example Request\n\n`;
+    response += `"Provide implementation guide for adding DC France with EAI Bus integration to the ArchiMetal model using Archi tool"\n\n`;
+
+    response += `This approach ensures you get actionable guidance while maintaining transparency about system capabilities.\n`;
 
     return response;
   }
