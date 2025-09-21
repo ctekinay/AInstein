@@ -34,12 +34,37 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   // Detect if this is a precise accuracy response
+  // Enhanced detection: Check for ArchiMate-related content and structured responses
   const isPreciseResponse = isAgent && (
-    message.content.includes('**') &&
-    (message.content.includes('business actors') ||
-     message.content.includes('business processes') ||
-     message.content.includes('business functions')) &&
-    /\*\*\d+\s+/.test(message.content) // Contains count pattern like "**3 business actors**"
+    // Check for element IDs (the most reliable indicator)
+    message.content.includes('<span class="element-id"') ||
+    // Check for structured ArchiMate responses with bold markdown
+    (message.content.includes('**') && (
+      // Business elements
+      message.content.toLowerCase().includes('business actor') ||
+      message.content.toLowerCase().includes('business process') ||
+      message.content.toLowerCase().includes('business function') ||
+      // Application elements
+      message.content.toLowerCase().includes('application component') ||
+      message.content.toLowerCase().includes('application service') ||
+      // ArchiMate specific terms
+      message.content.toLowerCase().includes('archimate') ||
+      message.content.toLowerCase().includes('archimetal') ||
+      // Structural indicators
+      message.content.includes('Internal Actor') ||
+      message.content.includes('External Actor') ||
+      message.content.includes('Department') ||
+      // Count patterns
+      /\*\*\d+\s+/.test(message.content)
+    )) ||
+    // Check for relationship analysis
+    message.content.includes('CompositionRelationship') ||
+    message.content.includes('AssignmentRelationship') ||
+    message.content.includes('ServingRelationship') ||
+    // Check for ArchiMate view references
+    message.content.includes('Figure ') ||
+    // Check for model analysis headers
+    message.content.includes('## ArchiMate')
   );
 
   // Function to safely render HTML content while preserving line breaks
