@@ -199,12 +199,16 @@ export const ChatInterface = () => {
       </header>
 
       {/* Main chat area */}
-      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
-        <MessageList />
-        <MessageInput
-          onSendMessage={handleSendMessage}
-          disabled={!isConnected || !sessionId}
-        />
+      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0">
+        <div className="flex-1 overflow-hidden">
+          <MessageList />
+        </div>
+        <div className="flex-shrink-0 border-t bg-white">
+          <MessageInput
+            onSendMessage={handleSendMessage}
+            disabled={!isConnected || !sessionId}
+          />
+        </div>
       </div>
 
       {/* Element Viewer Modal */}

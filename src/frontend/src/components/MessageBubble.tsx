@@ -13,14 +13,14 @@ const formatMarkdown = (text: string): string => {
   return text
     // Bold text (**text**)
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-700">$1</strong>')
-    // Bullet points with enhanced styling
-    .replace(/^•\s(.+)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-500 mt-1">•</span><span>$1</span></div>')
+    // Bullet points with compact styling
+    .replace(/^•\s(.+)$/gm, '<div class="flex items-start gap-1 my-0.5"><span class="text-blue-500 text-sm">•</span><span class="text-sm">$1</span></div>')
     // Lines starting with "- " (list items)
-    .replace(/^-\s(.+)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-500 mt-1">•</span><span>$1</span></div>')
-    // Headers (### text)
-    .replace(/^###\s(.+)$/gm, '<h3 class="font-semibold text-lg text-gray-800 mt-4 mb-2">$1</h3>')
-    // Section breaks
-    .replace(/\n\n/g, '<br/><br/>')
+    .replace(/^-\s(.+)$/gm, '<div class="flex items-start gap-1 my-0.5"><span class="text-blue-500 text-sm">•</span><span class="text-sm">$1</span></div>')
+    // Headers (### text) - more compact
+    .replace(/^###\s(.+)$/gm, '<h3 class="font-semibold text-base text-gray-800 mt-2 mb-1">$1</h3>')
+    // Section breaks - reduced spacing
+    .replace(/\n\n/g, '<br/>')
     // Single line breaks
     .replace(/\n/g, '<br/>')
     // Preserve element links
@@ -182,21 +182,21 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   return (
     <div
       className={clsx(
-        'flex gap-3 max-w-4xl group',
+        'flex gap-2 max-w-4xl group',
         isAgent ? 'justify-start' : 'justify-end ml-auto'
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {isAgent && (
-        <div className="flex-shrink-0 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-          <Bot className="w-5 h-5 text-white" />
+        <div className="flex-shrink-0 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center mt-1">
+          <Bot className="w-4 h-4 text-white" />
         </div>
       )}
 
       <div className="relative">
         <div className={clsx(
-          'max-w-3xl px-4 py-3 rounded-2xl',
+          'max-w-3xl px-3 py-2 rounded-2xl text-sm',
           isAgent
             ? isPreciseResponse
               ? 'bg-blue-50 border border-blue-200 text-gray-900 rounded-bl-sm'
@@ -253,8 +253,8 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
       </div>
 
       {!isAgent && (
-        <div className="flex-shrink-0 w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-          <User className="w-5 h-5 text-gray-600" />
+        <div className="flex-shrink-0 w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mt-1">
+          <User className="w-4 h-4 text-gray-600" />
         </div>
       )}
     </div>

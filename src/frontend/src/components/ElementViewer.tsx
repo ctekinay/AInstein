@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, ExternalLink, FileText, Layers } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, FileText, Layers, ArrowLeft, ExternalLink } from 'lucide-react';
 // import clsx from 'clsx';
 
 interface ElementViewerProps {
@@ -29,6 +29,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openingArchi, setOpeningArchi] = useState(false);
+  const [navigationHistory, setNavigationHistory] = useState<Array<{elementId: string, modelName: string, elementName: string}>>([]);
 
   useEffect(() => {
     if (isOpen && elementId && modelName) {
@@ -79,10 +80,33 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
         {/* Header */}
         <div className="bg-primary-500 text-white px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            {/* Back navigation button */}
+            {navigationHistory.length > 0 && (
+              <button
+                onClick={() => {
+                  const lastElement = navigationHistory[navigationHistory.length - 1];
+                  if (lastElement && onNavigate) {
+                    // Remove the last element from history
+                    setNavigationHistory(prev => prev.slice(0, -1));
+                    // Navigate back to the previous element
+                    onNavigate(lastElement.elementId, lastElement.modelName);
+                  }
+                }}
+                className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
+                title="Go back to previous element"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
             <Layers className="w-6 h-6" />
             <div>
               <h2 className="text-lg font-semibold">ArchiMate Element Viewer</h2>
               <p className="text-primary-100 text-sm">Model: {modelName}</p>
+              {navigationHistory.length > 0 && (
+                <p className="text-primary-200 text-xs">
+                  {navigationHistory.length} element{navigationHistory.length !== 1 ? 's' : ''} in history
+                </p>
+              )}
             </div>
           </div>
           <button
@@ -117,25 +141,25 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
           )}
 
           {elementDetails && (
-            <div className="space-y-6">
+            <div className="space-y-3">
               {/* Element Info */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-primary-500" />
+              <div className="bg-gray-50 rounded-lg p-3">
+                <h3 className="text-base font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-primary-500" />
                   Element Information
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Name</label>
-                    <p className="text-gray-900 font-medium">{elementDetails.name}</p>
+                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Name</label>
+                    <p className="text-sm text-gray-900 font-medium">{elementDetails.name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Type</label>
-                    <p className="text-gray-900">{elementDetails.type.replace('archimate:', '')}</p>
+                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Type</label>
+                    <p className="text-sm text-gray-900">{elementDetails.type.replace('archimate:', '')}</p>
                   </div>
                   <div className="md:col-span-2">
-                    <label className="text-sm font-medium text-gray-500">Element ID</label>
-                    <p className="text-gray-600 font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Element ID</label>
+                    <p className="text-gray-600 font-mono text-xs bg-gray-100 px-2 py-1 rounded">
                       {elementDetails.id}
                     </p>
                   </div>
@@ -145,43 +169,49 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
               {/* Documentation */}
               {elementDetails.documentation && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Documentation</h3>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-gray-700">{elementDetails.documentation}</p>
+                  <h3 className="text-base font-semibold text-gray-900 mb-2">Documentation</h3>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-gray-700">{elementDetails.documentation}</p>
                   </div>
                 </div>
               )}
 
               {/* Relationships */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Relationships ({elementDetails.relationships.length})</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">Relationships ({elementDetails.relationships.length})</h3>
                 {elementDetails.relationships.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {elementDetails.relationships.map((rel, index) => (
-                      <div key={index} className="bg-white border border-gray-200 rounded-lg p-3 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                      <div key={index} className="bg-white border border-gray-200 rounded-lg p-2 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
                           <div>
-                            <p className="font-medium text-gray-900">{rel.targetName}</p>
-                            <p className="text-sm text-gray-500">{rel.type.replace('archimate:', '').replace('Relationship', '')}</p>
+                            <p className="text-sm font-medium text-gray-900">{rel.targetName}</p>
+                            <p className="text-xs text-gray-500">{rel.type.replace('archimate:', '').replace('Relationship', '')}</p>
                           </div>
                         </div>
                         <button
                           onClick={() => {
-                            if (onNavigate) {
+                            if (onNavigate && elementDetails) {
+                              // Add current element to history
+                              setNavigationHistory(prev => [...prev, {
+                                elementId: elementDetails.id,
+                                modelName: elementDetails.model,
+                                elementName: elementDetails.name
+                              }]);
                               onNavigate(rel.target, modelName || '');
                             }
                           }}
                           className="text-gray-400 hover:text-primary-500 transition-colors"
                           title="Navigate to this element"
                         >
-                          <ExternalLink className="w-4 h-4" />
+                          <ChevronRight className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500 italic">No relationships found for this element.</p>
+                  <p className="text-sm text-gray-500 italic">No relationships found for this element.</p>
                 )}
               </div>
 
