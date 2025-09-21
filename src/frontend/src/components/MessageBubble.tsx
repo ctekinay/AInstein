@@ -13,12 +13,17 @@ const formatMarkdown = (text: string): string => {
   return text
     // Bold text (**text**)
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-700">$1</strong>')
+    // Headers - Handle all levels with proper hierarchy
+    .replace(/^# (.+)$/gm, '<h1 class="font-bold text-xl text-gray-900 mt-4 mb-3">$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2 class="font-bold text-lg text-gray-800 mt-3 mb-2">$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3 class="font-semibold text-base text-gray-800 mt-2 mb-1">$1</h3>')
+    .replace(/^#### (.+)$/gm, '<h4 class="font-semibold text-sm text-gray-700 mt-2 mb-1">$1</h4>')
     // Bullet points with compact styling
     .replace(/^•\s(.+)$/gm, '<div class="flex items-start gap-1 my-0.5"><span class="text-blue-500 text-sm">•</span><span class="text-sm">$1</span></div>')
     // Lines starting with "- " (list items)
     .replace(/^-\s(.+)$/gm, '<div class="flex items-start gap-1 my-0.5"><span class="text-blue-500 text-sm">•</span><span class="text-sm">$1</span></div>')
-    // Headers (### text) - more compact
-    .replace(/^###\s(.+)$/gm, '<h3 class="font-semibold text-base text-gray-800 mt-2 mb-1">$1</h3>')
+    // Code blocks with backticks
+    .replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-xs">$1</code>')
     // Section breaks - reduced spacing
     .replace(/\n\n/g, '<br/>')
     // Single line breaks
@@ -38,6 +43,14 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   const isPreciseResponse = isAgent && (
     // Check for element IDs (the most reliable indicator)
     message.content.includes('<span class="element-id"') ||
+    // Check for execution responses (new)
+    message.content.includes('Model Updates Applied') ||
+    message.content.includes('Execution Summary') ||
+    message.content.includes('Created Elements') ||
+    message.content.includes('Change ID:') ||
+    message.content.includes('Successfully Applied') ||
+    // Check for markdown headers (H1, H2, H3)
+    /^#{1,3}\s/.test(message.content) ||
     // Check for structured ArchiMate responses with bold markdown
     (message.content.includes('**') && (
       // Business elements
@@ -74,7 +87,8 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
     const spanPattern = /<span class="element-id"([^>]*)>([^<]*)<\/span>/g;
 
     // Enhanced pattern matching for accuracy indicators
-    const hasAccuracyMarkers = content.includes('**') || content.includes('•') || content.includes('###');
+    const hasAccuracyMarkers = content.includes('**') || content.includes('•') ||
+                              /^#{1,4}\s/.test(content) || content.includes('###');
     const hasLinks = linkPattern.test(content) || spanPattern.test(content);
 
     if (hasLinks) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, ChevronRight, ChevronLeft, FileText, Layers, ArrowLeft, ExternalLink } from 'lucide-react';
+import { X, ChevronRight, FileText, Layers, ArrowLeft, ExternalLink } from 'lucide-react';
 // import clsx from 'clsx';
 
 interface ElementViewerProps {
