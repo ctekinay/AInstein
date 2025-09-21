@@ -226,7 +226,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                                     {relatedElement.id}
                                   </code>
                                   <span>•</span>
-                                  <span className="text-blue-600">
+                                  <span>
                                     {rel.type.replace('archimate:', '').replace('Relationship', '')}
                                   </span>
                                 </div>
