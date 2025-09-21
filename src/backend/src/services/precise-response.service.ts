@@ -1,4 +1,4 @@
-import archiMateParser from './archimate-parser.service';
+import archiMateParser from './archimate-parser.service';\nimport archiMateUpdater from './archimate-model-updater.service';
 import logger from '../utils/logger';
 
 /**
