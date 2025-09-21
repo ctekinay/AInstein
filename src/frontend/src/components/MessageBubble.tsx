@@ -8,11 +8,39 @@ interface MessageBubbleProps {
   message: Message;
 }
 
+// Helper function to format markdown-style text for accuracy responses
+const formatMarkdown = (text: string): string => {
+  return text
+    // Bold text (**text**)
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-700">$1</strong>')
+    // Bullet points with enhanced styling
+    .replace(/^•\s(.+)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-500 mt-1">•</span><span>$1</span></div>')
+    // Lines starting with "- " (list items)
+    .replace(/^-\s(.+)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-500 mt-1">•</span><span>$1</span></div>')
+    // Headers (### text)
+    .replace(/^###\s(.+)$/gm, '<h3 class="font-semibold text-lg text-gray-800 mt-4 mb-2">$1</h3>')
+    // Section breaks
+    .replace(/\n\n/g, '<br/><br/>')
+    // Single line breaks
+    .replace(/\n/g, '<br/>')
+    // Preserve element links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:text-blue-800 underline">$1</a>');
+};
+
 export const MessageBubble = ({ message }: MessageBubbleProps) => {
   const isAgent = message.sender === 'agent';
   const isSystem = message.type === 'system';
   const [copied, setCopied] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
+  // Detect if this is a precise accuracy response
+  const isPreciseResponse = isAgent && (
+    message.content.includes('**') &&
+    (message.content.includes('business actors') ||
+     message.content.includes('business processes') ||
+     message.content.includes('business functions')) &&
+    /\*\*\d+\s+/.test(message.content) // Contains count pattern like "**3 business actors**"
+  );
 
   // Function to safely render HTML content while preserving line breaks
   const renderMessageContent = (content: string) => {
@@ -20,13 +48,15 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
     const linkPattern = /<a href="([^"]*)"([^>]*)>([^<]*)<\/a>/g;
     const spanPattern = /<span class="element-id"([^>]*)>([^<]*)<\/span>/g;
 
+    // Enhanced pattern matching for accuracy indicators
+    const hasAccuracyMarkers = content.includes('**') || content.includes('•') || content.includes('###');
     const hasLinks = linkPattern.test(content) || spanPattern.test(content);
 
     if (hasLinks) {
       // Create a comprehensive pattern that matches both links and spans
       const combinedPattern = /(<a href="[^"]*"[^>]*>[^<]*<\/a>|<span class="element-id"[^>]*>[^<]*<\/span>)/g;
       const parts = content.split(combinedPattern);
-      const elements = [];
+      const elements: React.ReactNode[] = [];
 
       parts.forEach((part, index) => {
         if (!part) return;
@@ -72,22 +102,32 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
           elements.push(
             <span
               key={index}
-              className="element-id"
+              className="element-id inline-flex items-center px-2 py-1 mx-1 text-xs font-mono bg-blue-100 hover:bg-blue-200 text-blue-800 rounded border cursor-pointer transition-colors duration-200"
               data-element-id={elementIdMatch ? elementIdMatch[1] : ''}
               data-model={modelMatch ? modelMatch[1] : ''}
               title={titleMatch ? titleMatch[1] : 'Click to view element details'}
             >
+              <span className="text-blue-500 mr-1">🔍</span>
               {spanText}
             </span>
           );
           return;
         }
 
-        // Regular text
-        elements.push(part);
+        // Regular text - apply markdown formatting
+        if (hasAccuracyMarkers) {
+          elements.push(<span key={index} dangerouslySetInnerHTML={{ __html: formatMarkdown(part) }} />);
+        } else {
+          elements.push(part);
+        }
       });
 
       return elements;
+    }
+
+    // Apply markdown formatting for accuracy-focused responses
+    if (hasAccuracyMarkers) {
+      return <span dangerouslySetInnerHTML={{ __html: formatMarkdown(content) }} />;
     }
 
     return content;
@@ -133,9 +173,19 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         <div className={clsx(
           'max-w-3xl px-4 py-3 rounded-2xl',
           isAgent
-            ? 'bg-gray-100 text-gray-900 rounded-bl-sm'
+            ? isPreciseResponse
+              ? 'bg-blue-50 border border-blue-200 text-gray-900 rounded-bl-sm'
+              : 'bg-gray-100 text-gray-900 rounded-bl-sm'
             : 'bg-primary-500 text-white rounded-br-sm'
         )}>
+          {/* Accuracy indicator */}
+          {isPreciseResponse && (
+            <div className="flex items-center gap-2 mb-2 text-xs text-blue-600 font-medium">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>Enhanced Accuracy Mode</span>
+            </div>
+          )}
+
           <div className="whitespace-pre-wrap break-words">{renderMessageContent(message.content)}</div>
 
           {message.metadata && (

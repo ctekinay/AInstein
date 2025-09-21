@@ -82,19 +82,19 @@ export class PreciseResponseService {
     // Show proper categorization instead of heuristic grouping
     response += `**Internal Organizational Actors (${businessActorAnalysis.internalActors.length}):**\n`;
     businessActorAnalysis.internalActors.forEach(actor => {
-      response += `- ${actor.name}\n`;
+      response += `- ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
     });
     response += '\n';
 
     response += `**External Business Partners (${businessActorAnalysis.externalActors.length}):**\n`;
     businessActorAnalysis.externalActors.forEach(actor => {
-      response += `- ${actor.name}\n`;
+      response += `- ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
     });
     response += '\n';
 
     response += `**Internal Departments/Functions (${businessActorAnalysis.departments.length}):**\n`;
     businessActorAnalysis.departments.forEach(actor => {
-      response += `- ${actor.name}\n`;
+      response += `- ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
     });
     response += '\n';
 
@@ -124,17 +124,17 @@ export class PreciseResponseService {
 
     response += `**Internal Actors (${businessActorAnalysis.internalActors.length}):**\n`;
     businessActorAnalysis.internalActors.forEach(actor => {
-      response += `- ${actor.name}\n`;
+      response += `- ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
     });
 
     response += `\n**External Actors (${businessActorAnalysis.externalActors.length}):**\n`;
     businessActorAnalysis.externalActors.forEach(actor => {
-      response += `- ${actor.name}\n`;
+      response += `- ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
     });
 
     response += `\n**Departments/Functions (${businessActorAnalysis.departments.length}):**\n`;
     businessActorAnalysis.departments.forEach(actor => {
-      response += `- ${actor.name}\n`;
+      response += `- ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
     });
 
     return response;
@@ -330,7 +330,7 @@ export class PreciseResponseService {
 
       response += `**All Business Actors (alphabetical):**\n`;
       actors.sort((a, b) => a.name.localeCompare(b.name)).forEach(actor => {
-        response += `• ${actor.name}\n`;
+        response += `• ${actor.name} <span class="element-id" data-element-id="${actor.id}" data-model="${actor.model || 'ArchiMetal'}" title="Click to view element details and open in Archi">${actor.id}</span>\n`;
       });
     }
 

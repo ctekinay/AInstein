@@ -15,7 +15,7 @@ export const useWebSocket = (sessionId: string | null) => {
   useEffect(() => {
     if (!sessionId) return;
 
-    const serverUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    const serverUrl = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001';
 
     socketRef.current = io(serverUrl);
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, ExternalLink, FileText, Layers } from 'lucide-react';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 
 interface ElementViewerProps {
   elementId: string | null;
@@ -218,7 +218,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                           throw new Error(errorData.error || 'Failed to open Archi');
                         }
                       } else {
-                        const data = await response.json();
+                        await response.json();
 
                         // Show success feedback in a subtle way
                         const successMessage = document.createElement('div');
@@ -291,7 +291,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                       window.URL.revokeObjectURL(url);
                     } catch (error) {
                       console.error('Download failed:', error);
-                      alert(`Failed to download model file: ${error.message}`);
+                      alert(`Failed to download model file: ${error instanceof Error ? error.message : String(error)}`);
                     }
                   }}
                   className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"

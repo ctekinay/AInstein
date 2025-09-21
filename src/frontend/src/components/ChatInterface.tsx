@@ -221,7 +221,7 @@ export const ChatInterface = () => {
             modelName: newModelName
           });
         }}
-        onArchiOpened={(modelName, elementId) => {
+        onArchiOpened={() => {
           // Add a message from AInstein when Archi is opened
           const ainsteinMessage = {
             id: `msg-${Date.now()}`,

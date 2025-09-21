@@ -191,7 +191,7 @@ app.get('/api/models/:modelName/download', async (req, res) => {
 
   } catch (error) {
     logger.error('Error downloading model file:', error);
-    res.status(500).json({ error: 'Failed to download model file', details: error.message });
+    res.status(500).json({ error: 'Failed to download model file', details: error instanceof Error ? error.message : String(error) });
   }
 });
 
@@ -248,7 +248,7 @@ app.post('/api/models/:modelName/open-in-archi', async (req, res) => {
 
     logger.info(`Executing command: ${command}`);
 
-    exec(command, (error, stdout, stderr) => {
+    exec(command, (error: any, stdout: any, stderr: any) => {
       if (error) {
         logger.error('Error opening Archi:', error);
         logger.error('stderr:', stderr);
@@ -274,7 +274,7 @@ app.post('/api/models/:modelName/open-in-archi', async (req, res) => {
 
   } catch (error) {
     logger.error('Error opening model in Archi:', error);
-    res.status(500).json({ error: 'Failed to open model in Archi', details: error.message });
+    res.status(500).json({ error: 'Failed to open model in Archi', details: error instanceof Error ? error.message : String(error) });
   }
 });
 

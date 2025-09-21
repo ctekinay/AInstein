@@ -155,6 +155,13 @@ src/
 - Use structured commit messages: `feat(archimate): add impact analysis for applications`
 - Handle conflicts gracefully with user prompts
 - Maintain audit trail for all architectural decisions
+- **ALWAYS COMMIT CODE CHANGES**: When completing significant implementation work, fixes, or feature additions, ALWAYS create a git commit with appropriate message
+- **MANDATORY COMMIT SCENARIOS**:
+  - After fixing bugs or issues
+  - After implementing new features or functionality
+  - After completing requested code changes
+  - When explicitly asked to commit by the user
+  - After major refactoring or code improvements
 
 ### API Design
 
@@ -273,3 +280,10 @@ This is an active development project focusing on building the complete technica
 3. **Testing and Validation**: Use ArchiMetal test case to validate solution accuracy and completeness
 
 This test environment enables development and validation of the AInstein solution without requiring production data or knowledge graphs from the company.
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+**CRITICAL: ALWAYS COMMIT CODE CHANGES** - When completing implementation work, bug fixes, feature additions, or any significant code changes, ALWAYS create a git commit with an appropriate commit message. This applies to ALL development tasks.

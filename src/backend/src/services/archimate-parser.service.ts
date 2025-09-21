@@ -9,6 +9,7 @@ export interface ArchiMateElement {
   type: string;
   documentation?: string;
   layer: 'business' | 'application' | 'technology' | 'strategy' | 'implementation';
+  model?: string;
 }
 
 export interface ArchiMateRelationship {
@@ -31,6 +32,7 @@ export interface ArchiMateModel {
   id: string;
   name: string;
   version: string;
+  path?: string;
   elements: Map<string, ArchiMateElement>;
   relationships: Map<string, ArchiMateRelationship>;
   views: Map<string, ArchiMateView>;
@@ -120,6 +122,7 @@ class ArchiMateParserService {
       id: archiMateRoot['@_id'] || path.basename(filePath, '.archimate'),
       name: archiMateRoot['@_name'] || path.basename(filePath, '.archimate'),
       version: archiMateRoot['@_version'] || '3.2',
+      path: filePath,
       elements: new Map(),
       relationships: new Map(),
       views: new Map(),
@@ -164,7 +167,8 @@ class ArchiMateParserService {
           name: elementData['@_name'] || 'Unnamed Element',
           type: elementData['@_xsi:type'] || elementData.type,
           layer,
-          documentation: elementData.documentation
+          documentation: elementData.documentation,
+          model: model.name
         };
 
         model.elements.set(element.id, element);
