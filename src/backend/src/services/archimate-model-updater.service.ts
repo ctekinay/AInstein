@@ -202,7 +202,7 @@ class ArchiMateModelUpdaterService {
       }
 
       // Add DC France business actor
-      const newElement = {
+      const newElement: any = {
         '@_xsi:type': 'archimate:BusinessActor',
         '@_name': actor.name,
         '@_id': actor.id
@@ -250,7 +250,7 @@ class ArchiMateModelUpdaterService {
       }
 
       // Add France location
-      const newElement = {
+      const newElement: any = {
         '@_xsi:type': 'archimate:Location',
         '@_name': location.name,
         '@_id': location.id
@@ -286,7 +286,7 @@ class ArchiMateModelUpdaterService {
       }
 
       // Add new relationship
-      const newRelationship = {
+      const newRelationship: any = {
         '@_xsi:type': relationship.type,
         '@_id': this.generateElementId(),
         '@_source': relationship.sourceId,

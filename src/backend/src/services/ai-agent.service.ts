@@ -1003,7 +1003,7 @@ Based on ArchiMetal Views 3-5 (Production and Logistics), here's the production 
     // ALWAYS use the new precise response service (fix for accuracy issues)
     try {
       // Use precise response service for business actors queries
-      return await preciseResponseService.handleBusinessActorsQuery(userMessage);
+      return await preciseResponseService.generatePreciseResponse(userMessage);
     } catch (error) {
       logger.warn('Precise response service failed for organizational query, using fallback:', error);
       // Fall through to legacy implementation only if precise service fails
