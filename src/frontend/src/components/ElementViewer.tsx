@@ -17,9 +17,14 @@ interface ElementDetails {
   type: string;
   model: string;
   relationships: Array<{
+    id: string;
     type: string;
+    source: string;
     target: string;
+    sourceName: string;
     targetName: string;
+    sourceType: string;
+    targetType: string;
   }>;
   documentation?: string;
 }
@@ -56,9 +61,14 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
         type: data.type,
         model: data.model,
         relationships: data.relationships.map((rel: any) => ({
+          id: rel.id,
           type: rel.type.replace('Relationship', ''),
-          target: rel.target === data.id ? rel.source : rel.target,
-          targetName: rel.target === data.id ? rel.sourceName : rel.targetName
+          source: rel.source,
+          target: rel.target,
+          sourceName: rel.sourceName,
+          targetName: rel.targetName,
+          sourceType: rel.sourceType,
+          targetType: rel.targetType
         })),
         documentation: data.documentation
       };
@@ -176,42 +186,67 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                 </div>
               )}
 
-              {/* Relationships */}
+              {/* Related Elements */}
               <div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">Relationships ({elementDetails.relationships.length})</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">Related Elements ({elementDetails.relationships.length})</h3>
                 {elementDetails.relationships.length > 0 ? (
                   <div className="space-y-1">
-                    {elementDetails.relationships.map((rel, index) => (
-                      <div key={index} className="bg-white border border-gray-200 rounded-lg p-2 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                        <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">{rel.targetName}</p>
-                            <p className="text-xs text-gray-500">{rel.type.replace('archimate:', '').replace('Relationship', '')}</p>
+                    {elementDetails.relationships.map((rel, index) => {
+                      // Determine which element is the "other" element (not the current one)
+                      const isSourceCurrent = rel.source === elementDetails.id;
+                      const relatedElement = {
+                        id: isSourceCurrent ? rel.target : rel.source,
+                        name: isSourceCurrent ? rel.targetName : rel.sourceName,
+                        type: isSourceCurrent ? rel.targetType : rel.sourceType
+                      };
+
+                      return (
+                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-2 h-2 bg-primary-500 rounded-full flex-shrink-0"></div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <p className="text-sm font-medium text-gray-900 truncate">{relatedElement.name}</p>
+                                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
+                                    {relatedElement.type}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                  <code className="bg-gray-50 px-1 py-0.5 rounded text-xs font-mono">
+                                    {relatedElement.id}
+                                  </code>
+                                  <span>•</span>
+                                  <span className="text-blue-600">
+                                    {rel.type.replace('archimate:', '').replace('Relationship', '')}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                if (onNavigate && elementDetails) {
+                                  // Add current element to history
+                                  setNavigationHistory(prev => [...prev, {
+                                    elementId: elementDetails.id,
+                                    modelName: elementDetails.model,
+                                    elementName: elementDetails.name
+                                  }]);
+                                  onNavigate(relatedElement.id, modelName || '');
+                                }
+                              }}
+                              className="text-gray-400 hover:text-primary-500 transition-colors ml-2 flex-shrink-0"
+                              title={`Navigate to ${relatedElement.name}`}
+                            >
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
-                        <button
-                          onClick={() => {
-                            if (onNavigate && elementDetails) {
-                              // Add current element to history
-                              setNavigationHistory(prev => [...prev, {
-                                elementId: elementDetails.id,
-                                modelName: elementDetails.model,
-                                elementName: elementDetails.name
-                              }]);
-                              onNavigate(rel.target, modelName || '');
-                            }
-                          }}
-                          className="text-gray-400 hover:text-primary-500 transition-colors"
-                          title="Navigate to this element"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 italic">No relationships found for this element.</p>
+                  <p className="text-sm text-gray-500 italic">No related elements found for this element.</p>
                 )}
               </div>
 

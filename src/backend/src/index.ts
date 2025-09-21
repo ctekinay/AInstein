@@ -81,14 +81,21 @@ app.get('/api/elements/:elementId', async (req, res) => {
       model: modelName,
       modelPath: modelPath,
       documentation: foundElement.documentation || '',
-      relationships: relationships.map(rel => ({
-        id: rel.id,
-        type: rel.type.replace('archimate:', ''),
-        source: rel.source,
-        target: rel.target,
-        sourceName: models.find(m => m.elements.has(rel.source))?.elements.get(rel.source)?.name || 'Unknown',
-        targetName: models.find(m => m.elements.has(rel.target))?.elements.get(rel.target)?.name || 'Unknown'
-      }))
+      relationships: relationships.map(rel => {
+        const sourceElement = models.find(m => m.elements.has(rel.source))?.elements.get(rel.source);
+        const targetElement = models.find(m => m.elements.has(rel.target))?.elements.get(rel.target);
+
+        return {
+          id: rel.id,
+          type: rel.type.replace('archimate:', ''),
+          source: rel.source,
+          target: rel.target,
+          sourceName: sourceElement?.name || 'Unknown',
+          targetName: targetElement?.name || 'Unknown',
+          sourceType: sourceElement?.type?.replace('archimate:', '') || 'Unknown',
+          targetType: targetElement?.type?.replace('archimate:', '') || 'Unknown'
+        };
+      })
     });
 
   } catch (error) {
