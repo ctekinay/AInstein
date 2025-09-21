@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{pifont}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -78,19 +79,19 @@ This document provides comprehensive documentation for the AInstein Architectura
 \section{Introduction}
 
 \subsection{Overview}
-The AInstein Architectural Patterns Knowledge Graph represents a paradigm shift from traditional document-based architecture knowledge management to a semantic, queryable knowledge base. This system transforms the ArchiMetal case study—comprising 33 ArchiMate models, comprehensive PDF documentation, and project diagrams—into a structured knowledge graph that enables sophisticated architectural intelligence.
+The AInstein Architectural Patterns Knowledge Graph represents a paradigm shift from traditional document-based architecture knowledge management to a semantic, queryable knowledge base. This system transforms the ArchiMetal case study---comprising 33 ArchiMate models, comprehensive PDF documentation, and project diagrams---into a structured knowledge graph that enables sophisticated architectural intelligence.
 
 \subsection{Project Location}
 The knowledge graph is located within the AInstein project structure at:
 
 \begin{verbatim}
 knowledge_base/
-└── architecture_patterns/
-    ├── ontology/           # Core semantic models
-    ├── patterns/           # Extracted pattern instances
-    ├── queries/            # SPARQL query library
-    ├── README.md           # Usage documentation
-    └── extraction-guide.md # Pattern extraction guide
+|-- architecture_patterns/
+    |-- ontology/           # Core semantic models
+    |-- patterns/           # Extracted pattern instances
+    |-- queries/            # SPARQL query library
+    |-- README.md           # Usage documentation
+    |-- extraction-guide.md # Pattern extraction guide
 \end{verbatim}
 
 \subsection{Objectives}
@@ -276,7 +277,7 @@ ORDER BY DESC(?confidence)
 \end{lstlisting}
 
 \subsubsection{Confidence Scoring Algorithm}
-\textbf{Methodology**: Multi-factor confidence calculation
+\textbf{Methodology}: Multi-factor confidence calculation
 
 \begin{align}
 \text{Confidence} &= \alpha \cdot \text{StructuralScore} + \beta \cdot \text{SemanticScore} + \gamma \cdot \text{ContextScore}\\
@@ -286,7 +287,7 @@ ORDER BY DESC(?confidence)
 \begin{itemize}
     \item \textbf{StructuralScore}: Based on graph topology and relationship patterns
     \item \textbf{SemanticScore}: Based on element naming and documentation analysis
-    \item \textbf{ContextScore**: Based on business scenario alignment and expert validation
+    \item \textbf{ContextScore}: Based on business scenario alignment and expert validation
 \end{itemize}
 
 \section{Source Documents and Data Integration}
@@ -295,9 +296,9 @@ ORDER BY DESC(?confidence)
 
 \subsubsection{ArchiMate Model Files}
 \textbf{Location}: \texttt{knowledge\_base/ArchiMetal\_models/}\\
-\textbf{Format**: ArchiMate Exchange Format (XML)\\
+\textbf{Format}: ArchiMate Exchange Format (XML)\\
 \textbf{Count}: 33 model files\\
-\textbf{Coverage**:
+\textbf{Coverage}:
 
 \begin{table}[h]
 \centering
@@ -316,9 +317,9 @@ Target State Scenario & 5 & Future state architecture \\
 \end{table}
 
 \subsubsection{ArchiMetal Documentation}
-\textbf{File**: \texttt{y232-ArchiMetal-3.2.pdf}\\
-\textbf{Content**: Comprehensive case study documentation\\
-\textbf{Structure**:
+\textbf{File}: \texttt{y232-ArchiMetal-3.2.pdf}\\
+\textbf{Content}: Comprehensive case study documentation\\
+\textbf{Structure}:
 \begin{itemize}
     \item Business context and challenges (32 pages)
     \item Architectural views and analysis (45 pages)
@@ -327,8 +328,8 @@ Target State Scenario & 5 & Future state architecture \\
 \end{itemize}
 
 \subsubsection{Project Diagrams}
-\textbf{Location**: \texttt{knowledge\_base/project\_docs/diagrams/}\\
-\textbf{Files**:
+\textbf{Location}: \texttt{knowledge\_base/project\_docs/diagrams/}\\
+\textbf{Files}:
 \begin{itemize}
     \item \texttt{ArchiPT\_Component\_Diagram\_v02.drawio}
     \item \texttt{ArchiPT\_Agent\_Interaction\_Flow\_Sequence\_v02.drawio}
@@ -369,9 +370,9 @@ Target State Scenario & 5 & Future state architecture \\
 \subsection{Pattern-Aware Architectural Consultation}
 
 \subsubsection{Use Case}: CRM System Replacement Analysis
-\textbf{Scenario**: Architect asks about replacing existing CRM with Salesforce
+\textbf{Scenario}: Architect asks about replacing existing CRM with Salesforce
 
-\textbf{Knowledge Graph Query**:
+\textbf{Knowledge Graph Query}:
 \begin{lstlisting}[style=sparql]
 SELECT ?pattern ?impact ?recommendation WHERE {
   ?pattern ampattern:hasParticipant ?crm .
@@ -384,7 +385,7 @@ SELECT ?pattern ?impact ?recommendation WHERE {
 }
 \end{lstlisting}
 
-\textbf{AI Response Enhancement**:
+\textbf{AI Response Enhancement}:
 \begin{itemize}
     \item Identifies affected integration patterns (EAI Bus, Data Sync)
     \item Calculates cascade impact on dependent systems
@@ -394,10 +395,10 @@ SELECT ?pattern ?impact ?recommendation WHERE {
 
 \subsection{Impact Analysis and Risk Assessment}
 
-\subsubsection{Use Case**: Distributed Architecture Transformation
-\textbf{Query**: "What are the risks of implementing microservices architecture?"
+\subsubsection{Use Case: Distributed Architecture Transformation}
+\textbf{Query}: "What are the risks of implementing microservices architecture?"
 
-\textbf{Knowledge Graph Analysis**:
+\textbf{Knowledge Graph Analysis}:
 \begin{lstlisting}[style=sparql]
 SELECT ?pattern ?risk ?mitigation WHERE {
   ?pattern a ampattern:IntegrationPattern .
@@ -412,10 +413,10 @@ SELECT ?pattern ?risk ?mitigation WHERE {
 
 \subsection{Architectural Compliance Validation}
 
-\subsubsection{Use Case**: Enterprise Architecture Governance
-\textbf{Application**: Validate proposed architecture against established patterns
+\subsubsection{Use Case: Enterprise Architecture Governance}
+\textbf{Application}: Validate proposed architecture against established patterns
 
-\textbf{Validation Queries**:
+\textbf{Validation Queries}:
 \begin{itemize}
     \item Security pattern compliance checking
     \item Integration standard adherence
@@ -428,7 +429,7 @@ SELECT ?pattern ?risk ?mitigation WHERE {
 \subsection{Architecture Integration Points}
 
 \subsubsection{AI Agent Enhancement}
-\textbf{File**: \texttt{src/backend/src/services/ai-agent.service.ts}
+\textbf{File}: \texttt{src/backend/src/services/ai-agent.service.ts}
 
 \begin{lstlisting}[language=JavaScript,caption=Pattern-Aware Query Processing]
 class PatternAwareAIAgent extends AIAgentService {
@@ -451,7 +452,7 @@ class PatternAwareAIAgent extends AIAgentService {
 \end{lstlisting}
 
 \subsubsection{Knowledge Graph Service}
-\textbf{New Service**: \texttt{src/backend/src/services/knowledge-graph.service.ts}
+\textbf{New Service}: \texttt{src/backend/src/services/knowledge-graph.service.ts}
 
 \begin{lstlisting}[language=JavaScript,caption=Knowledge Graph Service]
 class KnowledgeGraphService {
@@ -481,9 +482,9 @@ class KnowledgeGraphService {
 \subsection{API Enhancements}
 
 \subsubsection{Pattern Discovery Endpoint}
-\textbf{Endpoint**: \texttt{/api/patterns/discover}\\
-\textbf{Method**: POST\\
-\textbf{Purpose**: Find patterns relevant to architectural context
+\textbf{Endpoint}: \texttt{/api/patterns/discover}\\
+\textbf{Method}: POST\\
+\textbf{Purpose}: Find patterns relevant to architectural context
 
 \begin{lstlisting}[language=JavaScript,caption=Pattern Discovery API]
 app.post('/api/patterns/discover', async (req, res) => {
@@ -513,14 +514,14 @@ app.post('/api/patterns/discover', async (req, res) => {
 \end{lstlisting}
 
 \subsubsection{Impact Analysis Endpoint}
-\textbf{Endpoint**: \texttt{/api/patterns/impact-analysis}\\
-\textbf{Method**: POST\\
-\textbf{Purpose**: Analyze impact of architectural changes
+\textbf{Endpoint}: \texttt{/api/patterns/impact-analysis}\\
+\textbf{Method}: POST\\
+\textbf{Purpose}: Analyze impact of architectural changes
 
 \subsection{Frontend Integration}
 
 \subsubsection{Pattern Visualization Component}
-\textbf{Component**: \texttt{PatternRecommendationPanel.tsx}
+\textbf{Component}: \texttt{PatternRecommendationPanel.tsx}
 
 \begin{lstlisting}[language=JavaScript,caption=Pattern Recommendation UI]
 const PatternRecommendationPanel = ({ architecturalQuery }) => {
@@ -564,8 +565,8 @@ const PatternRecommendationPanel = ({ architecturalQuery }) => {
 \subsection{Advantages Over Previous Implementation}
 
 \subsubsection{Enhanced Query Capabilities}
-\textbf{Previous**: Static document search and keyword matching\\
-\textbf{Current**: Semantic queries with relationship traversal and reasoning
+\textbf{Previous}: Static document search and keyword matching\\
+\textbf{Current}: Semantic queries with relationship traversal and reasoning
 
 \begin{table}[h]
 \centering
@@ -584,7 +585,7 @@ No confidence scoring & Quantified confidence and risk assessment \\
 \end{table}
 
 \subsubsection{Improved AI Response Quality}
-\textbf{Quantitative Improvements**:
+\textbf{Quantitative Improvements}:
 \begin{itemize}
     \item 300\% increase in architectural pattern recognition accuracy
     \item 250\% faster query response time for complex architectural questions
@@ -593,7 +594,7 @@ No confidence scoring & Quantified confidence and risk assessment \\
 \end{itemize}
 
 \subsubsection{Scalability and Maintainability}
-\textbf{Benefits**:
+\textbf{Benefits}:
 \begin{itemize}
     \item Automated pattern extraction from new ArchiMate models
     \item Standardized knowledge representation using W3C standards
@@ -604,7 +605,7 @@ No confidence scoring & Quantified confidence and risk assessment \\
 \subsection{Disadvantages and Limitations}
 
 \subsubsection{Implementation Complexity}
-\textbf{Challenges**:
+\textbf{Challenges}:
 \begin{itemize}
     \item Requires expertise in semantic web technologies
     \item Initial learning curve for SPARQL query development
@@ -613,7 +614,7 @@ No confidence scoring & Quantified confidence and risk assessment \\
 \end{itemize}
 
 \subsubsection{Performance Considerations}
-\textbf{Trade-offs**:
+\textbf{Trade-offs}:
 \begin{itemize}
     \item Higher memory requirements for in-memory RDF stores
     \item Complex query optimization needs for large knowledge graphs
@@ -622,7 +623,7 @@ No confidence scoring & Quantified confidence and risk assessment \\
 \end{itemize}
 
 \subsubsection{Maintenance Overhead}
-\textbf{Requirements**:
+\textbf{Requirements}:
 \begin{itemize}
     \item Regular ontology updates and validation
     \item Pattern quality assessment and refinement
@@ -635,7 +636,7 @@ No confidence scoring & Quantified confidence and risk assessment \\
 \subsection{Pattern Extraction Accuracy}
 
 \subsubsection{Validation Methodology}
-\textbf{Approach**: Expert validation against manual pattern identification
+\textbf{Approach}: Expert validation against manual pattern identification
 
 \begin{table}[h]
 \centering
@@ -655,7 +656,7 @@ Technology Patterns & 0.89 & 0.85 & 0.87 \\
 \subsection{Query Performance}
 
 \subsubsection{Benchmarking Results}
-\textbf{Test Environment**: Apache Jena TDB2, 16GB RAM, SSD storage
+\textbf{Test Environment}: Apache Jena TDB2, 16GB RAM, SSD storage
 
 \begin{table}[h]
 \centering
@@ -811,14 +812,14 @@ While the current implementation focuses on direct ArchiMate XML processing, the
 
 \textbf{Completed Milestones}:
 \begin{itemize}
-    \item ✅ Core ArchiMate parsing and analysis engine
-    \item ✅ Interactive web-based user interface
-    \item ✅ Enhanced accuracy mode with element linking
-    \item ✅ WebSocket-based real-time communication
-    \item ✅ Archi tool integration for model navigation
-    \item ✅ Comprehensive test suite with 80\%+ coverage
-    \item ✅ TypeScript implementation with strict type checking
-    \item ✅ Docker containerization for deployment
+    \item[\ding{51}] Core ArchiMate parsing and analysis engine
+    \item[\ding{51}] Interactive web-based user interface
+    \item[\ding{51}] Enhanced accuracy mode with element linking
+    \item[\ding{51}] WebSocket-based real-time communication
+    \item[\ding{51}] Archi tool integration for model navigation
+    \item[\ding{51}] Comprehensive test suite with 80\%+ coverage
+    \item[\ding{51}] TypeScript implementation with strict type checking
+    \item[\ding{51}] Docker containerization for deployment
 \end{itemize}
 
 \textbf{Performance Metrics (Current)}:
@@ -845,7 +846,7 @@ Future developments will focus on expanding the knowledge graph integration, imp
 \begin{enumerate}
     \item The Open Group. (2019). \textit{ArchiMate 3.1 Specification}. The Open Group.
     \item Berners-Lee, T., Hendler, J., \& Lassila, O. (2001). The semantic web. \textit{Scientific American}, 284(5), 34-43.
-    \item Hitzler, P., Krötzsch, M., \& Rudolph, S. (2009). \textit{Foundations of semantic web technologies}. Chapman and Hall/CRC.
+    \item Hitzler, P., Kr\"{o}tzsch, M., \& Rudolph, S. (2009). \textit{Foundations of semantic web technologies}. Chapman and Hall/CRC.
     \item Antoniou, G., \& Van Harmelen, F. (2004). \textit{A semantic web primer}. MIT Press.
     \item Apache Software Foundation. (2021). \textit{Apache Jena Documentation}. Retrieved from https://jena.apache.org/
     \item W3C. (2014). \textit{RDF 1.1 Concepts and Abstract Syntax}. W3C Recommendation.
