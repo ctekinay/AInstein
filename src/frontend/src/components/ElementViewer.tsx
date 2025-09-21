@@ -29,6 +29,15 @@ interface ElementDetails {
   documentation?: string;
 }
 
+// Helper function to format ArchiMate type names with proper spacing
+const formatTypeName = (type: string): string => {
+  return type
+    // Add space before uppercase letters that follow lowercase letters
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    // Handle specific cases
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2');
+};
+
 export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigate, onArchiOpened }: ElementViewerProps) => {
   const [elementDetails, setElementDetails] = useState<ElementDetails | null>(null);
   const [loading, setLoading] = useState(false);
@@ -165,7 +174,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                   </div>
                   <div>
                     <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Type</label>
-                    <p className="text-sm text-gray-900">{elementDetails.type.replace('archimate:', '')}</p>
+                    <p className="text-sm text-gray-900">{formatTypeName(elementDetails.type.replace('archimate:', ''))}</p>
                   </div>
                   <div className="md:col-span-2">
                     <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Element ID</label>
@@ -209,7 +218,7 @@ export const ElementViewer = ({ elementId, modelName, isOpen, onClose, onNavigat
                                 <div className="flex items-center gap-2 mb-1">
                                   <p className="text-sm font-medium text-gray-900 truncate">{relatedElement.name}</p>
                                   <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
-                                    {relatedElement.type}
+                                    {formatTypeName(relatedElement.type)}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
